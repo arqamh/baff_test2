@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.centrics.hr.overtime</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Boolean to configure in settings for approvals needed or not -->
+            <xpath expr="//div[hasclass('app_settings_block')]/div[@name='pincode_setting_container']"
+                   position="after">
+                <h2>Overtime Settings</h2>
+                <div class="row mt16 o_settings_container" name="overtime_configuration">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane" title="Activate the Employee Overtime Calculations">
+                            <field name="enable_overtime"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_overtime" class="o_form_label">Enable Overtime</label>
+                            <div class="text-muted">
+                                Enable overtime calculations
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_overtime', '=', False)]}">
+                        <div class="o_setting_left_pane" title="Request to Approve Overtime">
+                            <field name="need_to_approve"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="need_to_approve" class="o_form_label">Approval for Overtime</label>
+                            <div class="text-muted">
+                                Enable overtime Approval
+                            </div>
+
+                            <field name="enable_inline_approval" attrs="{'invisible': [('need_to_approve', '=', False)]}"/>
+                            <label for="enable_inline_approval" class="o_form_label" attrs="{'invisible': [('need_to_approve', '=', False)]}">Enable Inline Approval</label><br/>
+                            <field name="enable_bulk_approval" attrs="{'invisible': [('need_to_approve', '=', False)]}" />
+                            <label for="enable_bulk_approval" class="o_form_label" attrs="{'invisible': [('need_to_approve', '=', False)]}">Enable Bulk Approval</label><br/>
+                            <field name="enable_pre_approval" attrs="{'invisible': [('need_to_approve', '=', False)]}"/>
+                            <label for="enable_pre_approval" class="o_form_label" attrs="{'invisible': [('need_to_approve', '=', False)]}">Enable Pre Approval</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_overtime', '=', False)]}">
+                        <div class="o_setting_left_pane"
+                             title="Activate the buffer time consideration for the Overtime">
+                            <field name="consider_buffer_time"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="consider_buffer_time" class="o_form_label">Enable Buffer time</label>
+                            <div class="text-muted">
+                                Consider Buffer time for the Overtime
+                            </div>
+                            <div class="mt16" attrs="{'invisible': [('consider_buffer_time', '=', False)],
+                                                          'required': [('consider_buffer_time', '=', True)]}">
+                                <label for="buffer_time" class="o_form_label">
+                                    Buffer time In Favor Of Company
+                                </label>
+                                <div class="text-muted">
+                                    Allow a period of time (around working hours) where overtime will not be counted.
+                                </div>
+                                <span>Time Period</span>
+                                <field name="buffer_time" class="text-center"
+                                       attrs="{'required': [('consider_buffer_time', '=', True)]}"
+                                       style="width: 10%; min-width: 4rem;"/>
+                                <span>Minutes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_overtime', '=', False)]}">
+                        <div class="o_setting_left_pane"
+                             title="Roundup the Overtime">
+                            <field name="roundup_overtime"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="roundup_overtime" class="o_form_label">Enable Overtime Roundup</label>
+                            <div class="text-muted">
+                                Enable Overtime roundup
+                            </div>
+                            <div class="mt16" attrs="{'invisible': [('roundup_overtime', '=', False)],
+                                                          'required': [('roundup_overtime', '=', True)]}">
+                                <label for="roundup_overtime_interval" class="o_form_label">
+                                    Overtime Roundup Range for the Company
+                                </label>
+                                <div class="text-muted">
+                                    Set up a time range to roundup the overtime calculation
+                                </div>
+                                <span>Time Range</span>
+                                <field name="roundup_overtime_interval" class="text-center"
+                                       attrs="{'required': [('roundup_overtime', '=', True)]}"
+                                       style="width: 10%; min-width: 4rem;"/>
+                                <span>Minutes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_overtime', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="deduct_late_check_in"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="deduct_late_check_in" class="o_form_label">Deduct Late Check-In ?</label>
+                            <div class="text-muted">
+                                Deduct Late Check-In time from the Overtime hours
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('enable_overtime', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="consider_early_check_in"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="consider_early_check_in" class="o_form_label">Consider Late Check-In ?</label>
+                            <div class="text-muted">
+                                Consider Early Check-In for Overtime Calculation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[hasclass('app_settings_block')]/div[@name='overtime_settings']"
+                   position="replace">
+                <div class="row mt16 o_settings_container" name="overtime_settings"></div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

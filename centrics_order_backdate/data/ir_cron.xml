@@ -1,0 +1,23 @@
+<odoo>
+    <record id="server_action_update_journal_entry_backdate" model="ir.actions.server">
+        <field name="name">Update valuation backdate</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">records.cron_action_update_move_backdate()</field>
+    </record>
+
+    <record id="stock.action_validate_picking" model="ir.actions.server">
+            <field name="name">Validate</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                res = records.with_context(force_back_date=True).button_validate()
+                if isinstance(res, dict):
+                    action = res
+            </field>
+        </record>
+
+</odoo>

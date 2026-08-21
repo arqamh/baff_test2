@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Wizard Form View -->
+        <record id="view_change_requisition_type_wizard_form" model="ir.ui.view">
+            <field name="name">change.requisition.type.wizard.form</field>
+            <field name="model">change.requisition.type.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Change Requisition Type">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="requisition_id" readonly="1" class="oe_inline"/>
+                            </h1>
+                        </div>
+
+                        <!-- Info banner -->
+                        <div class="alert alert-info" role="alert">
+                            <p>
+                                <strong>Summary:</strong><br/>
+                                Total Lines: <field name="total_lines" readonly="1" class="oe_inline"/> |
+                                Valid Lines: <field name="valid_lines_count" readonly="1" class="oe_inline"/> |
+                                Invalid Lines: <field name="invalid_lines_count" readonly="1" class="oe_inline"/>
+                            </p>
+                            <p>
+                                <i class="fa fa-info-circle"/> Only lines without pickings or purchase orders can be changed.
+                            </p>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="requisition_type_new"
+                                       required="1"
+                                       widget="radio"
+                                       options="{'horizontal': true}"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Lines to Change">
+                                <field name="line_ids" nolabel="1">
+                                    <tree decoration-success="is_changeable == True"
+                                          decoration-danger="is_changeable == False"
+                                          create="false"
+                                          delete="false">
+                                        <field name="requisition_line_id" invisible="1"/>
+                                        <field name="wizard_id" invisible="1"/>
+                                        <field name="is_changeable" invisible="1"/>
+                                        <field name="selected" widget="boolean_toggle" nolabel="1"/>
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="description" readonly="1"/>
+                                        <field name="qty" readonly="1"/>
+                                        <field name="uom" readonly="1"/>
+                                        <field name="current_requisition_type" readonly="1"/>
+                                        <field name="partner_id" widget="many2many_tags" readonly="1"/>
+                                        <field name="change_status" readonly="1"/>
+                                        <field name="has_picking" invisible="1"/>
+                                        <field name="has_purchase_order" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_confirm"
+                                type="object"
+                                string="Confirm Change"
+                                class="btn-primary"
+                                attrs="{'invisible': [('valid_lines_count', '=', 0)]}"/>
+                        <button string="Cancel"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Wizard Action -->
+        <record id="action_change_requisition_type_wizard" model="ir.actions.act_window">
+            <field name="name">Change Requisition Type</field>
+            <field name="res_model">change.requisition.type.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_material_purchase_requisition"/>
+        </record>
+
+    </data>
+</odoo>

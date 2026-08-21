@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem
+            id="attendance_manual_import_menu_root"
+            name="Attendance Manual Import"
+            parent="hr_attendance.menu_hr_attendance_root"
+            sequence="10"
+            groups="hr_attendance_import_user"
+    />
+
+</odoo>

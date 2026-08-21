@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record model="ir.rule" id="custom_job_costing_comp_rule">
+            <field name="name">Job Costing multi-company</field>
+            <field name="model_id" ref="model_job_costing"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="custom_job_cost_line_comp_rule">
+            <field name="name">Job Cost Line multi-company</field>
+            <field name="model_id" ref="model_job_cost_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('job_costing_id.company_id', '=', False), ('job_costing_id.company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="job_cost_line_all_rule">
+            <field name="name">Job Cost Line All</field>
+            <field name="model_id" ref="model_job_cost_line"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('odoo_job_costing_management.group_job_costing_all_costs'))]"/>
+        </record>
+
+        <record model="ir.rule" id="job_cost_line_production_rule">
+            <field name="name">Job Cost Line All</field>
+            <field name="model_id" ref="model_job_cost_line"/>
+            <field name="domain_force">[('available_for_production_team','=',False)]</field>
+            <field name="groups" eval="[(4, ref('odoo_job_costing_management.group_job_costing_production'))]"/>
+        </record>
+    </data>
+</odoo>

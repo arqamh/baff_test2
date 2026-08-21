@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vendor_bills_to_iou_wizard_form" model="ir.ui.view">
+        <field name="name">vendorbill.iourequest.wizard.form</field>
+        <field name="model">vendorbill.iourequest</field>
+        <field name="arch" type="xml">
+            <form >
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="iou_request" invisible="1"/>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
+                            />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Vendor Bills">
+                            <field name="vendor_bill_ids">
+                                <tree editable="bottom" create="false">
+                                    <field name="vendor_bill_id" readonly="1" force_save="1"/>
+                                    <field name="partner_id" readonly="1" force_save="1"/>
+                                    <field name="iou_request_id" invisible="1" />
+                                    <field name="currency_id" invisible="1" />
+                                    <field name="amount_total" readonly="1" force_save="1"/>
+                                    <field name="amount_residual"  readonly="1" force_save="1"/>
+                                    <field name="paid_amount" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string='Submit' name="approval_submission" type="object" class="btn-primary"/>
+                    <button string="Abort" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vendor_bill_to_petty_wizard" model="ir.actions.act_window">
+        <field name="name">Select Vendor Bills</field>
+        <field name="res_model">vendorbill.iourequest</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="vendor_bills_to_iou_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

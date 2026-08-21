@@ -1,0 +1,25 @@
+{
+    'name': 'Baff Inventory Modifications',
+    'sequence': 0,
+    'version': '16.0.0.1',
+    'license': 'LGPL-3',
+    'summary': "Baff Inventory Modifications",
+    'author': 'Centrics Business Solutions PVT Ltd',
+    'company': 'Centrics Business Solutions PVT Ltd',
+    'website': 'http://www.centrics.cloud/',
+    'depends': ['base', 'stock', 'mrp', 'stock_landed_costs', 'stock_account'],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/product_template_view.xml',
+        'views/boat_type_views.xml',
+        'views/mrp_bom_views.xml',
+        'views/stock_landed_cost_views.xml',
+        'data/stock_valuation_layer_action.xml',
+        'views/stock_account_menus.xml',
+    ],
+    'demo': [
+    ],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Pending-approvals shortcut, visible to any inventory user -->
+    <menuitem id="stock_picking_menu_grn_pending_my_approval"
+              name="GRNs Pending My Approval"
+              parent="stock.menu_stock_warehouse_mgmt"
+              action="stock_picking_action_grn_pending_my_approval"
+              sequence="25"
+              groups="stock.group_stock_user"/>
+
+    <!-- Configuration menu, admins only -->
+    <menuitem id="grn_approval_config_menu"
+              name="GRN Approval"
+              parent="stock.menu_stock_config_settings"
+              action="grn_approval_config_action"
+              sequence="100"
+              groups="grn_approval_workflow.grn_approval_workflow_group_admin"/>
+
+</odoo>

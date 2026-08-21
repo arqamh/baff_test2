@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Stock picking view form-->
+    <record id="stock_picking_view_form" model="ir.ui.view">
+        <field name="name">stock.picking.view.form.inherit.centrics_material_purchase_req_analytic</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <field name="location_dest_id" position="after">
+                <field name="analytic_distribution"
+                       widget="analytic_distribution"
+                       readonly="1"
+                       force_save="1"
+                       attrs="{'invisible': [('analytic_distribution', '=', False)]}"
+                />
+            </field>
+
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']" position="before">
+                <field name="analytic_distribution"
+                       widget="analytic_distribution"
+                       optional="hide"
+                       readonly="1"
+                       force_save="1"
+                />
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

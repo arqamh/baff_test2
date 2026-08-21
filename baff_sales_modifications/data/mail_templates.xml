@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="baff_mail_template_quotation_confirm" model="mail.template">
+            <field name="name">Quotation Confirm: Send by Email new</field>
+            <field name="model_id" ref="baff_sales_modifications.model_sale_order"/>
+            <field name="subject">Quotation {{ ctx['quotation_number'] }} Confirmed</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <br/><br/>
+                        Hey,
+                        This email is to inform you that the quotation has been confirmed.
+                        <br/><br/>
+                        <b><u>Quotation Status</u></b>
+                        <br/>
+                        <t t-if="object.quotation_required == 'yes'">
+                            Quotation Required: Yes
+                            <br/>
+                            - Customer PO Available: <t t-if="object.customer_po_available">Yes</t><t t-else="">No</t><br/>
+                            - Confirmed Email Text: <t t-if="object.confirmed_email_text">Yes</t><t t-else="">No</t><br/>
+                        </t>
+                        <t t-if="object.quotation_required == 'no'">
+                            Quotation Required: No
+                            <br/>
+                            <t t-if="object.customer_po_available">Customer PO Available: Yes</t>
+                            <t t-elif="object.confirmed_email_text">Confirmed Email Text: Yes</t>
+                        </t>
+                        <br/>
+                        Do not hesitate to contact us if you have any questions.
+                        <br/><br/>
+                        Best regards,
+                        <t t-if="not is_html_empty(user.signature)">
+                            <br/>
+                        </t>
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

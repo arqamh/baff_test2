@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherit quality check tree view to add Operation, MO Number, and Analytic Account columns -->
+    <record id="quality_check_view_tree" model="ir.ui.view">
+        <field name="name">quality.check.view.tree.inherit.baff.manufacturing</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_tree"/>
+        <field name="arch" type="xml">
+            <!-- Add Operation Name, MO Number, and Analytic Account after product_id -->
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="operation_name" optional="show"/>
+                <field name="mo_number" optional="show"/>
+                <field name="analytic_account_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit quality check form view to add Analytic Account -->
+    <record id="quality_check_view_form" model="ir.ui.view">
+        <field name="name">quality.check.view.form.inherit.baff.manufacturing</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='point_id']" position="before">
+                <field name="operation_name"/>
+                <field name="analytic_account_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit quality point tree view to add Analytic Account -->
+    <record id="quality_point_view_tree" model="ir.ui.view">
+        <field name="name">quality.point.view.tree.inherit.baff.manufacturing</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_type_ids']" position="after">
+                <field name="analytic_account_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit quality point form view to add Analytic Account -->
+    <record id="quality_point_view_form" model="ir.ui.view">
+        <field name="name">quality.point.view.form.inherit.baff.manufacturing</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="analytic_account_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quality_check_view_form_tablet" model="ir.ui.view">
+        <field name="name">inherit.quality.check.view.form.tablet</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="mrp_workorder.quality_check_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='note']" position="after">
+                <field name="is_required_approval" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_next'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|', '|', ('is_required_approval', '!=', False), ('is_user_working', '=', False), ('test_type', 'not in', ['register_consumed_materials', 'register_byproducts', 'picture']), ('consumption', '=', 'strict'), '&amp;', ('consumption', 'in', ['flexible', 'warning']), ('component_qty_to_do', '&gt;=', 0)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_next'][3]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|', ('is_required_approval', '!=', False), ('is_user_working', '=', False), ('test_type', 'not in', ['register_consumed_materials', 'register_byproducts', 'picture']), ('component_qty_to_do', '&lt;', 0)]}</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_continue'][1]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|', ('is_required_approval', '!=', False), ('is_user_working', '=', False), ('test_type', 'not in', ('register_consumed_materials', 'register_byproducts')), ('component_qty_to_do', '&gt;=', 0)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_continue'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|', '|', ('is_required_approval', '!=', False), ('is_user_working', '=', False), ('test_type', 'not in', ('register_consumed_materials', 'register_byproducts')), ('consumption', '=', 'strict'), '&amp;', ('consumption', 'in', ['flexible', 'warning']), ('component_qty_to_do', '&lt;', 0)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

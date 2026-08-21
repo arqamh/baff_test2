@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="centrics_hr_overtime_category" model="ir.module.category" >
+            <field name="name">Employee Overtime</field>
+            <field name="sequence">61</field>
+        </record>
+    </data>
+</odoo>

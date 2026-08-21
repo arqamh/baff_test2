@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_boat_type,access.boat.type,model_boat_type,base.group_user,1,1,1,1
+access_stock_valuation_layer_unlink,access.stock.valuation.layer.unlink,stock_account.model_stock_valuation_layer,base.group_system,1,1,1,1

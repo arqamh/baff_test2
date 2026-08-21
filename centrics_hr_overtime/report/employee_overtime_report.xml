@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <template id="overtime_template">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <!-- Header -->
+                        <div style="text-align: center;">
+                            <h4><strong>Employee Overtime Report</strong></h4>
+                            <h5><t t-esc="env.company.name"/></h5>
+                            <br/><br/><br/>
+                        </div>
+                        <!-- Report Metadata -->
+                        <t t-if="form['department_id']">
+                            <td>Department :</td>
+                            <td><t t-esc="form['department_id'][1]"/></td>
+                            <br/><br/>
+                        </t>
+
+                        <td>Start Date :</td>
+                        <td><t t-esc="form['start_date']"/></td>
+                        <br/><br/>
+
+                        <td>End Date :</td>
+                        <td><t t-esc="form['end_date']"/></td>
+
+                        <!-- Overtime Table -->
+                        <table class="table table-bordered mt32">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Check-in</th>
+                                    <th>Check-Out</th>
+                                    <th>Normal OT</th>
+                                    <th>Double OT</th>
+                                    <th>Triple OT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="attendance_records" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <t t-if="line['employee_id']">
+                                                <t t-esc="line['employee_id'][1]"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line['check_in']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="line['check_out']"/>
+                                        </td>
+                                        <td>
+                                            <t t-if="line['normal_overtime']">
+                                                <t t-esc="line['normal_overtime']"
+                                                   t-options="{'widget': 'float_time'}"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span>00:00</span>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-if="line['double_overtime']">
+                                                <t t-esc="line['double_overtime']"
+                                                   t-options="{'widget': 'float_time'}"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span>00:00</span>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-if="line['triple_overtime']">
+                                                <t t-esc="line['triple_overtime']"
+                                                   t-options="{'widget': 'float_time'}"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span>00:00</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_employee_overtime" model="ir.actions.report">
+            <field name="name">Employee Overtime</field>
+            <field name="model">make.employee.overtime</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">centrics_hr_overtime.overtime_template</field>
+            <field name="report_file">centrics_hr_overtime.overtime_template</field>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
+
+
+

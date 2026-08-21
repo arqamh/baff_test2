@@ -1,0 +1,32 @@
+{
+    'name': 'Centrics Multiple Payments',
+    'sequence': 1,
+    'version': '16.0.0.1',
+    'license': 'LGPL-3',
+    'summary': "This module contains all option to pay multiple payments",
+    'author': 'Centrics Business Solutions PVT Ltd',
+    'company': 'Centrics Business Solutions PVT Ltd',
+    'website': 'http://www.centrics.cloud/',
+    'depends': ['base', 'account', 'local_banks_config', 'sh_pdc'],
+    'data': [
+        "security/ir.model.access.csv",
+        "security/security.xml",
+        "data/payment_methods.xml",
+        "data/mail_templates.xml",
+        "data/ir_sequence_data.xml",
+        "views/account_receipt_payment.xml",
+        "views/account_payment.xml",
+        "views/account_move.xml",
+        "views/payment_register_wizard.xml",
+        "views/res_config_settings_views.xml",
+        "views/bank_rec_widget_views.xml",
+        "wizard/payment_approve_or_reject_view.xml",
+        "wizard/payment_send_for_approval_wizard.xml",
+    ],
+    'demo': [
+    ],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+    'license': 'LGPL-3'
+}

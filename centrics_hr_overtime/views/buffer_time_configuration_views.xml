@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="buffer_time_configuration_view_tree" model="ir.ui.view">
+        <field name="name">buffer.time.configuration.view.tree</field>
+        <field name="model">buffer.time.configuration</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="employee_type"/>
+                <field name="avoid_buffer_time"/>
+                <field name="buffer_time" attrs="{'required': [('avoid_buffer_time', '=', False)], 'invisible': [('avoid_buffer_time', '=', True)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="buffer_time_configuration_action" model="ir.actions.act_window">
+        <field name="name">Buffer Time Configuration</field>
+        <field name="res_model">buffer.time.configuration</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="buffer_time_configuration_view_tree"/>
+    </record>
+
+    <menuitem id="menu_buffer_time_configuration"
+              name="Buffer Time Configuration"
+              parent="centrics_hr_overtime.hr_overtime_rule_menu_root"
+              action="buffer_time_configuration_action"
+              sequence="4"/>
+
+</odoo>

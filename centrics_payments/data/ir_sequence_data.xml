@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequences for Assert Request & Transfer -->
+        <record id="seq_account_receipt_payment" model="ir.sequence">
+            <field name="name">Account Receipt Payment</field>
+            <field name="code">account.receipt.payment</field>
+            <field name="prefix">ARP/%(y)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

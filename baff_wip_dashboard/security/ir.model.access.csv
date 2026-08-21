@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wip_material_line_user,wip.material.line.user,model_wip_material_line,mrp.group_mrp_user,1,0,0,0
+access_wip_material_line_manager,wip.material.line.manager,model_wip_material_line,mrp.group_mrp_manager,1,0,0,0
+access_wip_material_line_stock,wip.material.line.stock_user,model_wip_material_line,stock.group_stock_user,1,0,0,0
+access_wip_material_line_purchase,wip.material.line.purchase_user,model_wip_material_line,purchase.group_purchase_user,1,0,0,0

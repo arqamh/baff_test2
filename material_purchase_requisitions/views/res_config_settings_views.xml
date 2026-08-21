@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--settings for job costing management-->
+        <record id="material_requisitions_res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">material.requisition.res.config.settings.view.form</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="90"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Material Requisition" id="purchase_requisition"
+                         string="Material Requisition"
+                         data-key="material_purchase_requisitions">
+                        <h2>Material Requisition</h2>
+                        <div class="row mt16 o_settings_container" id="purchase_requisition_setting">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."
+                                          aria-label="Values set here are company-specific."
+                                          groups="base.group_multi_company" role="img"/>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label string="Default Transfer Type" for="mpr_default_picking_type"
+                                                   class="col-lg-3 o_light_label"/>
+                                            <field name="mpr_default_picking_type"/>
+                                            <div class="text-muted">
+                                                Set a default internal transfer type for material requisitions
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."
+                                          aria-label="Values set here are company-specific."
+                                          groups="base.group_multi_company" role="img"/>
+                                    <span class="o_form_label">Asset Purchase Procurement Notification</span>
+                                    <div class="text-muted">
+                                        Users and email addresses that will be notified when an Asset Purchase
+                                        requisition is converted to an RFQ/Purchase Order.
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label string="Notified Users" for="procurement_notification_user_ids"
+                                                   class="col-lg-3 o_light_label"/>
+                                            <field name="procurement_notification_user_ids" widget="many2many_tags"
+                                                   options="{'no_create': True}"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label string="Additional Emails" for="procurement_notification_emails"
+                                                   class="col-lg-3 o_light_label"/>
+                                            <field name="procurement_notification_emails"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!--menu for the settings under configurations-->
+        <record id="material_purchase_requisitions_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'material_purchase_requisitions', 'bin_size': False}</field>
+        </record>
+        <menuitem id="menu_material_purchase_requisitions" parent="menu_purchase_requisition" name="Configuration"
+                  groups="material_purchase_requisitions.group_purchase_requisition_department" sequence="100"/>
+        <menuitem id="menu_materials_settings"
+                  name="Settings"
+                  parent="menu_material_purchase_requisitions"
+                  sequence="0"
+                  action="material_purchase_requisitions_config_settings_action"/>
+    </data>
+</odoo>

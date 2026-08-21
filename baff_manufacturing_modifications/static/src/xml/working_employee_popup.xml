@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="baff_manufacturing_modifications.WorkingEmployeePopup" t-inherit="mrp_workorder_hr.WorkingEmployeePopup" t-inherit-mode="extension" owl="1">
+        <xpath expr="//footer" position="replace">
+            <footer class="footer">
+                <button class="btn btn-outline-primary btn-sm px-4 py-2" t-on-click="addEmployee">+ New Operator</button>
+
+                <button class="btn btn-outline-danger btn-sm px-4 py-2" t-on-click="cancel">Cancel</button>
+            </footer>
+        </xpath>
+
+    </t>
+</templates>

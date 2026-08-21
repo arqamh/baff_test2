@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit Journal Form View to Add Bypass Currency Validation Field -->
+        <record id="view_account_journal_form_inherit_bypass_currency" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.bypass.currency</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <!-- Add the bypass field in the Advanced Settings notebook page -->
+                <xpath expr="//page[@name='advanced_settings']" position="inside">
+                    <group string="Currency Validation">
+                        <field name="bypass_currency_validation"
+                               widget="boolean_toggle"
+                               attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

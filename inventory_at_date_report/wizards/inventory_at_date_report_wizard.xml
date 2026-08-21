@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inventory_at_date_report_wizard_form" model="ir.ui.view">
+        <field name="name">inventory.at.date.report.wizard.form</field>
+        <field name="model">inventory.at.date.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="initial_lock_datetime" invisible="1"/>
+                        <field name="inventory_datetime"/>
+<!--                        <field name="type" widget="radio"/>-->
+                        <field name="location_id" options="{'no_create': True}" domain="[('usage', '=', 'internal')]" required="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="download_report" string="Download" type="object" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="inventory_at_date_report_wizard_action" model="ir.actions.act_window">
+        <field name="name">Inventory At Date Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">inventory.at.date.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+            name="Inventory At Date Report"
+            parent="stock.menu_warehouse_report"
+            action="inventory_at_date_report_wizard_action"
+            id="menu_inventory_at_date_report_wizard"/>
+</odoo>

@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="google_connector_form">
+            <field name="name">Google Connector Form</field>
+            <field name="model">google.connector</field>
+            <field name="arch" type="xml">
+                <form edit="false" create="false">
+                    <sheet>
+                        <group string="Google Connector">
+
+                            <group>
+                                <h3 style="width: 225px;">Contact</h3>
+                                <div>
+                                    <field name="import_contact"/>
+                                    <label for="import_contact" string="Import"/>
+                                    <field name="export_contact"/>
+                                    <label for="export_contact" string="Export"/>
+                                </div>
+                            </group>
+
+
+                            <group>
+                                <h3 style="width: 225px;">Task</h3>
+                                <div>
+                                    <field name="import_task"/>
+                                    <label for="import_task" string="Import"/>
+                                    <field name="export_task"/>
+                                    <label for="export_task" string="Export"/>
+                                </div>
+                            </group>
+
+                            <group>
+                                <h3 style="width: 225px;">Calendar</h3>
+                                <div>
+                                    <field name="import_calendar"/>
+                                    <label for="import_calendar" string="Import"/>
+                                    <field name="export_calendar"/>
+                                    <label for="export_calendar" string="Export"/>
+                                </div>
+                            </group>
+
+                            <group>
+                                <h3 style="width: 225px;">Email</h3>
+                                <div>
+                                    <field name="import_email"/>
+                                    <label for="import_email" string="Import"/>
+                                </div>
+                            </group>
+
+                            <group>
+                                <field name="custom_from_datetime" style="width:50%"/>
+                                <field name="custom_to_datetime" style="width:50%"/>
+                            </group>
+
+                        </group>
+
+                        <button name="synchronize" type="object" string="Sync" class="oe_highlight"/>
+                        <br/><br/>
+                        <button name="import_history_action" type="object" target="new" string="Import History"/>
+                        <button name="export_history_action" type="object" target="new" string="Export History"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="google_connector_action_window">
+            <field name="name">Google Connector</field>
+            <field name="res_model">google.connector</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+    </data>
+</odoo>

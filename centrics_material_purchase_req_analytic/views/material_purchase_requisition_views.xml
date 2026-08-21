@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <!--Material purchase requisition form view customizations-->
+    <record id="material_purchase_requisition_view_form" model="ir.ui.view">
+        <field name="name">material.purchase.requisition.view.form.inherit.centrics_material_purchase_req_analytic</field>
+        <field name="model">material.purchase.requisition</field>
+        <field name="inherit_id" ref="material_purchase_requisitions.material_purchase_requisition_form_view"/>
+        <field name="arch" type="xml">
+
+            <field name="analytic_account_id" position="after">
+                <field name="mp_project_id" required="1"/>
+                <field name="analytic_editable" invisible="1"/>
+                <field name="analytic_distribution"
+                       widget="analytic_distribution"
+                       attrs="{'readonly': [('analytic_editable', '=', False)]}"
+                />
+            </field>
+
+            <xpath expr="//field[@name='requisition_line_ids']/tree/field[@name='uom']" position="after">
+                <field name="analytic_distribution"
+                       widget="analytic_distribution"
+                       optional="hide"
+                       attrs="{'readonly': [('parent.analytic_editable', '=', False)]}"
+                       force_save="1"
+                />
+            </xpath>
+
+            <xpath expr="//field[@name='requisition_line_ids']" position="attributes">
+                <attribute name="context">{'default_analytic_distribution': analytic_distribution}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

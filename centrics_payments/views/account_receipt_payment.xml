@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_account_invoice_from_list_receipt" model="ir.actions.server">
+        <field name="name">Register Receipt</field>
+        <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+            action = records.action_register_receipt()
+        </field>
+    </record>
+
+    <record id="account_receipt_payment_form" model="ir.ui.view">
+        <field name="name">account.receipt.payment.form</field>
+        <field name="model">account.receipt.payment</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Register Payment">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                     <field name="custom_url" invisible="1"/>
+                    <button name="action_send_for_approval_payment" type="object" string="Send for Approval" class="btn btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_approve_payment" type="object" string="Approve" class="btn btn-primary" attrs="{'invisible': [('state', '!=', 'waiting_approval')]}"/>
+                    <button name="action_reject_payment" type="object" string="Reject" class="btn btn-danger" attrs="{'invisible': [('state', '!=', 'waiting_approval')]}"/>
+                    <button string='Close Receipt' name="close_receipt" type="object" class="btn-primary" states="approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}" required="1" force_save="1"/>
+                            <field name="receipt_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="payment_type" force_save="1" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id"  options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="company_id" invisible="1" force_save="1"/>
+                            <field name="manual_receipt_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="currency_id" options="{'no_create': True}" invisible="1" required="1"/>
+                            <field name="partner_type" force_save="1" invisible="1"/>
+                        </group>
+                    </group>
+                    <group states="draft">
+                        <group>
+                            <field name="journal_id" widget="selection" required="1" force_save="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                        <group>
+
+
+                            <field name="payment_method_line_id" widget="radio" required="1" attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('journal_id', '=', False), ('hide_payment_method_line', '=', True)]}" force_save="1"/>
+<!--                            <field name="payment_method_id" widget="radio" required="1" attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('journal_id', '=', False), ('hide_payment_method', '=', True)]}" force_save="1"/>-->
+
+                        </group>
+                    </group>
+                    <group col="4">
+                        <field name="available_payment_method_line_ids" invisible="1"/>
+                        <field name="hide_payment_method_line" invisible="1"/>
+<!--                        <field name="available_payment_method_ids" invisible="1"/>-->
+<!--                        <field name="hide_payment_method" invisible="1"/>-->
+                        <field name="payment_method_name" invisible="1" />
+                    </group>
+                    <group col="4" name="over_payment" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('payment_method_name', '!=', 'Over Payment')]}">
+                        <field name="over_payment_amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    </group>
+                    <group col="4" name="cheque" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('payment_method_name', '!=', 'Cheque')]}">
+                        <field name="main_bank_id" attrs="{'required': [('payment_method_name', '=', 'Cheque')], 'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="cheque_no" attrs="{ 'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="cheque_date" attrs="{ 'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="is_cheque_ac_payee" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="branch_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="partner_bank_account_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    </group>
+                    <group col="4" name="deposit" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('payment_method_name', '!=', 'Direct Deposit')]}">
+                        <field name="main_bank_id" attrs="{'required': [('payment_method_name', '=', 'Direct Deposit')], 'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="branch_id" attrs="{'required': [('payment_method_name', '=', 'Direct Deposit')], 'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="partner_bank_account_id" attrs="{'required': [('payment_method_name', '=', 'Direct Deposit')], 'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="reference_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="deposited_date" attrs="{'required': [('payment_method_name', '=', 'Direct Deposit')]}"/>
+                    </group>
+                    <field name="remark" placeholder="Remarks...."  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="invoice_ids" attrs="{'invisible': [('payment_method_name', '=', 'Over Payment')], 'readonly': [('state', '!=', 'draft')]}">
+                        <tree create="false" edit="false" delete="false" editable="bottom">
+                            <field name="is_ticked" nolabel="1" attrs="{'readonly': [('invoice_actual_due', '&lt;=', 0)]}"/>
+                            <field name="invoice_id" readonly="1" force_save="1"/>
+                            <field name="invoice_date" readonly="1" force_save="1"/>
+                            <field name="invoice_age" readonly="1" force_save="1"/>
+                            <field name="invoice_total" readonly="1" force_save="1"/>
+                            <field name="invoice_actual_due" readonly="1" force_save="1"/>
+                            <field name="invoice_current_due" readonly="1" force_save="1" invisible="1"/>
+                            <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" invisible="1"/>
+                            <field name="invoice_paying_amount"/>
+                            <field name="paying_currency_id" options="{'no_create': True}" groups="base.group_multi_currency" invisible="0"/>
+                        </tree>
+                    </field>
+                    <button string='Add to Payments' name="create_payments" type="object" class="btn-primary" states="draft"/>
+                    <separator/>
+                    <separator/>
+                    <notebook>
+                        <page string="Cash Payments">
+                            <field name="cash_payment_ids" attrs="{'readonly':[('state', 'not in',('draft', 'waiting_approval'))]}">
+                                <tree create="false" edit="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="reconciled_invoice_ids" widget="many2many_tags"/>
+                                    <field name="journal_id"/>
+                                    <field name="payment_method_line_id"/>
+                                    <field name="payment_method_name"/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="amount" sum="Amount"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Cheque" domain="[('payment_method_name', '=', 'Cheque')]">
+                            <field name="cheque_payment_ids" >
+                                <tree create="false" edit="false" delete="false" context="{'visible_cheque': True}">
+                                    <field name="name"/>
+                                    <field name="payment_date"/>
+                                    <field name="journal_id"/>
+                                    <field name="main_bank_id"/>
+                                    <field name="bank_id"/>
+                                    <field name="partner_bank_account_id"/>
+                                    <field name="reference"/>
+                                    <field name="payment_date"/>
+                                    <field name="payment_amount"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Over Payment">
+                            <field name="over_payment_ids" attrs="{'readonly':[('state', 'not in',('draft', 'waiting_approval'))]}">
+                                <tree create="false" edit="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="reconciled_invoice_ids" widget="many2many_tags"/>
+                                    <field name="journal_id"/>
+                                    <field name="payment_method_line_id"/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="amount" sum="Amount"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Direct Deposits">
+                            <field name="deposit_payment_ids" attrs="{'readonly':[('state', 'not in',('draft', 'waiting_approval'))]}">
+                                <tree create="false" edit="false" delete="false">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="reconciled_invoice_ids" widget="many2many_tags"/>
+                                    <field name="journal_id"/>
+                                    <field name="payment_method_line_id"/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="main_bank_id"/>
+                                    <field name="branch_id"/>
+                                    <field name="partner_bank_account_id"/>
+                                    <field name="deposited_date"/>
+                                    <field name="amount" sum="Amount"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_receipt_payment_tree" model="ir.ui.view">
+        <field name="name">account.receipt.payment.tree</field>
+        <field name="model">account.receipt.payment</field>
+        <field name="arch" type="xml">
+            <tree string="Register Payment">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="receipt_date"/>
+                <field name="journal_id"/>
+                <field name="payment_type"/>
+                <field name="user_id"/>
+                <field name="company_id"/>
+                <field name="manual_receipt_no"/>
+                <field name="currency_id"/>
+                <field name="partner_type"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_receipt_payment_action_customers" model="ir.actions.act_window">
+        <field name="name">Bulk Customer Payments</field>
+        <field name="res_model">account.receipt.payment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('payment_type', '=', 'inbound')]</field>
+        <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer'}</field>
+    </record>
+
+    <record id="action_account_receipt_payment_action_vendors" model="ir.actions.act_window">
+        <field name="name">Bulk Vendor Payments</field>
+        <field name="res_model">account.receipt.payment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('payment_type', '=', 'outbound')]</field>
+        <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier'}</field>
+    </record>
+
+    <menuitem
+            id="menu_account_receipt_payment_customers"
+            groups="account.group_account_invoice"
+            parent="account.menu_finance_receivables"
+            sequence="25"
+            action="action_account_receipt_payment_action_customers"
+    />
+
+    <menuitem
+            id="menu_account_receipt_payment_vendors"
+            groups="account.group_account_invoice"
+            parent="account.menu_finance_payables"
+            sequence="25"
+            action="action_account_receipt_payment_action_vendors"
+    />
+</odoo>

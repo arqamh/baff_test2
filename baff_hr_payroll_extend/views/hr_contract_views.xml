@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Server action: deduplicate fixed.allowance.deduction records.
+         For each name that exists with both a generic type (FIXEDALLOWANCE /
+         FIXEDDEDUCTION) and a specific type, re-point every contract line from
+         the generic record to the specific one, then delete the generic record. -->
+    <record id="action_cleanup_fixed_allowance_deduction_dupes" model="ir.actions.server">
+        <field name="name">Clean Up Duplicate Fixed Allowance/Deduction Types</field>
+        <field name="model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="binding_model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+GENERIC_CODES = {'FIXEDALLOWANCE', 'FIXEDDEDUCTION'}
+
+all_types = env['fixed.allowance.deduction'].search([])
+names = list(set(all_types.mapped('name')))
+
+# Pass 1: identify bad→good replacements without touching the DB yet.
+# Deleting inside the filtered loop would invalidate the cached recordset
+# and raise "Missing Record" on subsequent iterations.
+replacements = {}   # {bad_record_id: good_record}
+all_bad = env['fixed.allowance.deduction']
+
+for name in names:
+    type_records = all_types.filtered(lambda r, n=name: r.name == n)
+    if len(type_records) &lt;= 1:
+        continue
+
+    bad = type_records.filtered(
+        lambda r: r.input_type_id and r.input_type_id.code in GENERIC_CODES
+    )
+    good = type_records - bad
+
+    if not bad or not good:
+        continue
+
+    good_record = good[0]
+    for b in bad:
+        replacements[b.id] = good_record
+    all_bad |= bad
+
+# Pass 2: re-point contract lines to the specific record.
+replaced_count = 0
+for bad_id, good_record in replacements.items():
+    lines = env['fixed.allowance.deduction.line'].search([('type_id', '=', bad_id)])
+    lines.write({'type_id': good_record.id})
+    replaced_count += len(lines)
+
+# Pass 3: delete all bad records in one call.
+deleted_count = len(all_bad)
+all_bad.unlink()
+
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': 'Fixed Allowance/Deduction Cleanup',
+        'message': '%d duplicate type(s) removed, %d contract line(s) updated.' % (deleted_count, replaced_count),
+        'type': 'success',
+        'sticky': True,
+    }
+}
+        </field>
+    </record>
+
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.baff.hr.payroll.extend</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='overtime_rate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='overtime_rate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='overtime_configuration']/group[2]" position="replace">
+                <group>
+                    <label for="baff_ot_rate_normal" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                    <div class="o_row mw-50" name="baff_ot_rate_normal" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}">
+                        <field name="baff_ot_rate_normal" class="oe_inline o_hr_narrow_field" nolabel="1" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                        <div class="mb-3">/ hourly</div>
+                    </div>
+                    <label for="baff_ot_rate_double" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                    <div class="o_row mw-50" name="baff_ot_rate_double" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}">
+                        <field name="baff_ot_rate_double" class="oe_inline o_hr_narrow_field" nolabel="1" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                        <div class="mb-3">/ hourly</div>
+                    </div>
+                    <label for="baff_ot_rate_triple" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                    <div class="o_row mw-50" name="baff_ot_rate_triple" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}">
+                        <field name="baff_ot_rate_triple" class="oe_inline o_hr_narrow_field" nolabel="1" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                        <div class="mb-3">/ hourly</div>
+                    </div>
+                    <div attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}">
+                        <button type="object" name="action_recompute_baff_ot_rates"
+                                icon="fa-refresh" class="btn-secondary btn-sm" title="Calculate OT Rates"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

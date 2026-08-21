@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_occupational_group_user,occupational.group.user,model_occupational_group,hr.group_hr_user,1,1,1,1
+access_occupational_group_manager,occupational.group.manager,model_occupational_group,hr.group_hr_manager,1,1,1,1
+access_epf_employment_type_user,epf.employment.type.user,model_epf_employment_type,hr.group_hr_user,1,1,1,1
+access_epf_employment_type_manager,epf.employment.type.manager,model_epf_employment_type,hr.group_hr_manager,1,1,1,1
+access_epf_contribution_report_wizard_user,epf.contribution.report.wizard.user,model_epf_contribution_report_wizard,hr_payroll.group_hr_payroll_user,1,1,1,1
+access_epf_contribution_report_wizard_manager,epf.contribution.report.wizard.manager,model_epf_contribution_report_wizard,hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_etf_contribution_report_wizard_user,etf.contribution.report.wizard.user,model_etf_contribution_report_wizard,hr_payroll.group_hr_payroll_user,1,1,1,1
+access_etf_contribution_report_wizard_manager,etf.contribution.report.wizard.manager,model_etf_contribution_report_wizard,hr_payroll.group_hr_payroll_manager,1,1,1,1

@@ -1,0 +1,25 @@
+.o_search_input_container {
+    display: flex;
+    justify-content: center;
+    margin: 0.8rem 0;
+}
+
+.o_search_input_container .o_search_input {
+    width: 80%;
+    font-size: 15px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.o_search_input_container .o_search_input:focus {
+    border-color: var(--o-brand-primary);
+    box-shadow: 0 0 4px rgba(68, 105, 185, 0.3);
+}
+
+.o_search_input_container .o_search_input::placeholder {
+    color: #999;
+    font-size: 14px;
+}

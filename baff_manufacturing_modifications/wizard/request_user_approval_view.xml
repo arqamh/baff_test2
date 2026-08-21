@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Approval User wizard and action-->
+    <record id="request_approval_user_wizard_form" model="ir.ui.view">
+        <field name="name">request.user.approve.wizard.form</field>
+        <field name="model">request.user.approve.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send to Approval">
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="user_ids" widget='many2many_tags' options="{'no_create': True, 'no_create_edit':True }"/>
+                            <field name="model_id" invisible="1"/>
+                            <field name="record_id" invisible="1"/>
+                            <field name="request_by" readonly="1" force_save="1" options="{'no_create': True, 'no_create_edit':True }"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string='Send for Approval' name="request_approve" type="object" class="btn-primary"/>
+                    <button string="Abort" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="request_approval_user_wizard_action" model="ir.actions.act_window">
+        <field name="name">Request for Approval</field>
+        <field name="res_model">request.user.approve.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="request_approval_user_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

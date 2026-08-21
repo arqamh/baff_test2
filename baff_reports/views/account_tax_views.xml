@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_tax_group_tree_inherit_baff_reports" model="ir.ui.view">
+            <field name="name">account.tax.group.tree.inherit.baff_reports</field>
+            <field name="model">account.tax.group</field>
+            <field name="inherit_id" ref="account.view_tax_group_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='country_id']" position="after">
+                    <field name="vat_type" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_line_list_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.line.list.centrics_payments</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account_accountant.view_account_move_line_list_bank_rec_widget"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='name']" position="before">
+                    <field name="payment_cheque_no" invisible="0"/>
+                 </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

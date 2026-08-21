@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="hr_attendance_manual_log_view_tree" model="ir.ui.view">
+        <field name="name">view.hr.attendance.manual.log.view.tree</field>
+        <field name="model">hr.attendance.manual.log</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" string="Manual Logs">
+                <field name="employee_id"/>
+                <field name="checkin_time"/>
+                <field name="checkout_time"/>
+                <field name="state"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="hr_attendance_manual_log_view_form" model="ir.ui.view">
+        <field name="name">view.hr.attendance.manual.log.view.form</field>
+        <field name="model">hr.attendance.manual.log</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" string="Manual Loag">
+                <header>
+                    <field name="state" widget="statusbar" readonly="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="checkin_time"/>
+                            <field name="checkout_time"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <group>
+                        <field name="note" attrs="{'invisible': [('state', '!=', 'failed')]}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="hr_attendance_manual_log_action" model="ir.actions.act_window">
+        <field name="name">Manual Attendance Logs</field>
+        <field name="res_model">hr.attendance.manual.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_hr_attendance_manual_log"
+              name="Manual Logs"
+              parent="attendance_manual_import_menu_root"
+              action="hr_attendance_manual_log_action"
+              groups="hr_attendance_import_user"
+              sequence="2"/>
+
+</odoo>

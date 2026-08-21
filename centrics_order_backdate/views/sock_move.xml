@@ -1,0 +1,12 @@
+<odoo>
+        <record id="inherit_stockmoves_view_form_readonly" model="ir.ui.view">
+            <field name="name">inherit.stockmove.form.readonly</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after" >
+                    <field name="move_date" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

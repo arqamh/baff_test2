@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_inventory_as_on_date_wizard_form" model="ir.ui.view">
+        <field name="name">inventory.as.on.date.wizard.form</field>
+        <field name="model">inventory.as.on.date.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Inventory As on Date">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="as_on_date" required="1"/>
+                            <field name="include_zero"/>
+                        </group>
+                        <group>
+                            <field name="category_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="location_ids" widget="many2many_tags"
+                               options="{'no_create': True}"
+                               placeholder="Leave empty for all internal locations"/>
+                        <field name="product_ids" widget="many2many_tags"
+                               options="{'no_create': True}"
+                               placeholder="Leave empty for all storable products"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate" type="object" string="Show Inventory"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_inventory_as_on_date_wizard" model="ir.actions.act_window">
+        <field name="name">Inventory As on Date</field>
+        <field name="res_model">inventory.as.on.date.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_inventory_as_on_date_line_tree" model="ir.ui.view">
+        <field name="name">inventory.as.on.date.line.tree</field>
+        <field name="model">inventory.as.on.date.line</field>
+        <field name="arch" type="xml">
+            <tree string="Inventory As on Date" create="false" edit="false" delete="false">
+                <field name="as_on_date" optional="show"/>
+                <field name="location_id" optional="show"/>
+                <field name="parent_category_id" string="Category" optional="show"/>
+                <field name="category_id" optional="show"/>
+                <field name="default_code" string="Code" optional="show"/>
+                <field name="product_id" optional="show"/>
+                <field name="product_name" string="Product Name" optional="show"/>
+                <field name="category_id" optional="hide"/>
+                <field name="product_uom_id" string="UoM" optional="show"/>
+                <field name="quantity" sum="Total" optional="show"/>
+                <field name="standard_price" string="Product Value" optional="show" />
+                <field name="total_value" string="Total Value" sum="Total Value" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_inventory_as_on_date_line_pivot" model="ir.ui.view">
+        <field name="name">inventory.as.on.date.line.pivot</field>
+        <field name="model">inventory.as.on.date.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Inventory As on Date">
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="col"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_inventory_as_on_date_line_graph" model="ir.ui.view">
+        <field name="name">inventory.as.on.date.line.graph</field>
+        <field name="model">inventory.as.on.date.line</field>
+        <field name="arch" type="xml">
+            <graph string="Inventory As on Date" type="bar">
+                <field name="product_id"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_inventory_as_on_date_line_search" model="ir.ui.view">
+        <field name="name">inventory.as.on.date.line.search</field>
+        <field name="model">inventory.as.on.date.line</field>
+        <field name="arch" type="xml">
+            <search string="Inventory As on Date">
+                <field name="product_id"/>
+                <field name="default_code" string="Internal Reference"/>
+                <field name="location_id"/>
+                <field name="category_id"/>
+                <separator/>
+                <filter string="Positive Qty" name="positive" domain="[('quantity', '>', 0)]"/>
+                <filter string="Negative Qty" name="negative" domain="[('quantity', '&lt;', 0)]"/>
+                <filter string="Zero Qty" name="zero" domain="[('quantity', '=', 0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Location" name="group_location"
+                            context="{'group_by': 'location_id'}"/>
+                    <filter string="Product" name="group_product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter string="Category" name="group_category"
+                            context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_inventory_as_on_date_line" model="ir.actions.act_window">
+        <field name="name">Inventory As on Date — Results</field>
+        <field name="res_model">inventory.as.on.date.line</field>
+        <field name="view_mode">tree,pivot,graph</field>
+        <field name="search_view_id" ref="view_inventory_as_on_date_line_search"/>
+    </record>
+
+    <menuitem id="menu_inventory_as_on_date"
+              name="Inventory As on Date"
+              parent="stock.menu_warehouse_report"
+              action="action_inventory_as_on_date_wizard"
+              sequence="60"/>
+
+</odoo>

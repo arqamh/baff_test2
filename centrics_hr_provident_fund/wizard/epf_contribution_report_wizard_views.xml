@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--
+        EPF Contribution Report Wizard
+
+        This wizard generates an Excel file containing EPF (Employees' Provident Fund)
+        contribution details for selected payroll batches.
+
+        Features:
+        - Filters only EPF-eligible employees (is_provident_fund_eligible = True)
+        - Extracts employer's contribution from salary rules with epf_12 configuration
+        - Extracts member's contribution from salary rules with epf_8 configuration
+        - Calculates total earnings from salary rules with add_to_calc_epf_etf configuration
+        - Counts actual days worked from hr.attendance records
+        - Uses EPF employment type code for member status
+        - Uses occupational group code for occupation classification
+
+        Output columns (15):
+        1. NIC/Passport Number
+        2. Last Name
+        3. Initials
+        4. Member AC Number
+        5. Total Contribution (Employer's + Member's)
+        6. Employer's Contribution (12%)
+        7. Member's Contribution (8%)
+        8. Total Earnings
+        9. Member Status (from EPF Employment Type)
+        10. Zone Code (from Company)
+        11. Employer Number (from Company)
+        12. Contribution Year & Month (YYYYMM format)
+        13. Data Submission Number (always 1)
+        14. No of Days Worked (from attendance records)
+        15. Occupation Classification Grade (from Occupational Group)
+    -->
+
+    <!-- EPF Contribution Report Wizard Form View -->
+    <record id="epf_contribution_report_wizard_form" model="ir.ui.view">
+        <field name="name">epf.contribution.report.wizard.form</field>
+        <field name="model">epf.contribution.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="EPF Contribution File">
+                <group>
+                    <field name="payslip_batch_ids" widget="many2many_tags" placeholder="Select Payroll Batches"/>
+                </group>
+                <footer>
+                    <button name="action_generate_excel" string="Generate Excel" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- EPF Contribution Report Wizard Action -->
+    <record id="action_epf_contribution_report_wizard" model="ir.actions.act_window">
+        <field name="name">EPF Contribution File</field>
+        <field name="res_model">epf.contribution.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip_run"/>
+    </record>
+
+    <!-- Menu Structure -->
+    <!-- Main EPF/ETF Reports Menu -->
+    <menuitem id="menu_epf_etf_reports"
+              name="EPF/ETF Reports"
+              parent="hr_payroll.menu_hr_payroll_report"
+              sequence="10"/>
+
+    <!-- EPF Contribution File Menu -->
+    <menuitem id="menu_epf_contribution_file"
+              name="EPF Contribution File"
+              parent="menu_epf_etf_reports"
+              action="action_epf_contribution_report_wizard"
+              sequence="10"/>
+
+</odoo>

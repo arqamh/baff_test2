@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--
+        EPF Employment Type Views and Menu
+
+        Provides configuration interface for EPF employment type categories used in
+        EPF calculations and reporting. Types are displayed as [code] name in dropdown fields.
+
+        Location: Employees > Configuration > EPF Employment Types
+        Features:
+        - Inline editing (editable="bottom")
+        - Custom name_get display format: [code] name
+        - Search by both code and name
+    -->
+
+    <!-- Tree View for EPF Employment Type -->
+    <record id="view_epf_employment_type_tree" model="ir.ui.view">
+        <field name="name">epf.employment.type.tree</field>
+        <field name="model">epf.employment.type</field>
+        <field name="arch" type="xml">
+            <tree string="EPF Employment Types" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for EPF Employment Type -->
+    <record id="action_epf_employment_type" model="ir.actions.act_window">
+        <field name="name">EPF Employment Types</field>
+        <field name="res_model">epf.employment.type</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first EPF Employment Type
+            </p>
+            <p>
+                Define EPF employment types with codes for employee categorization.
+                Examples: Permanent (PERM), Contract (CONT), Trainee (TRNE)
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item under Employees > Configuration -->
+    <menuitem
+        id="menu_epf_employment_type"
+        name="EPF Employment Types"
+        parent="hr.menu_human_resources_configuration"
+        action="action_epf_employment_type"
+        sequence="51"
+    />
+
+</odoo>

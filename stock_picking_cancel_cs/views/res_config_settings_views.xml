@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherited.stock_picking_cancel_cs</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <field name="group_stock_production_lot" position="after">
+                <label for="cancel_done_picking" string="Cancel Done Delivery"/>
+                <field name="cancel_done_picking"/>
+            </field>
+        </field>
+    </record>
+</odoo>

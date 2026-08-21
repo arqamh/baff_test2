@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    form view for multiple cash out Confirm wizard-->
+    <record id="view_generate_summery_report_form" model="ir.ui.view">
+        <field name="name">reimbursement.summary.report.form</field>
+        <field name="model">reimbursement.summary.report</field>
+        <field name="arch" type="xml">
+            <form string="Send to Confirm">
+                <header>
+                    <button name="button_request_approval_summery_report" type="object" string="Request Approval" class="oe_highlight" groups="petty_cash.petty_cash_group_assistant" attrs="{'invisible':[('state','!=','draft')]}"/>
+                    <button name="button_approve_summery_report" type="object" string="Approve" class="oe_highlight" groups="petty_cash.petty_cash_group_manager" attrs="{'invisible':['|',('state','!=', 'awaiting_approval'), ('is_requested_approver','=', False)]}"/>
+                    <button name="button_reject_summery_report" type="object" string="Reject" class="btn btn-danger" groups="petty_cash.petty_cash_group_manager" attrs="{'invisible':['|',('state','!=', 'awaiting_approval'), ('is_requested_approver','=', False)]}"/>
+                    <button name="set_to_draft" type="object" string="Set to Draft" class="btn btn-danger" groups="petty_cash.petty_cash_group_assistant" attrs="{'invisible':[('state','!=','rejected')]}"/>
+                    <button name="button_create_topup" type="object" string="Create TOP UP" class="btn btn-primary" groups="petty_cash.petty_cash_group_assistant" attrs="{'invisible':['|',('state','!=','approved'),('petty_cash_topup_id', '!=', False)]}"/>
+                    <button name="download_account_wise_report" type="object" string="Download Excel Report" class="btn-primary" attrs="{'invisible':[('state','=','draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,awaiting_approval,approved"/>
+                </header>
+                <sheet>
+                     <div class="oe_title">
+                         <h1 class="d-flex">
+                             <field name="name" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                         </h1>
+                     </div>
+                    <group>
+                        <group>
+
+                            <field name="date" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                            <field name="user_id"  attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                            <field name="requested_approver" readonly="1" force_save="1" attrs="{'invisible':[('requested_approver', '=', False)]}" />
+                            <field name="is_requested_approver" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="petty_cash_id" attrs="{'readonly':[('petty_cash_id', '!=', False)]}" force_save="1"/>
+                            <field name="company_id" readonly="1" force_save="1"/>
+                            <field name="currency_id" readonly="1" force_save="1" invisible="1" />
+                            <field name="petty_cash_topup_id" readonly="1" force_save="1" attrs="{'invisible':[('petty_cash_topup_id', '=', False)]}" />
+
+                            <field name="approved_by" readonly="1" force_save="1" attrs="{'invisible':[('approved_by', '=', False)]}"/>
+                            <field name="reject_reason" readonly="1" force_save="1" attrs="{'invisible':[('reject_reason', '=', False)]}"/>
+                            <field name="approver_comment" readonly="1" force_save="1" attrs="{'invisible':[('approver_comment', '=', False)]}" />
+                            <field name="approved_date" readonly="1" force_save="1" attrs="{'invisible':[('approved_date', '=', False)]}"/>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines">
+                                <field name="report_line_ids"
+                                       widget="many2many"
+                                       options="{'no_create': True, 'no_open':True}"
+                                       domain="[('summary_report_id', '=', False), ('is_completed', '=', True), ('company_id', '=', company_id)]" attrs="{'readonly':['|',('state','in', ('approved','rejected')),'&amp;',('state','=', 'awaiting_approval'), ('is_requested_approver','=', False)]}"
+                                >
+                                    <tree delete="false" edit="false">
+                                        <field name="name" />
+                                        <field name="from_acc" />
+                                        <field name="to_acc" />
+                                        <field name="reason" optional="hide"/>
+                                        <field name="amount" />
+                                        <field name="status" />
+                                        <field name="employee_id" optional="hide"/>
+                                        <field name="user_id" optional="hide"/>
+                                        <field name="approved_by" optional="hide"/>
+                                        <field name="petty_cash_id"  />
+                                        <field name="petty_cash_in"  invisible="1"/>
+                                        <field name="cash_release_id"  invisible="1"/>
+                                        <field name="cash_reimbursement_id"  invisible="1"/>
+                                        <field name="summary_report_id"  invisible="1"/>
+                                        <field name="transfer_type"  invisible="1"/>
+                                        <button name="button_view_line_details" type="object" string="View" class="btn btn-info" attrs="{'invisible': [('transfer_type','=', 'cash drawer')]}"/>
+                                    </tree>
+                                    <form edit="false" create="false">
+                                        <group>
+                                            <group>
+                                                <field name="name" readonly="1" />
+                                                <field name="from_acc" readonly="1" />
+                                                <field name="transfer_type" readonly="1"/>
+                                            </group>
+                                            <group>
+                                                <field name="petty_cash_id" readonly="1"/>
+                                                <field name="to_acc" readonly="1"/>
+                                                <field name="amount" readonly="1"/>
+                                                <field name="status" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                             <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                    <group colspan="4"/>
+                                    <group class="oe_subtotal_footer oe_right" colspan="2" name="cash_total">
+                                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                            <label for="total_amount" />
+                                        </div>
+                                        <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    </group>
+                                    <div class="oe_clear"/>
+                                </group>
+                            </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_generate_summery_report_tree" model="ir.ui.view">
+        <field name="name">reimbursement.summary.report.tree</field>
+        <field name="model">reimbursement.summary.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="date" />
+                <field name="user_id" />
+                <field name="total_amount" />
+                <field name="company_id" optional="show"/>
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_generate_summery_report" model="ir.actions.act_window">
+         <field name="name">Summery Report</field>
+         <field name="res_model">reimbursement.summary.report</field>
+         <field name="view_mode">tree,form</field>
+<!--         <field name="search_view_id" ref="view_petty_cash_out_filter"/>-->
+         <field name="context">{'create': False}</field>
+     </record>
+
+    <!--  action for petty cash out multiple confirm wizard  :act window -->
+    <record id="action_generate_summery_report_form_act_window" model="ir.actions.act_window">
+        <field name="name">Generate Summery Report</field>
+        <field name="res_model">reimbursement.summary.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_generate_summery_report_form"/>
+        <field name="context">{
+                    'mail_body': {},
+            }
+        </field>
+        <field name="target">current</field>
+        <field name="binding_model_id" ref="petty_cash.model_petty_cash_line" />
+        <field name="binding_view_types">list</field>
+    </record>
+
+
+</odoo>

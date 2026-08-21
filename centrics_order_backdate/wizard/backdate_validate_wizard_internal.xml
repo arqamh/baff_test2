@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_action_backdate_validate_wizard_internal" model="ir.ui.view">
+        <field name="name">backdate_validate_wizard_internal.view</field>
+        <field name="model">backdate.validate.wizard.internal</field>
+        <field name="arch" type="xml">
+            <form string="Wizard">
+                <group>
+                    <field name="transfer_date"/>
+                    <field name="picking_ids" widget="many2many_tags" readonly="1" force_save="1"/>
+                </group>
+                <footer>
+                    <button name="confirm_backdate" type="object" string="Process" class="oe_highlight"/>
+                    <button name="skip_backdate" type="object" string="Skip" class="oe_highlight"/>
+                    <button name="cancel" string="Cancel" class="btn btn-danger" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_backdate_validate_wizard_internal" model="ir.actions.act_window">
+        <field name="name">Validate Backdate</field>
+        <field name="res_model">backdate.validate.wizard.internal</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

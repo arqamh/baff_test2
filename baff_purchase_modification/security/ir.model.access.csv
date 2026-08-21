@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_shipment_details_readonly,access.purchase.shipment.details.readonly,model_purchase_shipment_details,baff_purchase_modification.group_shipment_details_user,1,0,0,0
+access_purchase_shipment_details_manger,access.purchase.shipment.details.manger,model_purchase_shipment_details,baff_purchase_modification.group_shipment_details_user_manger,1,1,1,1

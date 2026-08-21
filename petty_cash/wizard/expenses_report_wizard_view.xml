@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+        <!-- form view for petty cash expenses report wizard  -->
+        <record id="form_petty_cash_expenses_excel_report_wizard" model="ir.ui.view">
+            <field name="name">petty.cash.expenses.report.wizard.form</field>
+            <field name="model">petty.cash.expenses.report.wizard</field>
+            <field name="arch" type="xml">
+                <form >
+                    <group>
+                        <group>
+                            <field name="start_from"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="end_from"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="download_report" type="object" string="Download Excel" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- action for petty cash expenses report generate wizard -->
+        <record id="action_petty_cash_expenses_excel_report_wizard" model="ir.actions.act_window">
+            <field name="name">Petty Cash Expenses</field>
+            <field name="res_model">petty.cash.expenses.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="petty_cash.form_petty_cash_expenses_excel_report_wizard"/>
+        </record>
+
+        <!-- menuitem for petty cash expensesgenerate wizard -->
+        <menuitem id="menuitem_petty_cash_expenses_wizard" sequence="10" name="Expenses Report" parent="petty_cash_report_menu" action="action_petty_cash_expenses_excel_report_wizard"/>
+
+</odoo>

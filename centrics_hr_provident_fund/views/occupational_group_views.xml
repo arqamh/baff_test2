@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--
+        Occupational Group Views and Menu
+
+        Provides configuration interface for occupational classification groups used in
+        EPF/ETF reporting. Groups are displayed as [code] name in dropdown fields.
+
+        Location: Employees > Configuration > Occupational Groups
+        Features:
+        - Inline editing (editable="bottom")
+        - Custom name_get display format: [code] name
+        - Search by both code and name
+    -->
+
+    <!-- Tree View for Occupational Group -->
+    <record id="view_occupational_group_tree" model="ir.ui.view">
+        <field name="name">occupational.group.tree</field>
+        <field name="model">occupational.group</field>
+        <field name="arch" type="xml">
+            <tree string="Occupational Groups" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for Occupational Group -->
+    <record id="action_occupational_group" model="ir.actions.act_window">
+        <field name="name">Occupational Groups</field>
+        <field name="res_model">occupational.group</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Occupational Group
+            </p>
+            <p>
+                Define occupational groups with codes for employee categorization.
+                Examples: Executive (EXEC), Non-Executive (NON-EXEC), Clerical (CLR)
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item under Employees > Configuration -->
+    <menuitem
+        id="menu_occupational_group"
+        name="Occupational Groups"
+        parent="hr.menu_human_resources_configuration"
+        action="action_occupational_group"
+        sequence="50"
+    />
+
+</odoo>

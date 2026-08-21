@@ -1,0 +1,33 @@
+{
+    'name': 'Cheque Printing Module',
+    'version': '1.0',
+    'sequence': 1,
+    'author': "Centrics Business Solutions (Pvt) Ltd",
+    'website': 'http://www.centrics.cloud/',
+    'summary': 'This module is a generic module for checks printing in Srilanka',
+    'description': """This module is a generic module for checks printing in Srilanka. This module contains formats for seylan and commercial bank""",
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+    'depends': ['account', 'account_check_printing', 'payment_voucher'],
+    'data': [
+        'report/paper_formats/boc_cheque_paperformat.xml',
+        'report/paper_formats/dfcc_cheque_paperformat.xml',
+        'report/paper_formats/hnb_cheque_paperformat.xml',
+        'report/paper_formats/ntb_cheque_paperformat.xml',
+        # 'report/paper_formats/cheque_print_paperformat.xml',
+
+        # 'report/payment_voucher/seylan_cheque_view.xml',
+        # 'report/payment_voucher/commercial_cheque_view.xml',
+        'report/payment_voucher/boc_cheque_view.xml',
+        'report/payment_voucher/dfcc_cheque_view.xml',
+        'report/payment_voucher/hnb_cheque_view.xml',
+        'report/payment_voucher/ntb_cheque_view.xml',
+        'report/account_payment/boc_cheque_report.xml',
+        'report/account_payment/dfcc_cheque_report.xml',
+        'report/account_payment/hnb_cheque_report.xml',
+        'report/account_payment/ntb_cheque_report.xml',
+
+    ],
+    'summary': 'Cheque Printing Module',
+}

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_google_credentials,google.credentials,model_google_credentials,base.group_user,1,1,1,1
+access_google_connector,google.connector,model_google_connector,base.group_user,1,1,1,1
+access_google_import_stats,google.import.stats,model_google_import_stats,base.group_user,1,1,1,1
+access_google_export_stats,google.export.stats,model_google_export_stats,base.group_user,1,1,1,1
+access_google_cron_settings,google.cron.settings,model_google_cron_settings,base.group_user,1,1,1,1

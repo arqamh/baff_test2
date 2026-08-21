@@ -1,0 +1,47 @@
+<odoo>
+    <data noupdate="0">
+        <record id="account.account_payment_method_manual_in" model="account.payment.method">
+            <field name="name">Cash</field>
+            <field name="code">manual</field>
+            <field name="payment_type">inbound</field>
+        </record>
+        <record id="account.account_payment_method_manual_out" model="account.payment.method">
+            <field name="name">Cash</field>
+            <field name="code">manual</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="direct_deposit_inbound" model="account.payment.method">
+            <field name="name">Direct Deposit</field>
+            <field name="code">direct_deposit</field>
+            <field name="payment_type">inbound</field>
+        </record>
+        <record id="direct_deposit_outbound" model="account.payment.method">
+            <field name="name">Direct Deposit</field>
+            <field name="code">direct_deposit</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="cheque_inbound" model="account.payment.method">
+            <field name="name">Cheque</field>
+            <field name="code">cheque</field>
+            <field name="payment_type">inbound</field>
+        </record>
+        <record id="cheque_outbound" model="account.payment.method">
+            <field name="name">Cheque</field>
+            <field name="code">cheque</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="overpayment_inbound" model="account.payment.method">
+            <field name="name">Over Payment</field>
+            <field name="code">overpayment</field>
+            <field name="payment_type">inbound</field>
+        </record>
+        <record id="overpayment_outbound" model="account.payment.method">
+            <field name="name">Over Payment</field>
+            <field name="code">overpayment</field>
+            <field name="payment_type">outbound</field>
+        </record>
+    </data>
+</odoo>

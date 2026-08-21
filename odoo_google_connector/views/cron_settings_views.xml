@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+         <record model="ir.ui.view" id="google_cron_settings_inline">
+             <field name="name">Google CronJob Settings</field>
+             <field name="model">google.cron.settings</field>
+             <field name="arch" type="xml">
+                 <form edit="false" create="false">
+                     <sheet>
+                         <group string="Google AutoSync Configuration">
+
+                             <group string="Contact" colspan="4">
+                                 <group>
+                                     <h3 style="width: 225px;">Import Contact OPT</h3>
+                                    <div>
+                                        <label for="is_auto_import_contact" string="Enable"/>
+                                        <field name="is_auto_import_contact" widget="boolean_toggle"/>
+                                        <br />
+                                        <label for="import_call_num_contact" string="Number of Calls"/>
+                                        <field name="import_call_num_contact" widget="selection" />
+                                        <label for="import_interval_num_contact" string="Next Interval"/>
+                                        <field name="import_interval_num_contact"/>
+                                        <label for="import_interval_type_contact" string="Interval Type"/>
+                                        <field name="import_interval_type_contact" widget="selection"/>
+                                    </div>
+                                 </group>
+                                 <group>
+                                     <h3 style="width: 225px;">Export Contact OPT</h3>
+                                     <div>
+                                         <label for="is_auto_export_contact" string="Enable"/>
+                                         <field name="is_auto_export_contact" widget="boolean_toggle"/>
+                                         <br />
+                                         <label for="export_call_num_contact" string="Number of Calls"/>
+                                         <field name="export_call_num_contact" widget="selection"/>
+                                         <label for="export_interval_num_contact" string="Next Interval"/>
+                                         <field name="export_interval_num_contact"/>
+                                         <label for="export_interval_type_contact" string="Interval Type"/>
+                                         <field name="export_interval_type_contact" widget="selection"/>
+                                     </div>
+                                 </group>
+                             </group>
+                            <br/><br/>
+
+                             <group string="Calendar Event" colspan="4">
+                                 <group>
+                                     <h3 style="width: 225px;">Import Calendar Event OPT</h3>
+                                    <div>
+                                        <label for="is_auto_import_calendar" string="Enable"/>
+                                        <field name="is_auto_import_calendar" widget="boolean_toggle"/>
+                                        <br />
+                                        <label for="import_call_num_calendar" string="Number of Calls"/>
+                                        <field name="import_call_num_calendar" widget="selection" />
+                                        <label for="import_interval_num_calendar" string="Next Interval"/>
+                                        <field name="import_interval_num_calendar"/>
+                                        <label for="import_interval_type_calendar" string="Interval Type"/>
+                                        <field name="import_interval_type_calendar" widget="selection"/>
+                                    </div>
+                                 </group>
+                                 <group>
+                                     <h3 style="width: 225px;">Export Calendar Event OPT</h3>
+                                     <div>
+                                         <label for="is_auto_export_calendar" string="Enable"/>
+                                         <field name="is_auto_export_calendar" widget="boolean_toggle"/>
+                                         <br />
+                                         <label for="export_call_num_calendar" string="Number of Calls"/>
+                                         <field name="export_call_num_calendar" widget="selection"/>
+                                         <label for="export_interval_num_calendar" string="Next Interval"/>
+                                         <field name="export_interval_num_calendar"/>
+                                         <label for="export_interval_type_calendar" string="Interval Type"/>
+                                         <field name="export_interval_type_calendar" widget="selection"/>
+                                     </div>
+                                 </group>
+                             </group>
+                                <br/><br/>
+
+                             <group string="Task" colspan="4">
+                                 <group>
+                                     <h3 style="width: 225px;">Import Task OPT</h3>
+                                    <div>
+                                        <label for="is_auto_import_task" string="Enable"/>
+                                        <field name="is_auto_import_task" widget="boolean_toggle"/>
+                                        <br />
+                                        <label for="import_call_num_task" string="Number of Calls"/>
+                                        <field name="import_call_num_task" widget="selection" />
+                                        <label for="import_interval_num_task" string="Next Interval"/>
+                                        <field name="import_interval_num_task"/>
+                                        <label for="import_interval_type_task" string="Interval Type"/>
+                                        <field name="import_interval_type_task" widget="selection"/>
+                                    </div>
+                                 </group>
+                                 <group>
+                                     <h3 style="width: 225px;">Export Task OPT</h3>
+                                     <div>
+                                         <label for="is_auto_export_task" string="Enable"/>
+                                         <field name="is_auto_export_task" widget="boolean_toggle"/>
+                                         <br />
+                                         <label for="export_call_num_task" string="Number of Calls"/>
+                                         <field name="export_call_num_task" widget="selection"/>
+                                         <label for="export_interval_num_task" string="Next Interval"/>
+                                         <field name="export_interval_num_task"/>
+                                         <label for="export_interval_type_task" string="Interval Type"/>
+                                         <field name="export_interval_type_task" widget="selection"/>
+                                     </div>
+                                 </group>
+                             </group>
+                            <br/><br/>
+
+                             <group string="GDrive" colspan="4">
+                                 <group>
+                                     <h3 style="width: 225px;">Import GDrive OPT</h3>
+                                    <div>
+                                        <label for="is_auto_import_drive" string="Enable"/>
+                                        <field name="is_auto_import_drive" widget="boolean_toggle"/>
+                                        <br />
+                                        <label for="import_call_num_drive" string="Number of Calls"/>
+                                        <field name="import_call_num_drive" widget="selection" />
+                                        <label for="import_interval_num_drive" string="Next Interval"/>
+                                        <field name="import_interval_num_drive"/>
+                                        <label for="import_interval_type_drive" string="Interval Type"/>
+                                        <field name="import_interval_type_drive" widget="selection"/>
+                                    </div>
+                                 </group>
+                                 <group>
+                                     <h3 style="width: 225px;">Export GDrive OPT</h3>
+                                     <div>
+                                         <label for="is_auto_export_drive" string="Enable"/>
+                                         <field name="is_auto_export_drive" widget="boolean_toggle"/>
+                                         <br />
+                                         <label for="export_call_num_drive" string="Number of Calls"/>
+                                         <field name="export_call_num_drive" widget="selection"/>
+                                         <label for="export_interval_num_drive" string="Next Interval"/>
+                                         <field name="export_interval_num_drive"/>
+                                         <label for="export_interval_type_drive" string="Interval Type"/>
+                                         <field name="export_interval_type_drive" widget="selection"/>
+                                     </div>
+                                 </group>
+                             </group>
+
+                             <group string="GMail" colspan="4">
+                                 <group>
+                                     <h3 style="width: 225px;">Import GMail OPT</h3>
+                                    <div>
+                                        <label for="is_auto_import_mail" string="Enable"/>
+                                        <field name="is_auto_import_mail" widget="boolean_toggle"/>
+                                        <br />
+                                        <label for="import_call_num_mail" string="Number of Calls"/>
+                                        <field name="import_call_num_mail" widget="selection" />
+                                        <label for="import_interval_num_mail" string="Next Interval"/>
+                                        <field name="import_interval_num_mail"/>
+                                        <label for="import_interval_type_mail" string="Interval Type"/>
+                                        <field name="import_interval_type_mail" widget="selection"/>
+                                    </div>
+                                 </group>
+                             </group>
+
+                         </group>
+                         <button name="save_config_mod" type="object" string="Save" class="oe_highlight" target="_blank"/>
+                     </sheet>
+                 </form>
+             </field>
+         </record>
+
+         <record model="ir.actions.act_window" id="google_cron_settings_action_window">
+             <field name="name">Google CronJob Automation</field>
+             <field name="res_model">google.cron.settings</field>
+             <field name="view_mode">form</field>
+             <field name="target">inline</field>
+         </record>
+
+    </data>
+</odoo>

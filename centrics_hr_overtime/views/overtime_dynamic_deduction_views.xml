@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Tree View for Overtime Dynamic Deduction -->
+    <record id="view_overtime_dynamic_deduction_tree" model="ir.ui.view">
+        <field name="name">overtime.dynamic.deduction.tree</field>
+        <field name="model">overtime.dynamic.deduction</field>
+        <field name="arch" type="xml">
+            <tree string="Dynamic Deductions" editable="bottom">
+                <field name="name" width="300px"/>
+                <field name="start_time" widget="float_time" width="120px"/>
+                <field name="end_time" widget="float_time" width="120px"/>
+                <field name="deduction_time" width="150px"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for Overtime Dynamic Deduction -->
+    <record id="action_overtime_dynamic_deduction" model="ir.actions.act_window">
+        <field name="name">Dynamic Deductions</field>
+        <field name="res_model">overtime.dynamic.deduction</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Dynamic Deduction
+            </p>
+            <p>
+                Define deduction names and deduction times in minutes.
+            </p>
+        </field>
+    </record>
+
+    <!-- Settings Menu Item under Overtime -->
+    <menuitem
+        id="menu_overtime_settings"
+        name="Settings"
+        parent="hr_overtime_rule_menu_root"
+        sequence="100"
+    />
+
+    <!-- Dynamic Deductions Menu Item under Settings -->
+    <menuitem
+        id="menu_overtime_dynamic_deduction"
+        name="Dynamic Deductions"
+        parent="menu_overtime_settings"
+        action="action_overtime_dynamic_deduction"
+        sequence="10"
+    />
+
+</odoo>

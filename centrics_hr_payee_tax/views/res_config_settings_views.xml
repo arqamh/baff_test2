@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.centrics.hr.payee.tax</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='hr_payroll_accountant']"
+                       position="after">
+                <h2>PAYEE Tax</h2>
+                <div class="row mt16 o_settings_container" id="hr_payee_tax">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="payee_tax_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="payee_tax_enabled"/>
+                            <div class="text-muted">
+                                Enable using PAYEE tax brackets in salary rules.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

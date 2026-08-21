@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- PDC Wizard -->
+		<record id="sh_pdc_wizard_form_wizard" model="ir.ui.view">
+			<field name="name">sh.pdc.wizard</field>
+			<field name="model">pdc.wizard</field>
+			<field name="arch" type="xml">
+				<form string="PDC Payment">
+					<sheet>
+						<group>
+							<group>
+								<field name="currency_id" invisible="1"/>
+								<field name="partner_id" readonly="1"/>
+								<field name="payment_amount" readonly="0" widget="monetary"/>
+								<field name="reference"/>
+								<field name="is_cheque_ac_payee"/>
+								<field name="journal_id" options="{'no_create':1,'no_create_edit':1}"/>
+								<field name='cheque_status' widget="radio" invisible="1"/>
+								<field name="name" invisible="1"/>
+								<field name="payment_type" invisible="1"/>
+								<field name='check_amount_in_words' invisible="1"/>
+							</group>
+							<group>
+								<field name="payment_date"/>
+								<field name="due_date"/>
+								<field name="cheque_date"/>
+								<field name="invoice_id"/>
+								<field name="memo"/>
+								<field name="agent"/>
+								<field name="bank_id"/>
+								<field name="attachment_ids" widget="many2many_binary" string="Attach Cheque Image" nolabel="1" colspan="2"/>
+							</group>
+						</group>
+
+
+
+					</sheet>
+					<footer>
+						<button name="button_register" string="Register" type="object" class="btn-primary" />
+						<button name="action_deposited" string="Deposit" type="object" class="btn-primary" context="{'confirm_wizard_deposit':True}" />
+						<button string="Cancel" class="btn-default" special="cancel" />
+					</footer>
+
+				</form>
+			</field>
+		</record>
+
+		<!-- PDC Form Wizard -->
+		<record id="sh_pdc_payment_form_view" model="ir.ui.view">
+			<field name="name">sh.pdc.wizard</field>
+			<field name="model">pdc.wizard</field>
+			<field name="arch" type="xml">
+				<form string="PDC Payment">
+					<header>
+						<button name="action_register" class="oe_highlight" states="draft,approved" string="Register" type="object"/>
+						<button name="action_returned" class="oe_highlight" states="registered" string="Return" type="object"/>
+						<button name="action_deposited" class="oe_highlight" states="registered,returned,bounced" string="Deposit" type="object"/>
+<!--						<button name="action_bounced" class="oe_highlight" states="deposited" string="Bounce" type="object"/>-->
+<!--						<button name="action_done" class="oe_highlight" states="deposited" string="Done" type="object"/>-->
+						<button name="action_cancel" class="oe_highlight" states="registered,returned,bounced" string="Cancel" type="object"/>
+						<button name="approve_transfer" string="Approve" type="object"
+								class="oe_highlight"
+								attrs="{'invisible': [('state', '!=', 'waiting_approval')]}"
+								groups="sh_pdc.group_account_payment_pdc_approval_security"
+								context="{'action': 'Approved'}"/>
+						<button name="reject_transfer" string="Reject" type="object"
+								class="btn-danger"
+								attrs="{'invisible': [('state', '!=', 'waiting_approval')]}"
+								groups="sh_pdc.group_account_payment_pdc_approval_security"
+								context="{'action': 'Rejected'}"/>
+						<button name="action_draft" states="cancel" string="Reset To Draft" type="object"/>
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,waiting_approval,approved,deposited,cancel"/>
+					</header>
+					<sheet>
+						<div name="button_box" class="oe_button_box">
+							<button name="open_attachments"
+									class="oe_stat_button"
+									icon="fa-cloud-upload"
+									type="object"
+									string="Attachments">
+							</button>
+							<button name="open_journal_items"
+									class="oe_stat_button"
+									icon="fa-list"
+									type="object"
+									string="Journal Items">
+							</button>
+							<button name="open_journal_entry"
+									class="oe_stat_button"
+									icon="fa-list"
+									type="object"
+									string="Journal Entry">
+							</button>
+						</div>
+
+						<group>
+							<group>
+								<field name="name" readonly="1"/>
+								<field name="payment_type" attrs="{'readonly':[('state','not in',['draft','bounced'])]}" widget="radio"/>
+								<field name="currency_id" invisible="1"/>
+								<field name="company_id" invisible="1"/>
+								<field name="partner_id" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="payment_amount" widget="monetary" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="reference" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="is_cheque_ac_payee" />
+								<field name="journal_id" options="{'no_create':1,'no_create_edit':1}" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="bank_id" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+							</group>
+							<group>
+								<field name="payment_date" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="due_date" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="cheque_date" attrs="{'readonly':[('state','in',['deposited','done','cancel'])]}"/>
+								<field name="invoice_id" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="memo" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="agent" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="main_bank_id" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+								<field name="partner_bank_account_id" attrs="{'readonly':[('state','not in',['draft','bounced'])]}"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Attachments">
+								<field name="attachment_ids" widget="many2many_binary"/>
+								<!-- <field name="attachment_ids" attrs="{'readonly':[('state','not in',['draft','bounced','registered','returned'])]}">
+                                    <tree string="Attachments">
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="create_uid"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                </field> -->
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- PDC Tree view -->
+		<record id="sh_pdc_tree_form" model="ir.ui.view">
+			<field name="name">sh.pdc.tree.view</field>
+			<field name="model">pdc.wizard</field>
+			<field name="arch" type="xml">
+				<tree string="PDC Cheque Payment">
+					<field name="currency_id" invisible="1"/>
+					<field name="payment_date"/>
+					<field name="name"/>
+					<field name="reference"/>
+					<field name="cheque_date"/>
+					<field name="due_date"/>
+					<field name="journal_id"/>
+					<field name="partner_id"/>
+					<field name="payment_amount" sum="Total"/>
+					<field name="state"/>
+					<field name="approved_by" optional="hide"/>
+					<field name="approve_Date" optional="hide"/>
+					<field name="comment" optional="hide"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- PDC Filter -->
+		<record id="view_sh_pdc_filter" model="ir.ui.view">
+			<field name="name">pdc.payment.select</field>
+			<field name="model">pdc.wizard</field>
+			<field name="arch" type="xml">
+				<search string="Search PDC Payment">
+					<filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+					<filter name="registered" string="Registered" domain="[('state','=','registered')]"/>
+					<filter name="returned" string="Returned" domain="[('state','=','returned')]"/>
+					<filter name="deposited" string="Deposited" domain="[('state','=','deposited')]"/>
+					<filter name="bounced" string="Bounced" domain="[('state','=','bounced')]"/>
+					<filter name="bounced" string="Bounced" domain="[('state','=','bounced')]"/>
+					<filter name="cancel" string="Cancelled" domain="[('state','=','cancel')]"/>
+					<filter name="customer" string="Customer" domain="[('partner_id.customer_rank','&gt;', 0)]"/>
+					<filter name="partner" string="Partner" domain="[('partner_id.supplier_rank','&gt;', 0)]"/>
+					<separator/>
+					<field name="partner_id" operator="child_of"/>
+					<field name="name" string="Name" />
+					<field name="payment_date" string="Payment Date"/>
+					<field name='reference'/>
+					<field name='agent'/>
+					<field name='bank_id'/>
+					<group expand="0" string="Group By">
+						<filter name="group_by_partner_id" string="Partner" context="{'group_by':'partner_id'}"/>
+						<filter name="status" string="Status" context="{'group_by':'state'}"/>
+						<separator/>
+						<filter string="Payment Date" name="invoicedate" context="{'group_by':'payment_date'}"/>
+						<filter string="Due Date" name="duedate" context="{'group_by':'due_date'}"/>
+						<separator/>
+						<filter string="Journal" name="journal_id" context="{'group_by':'journal_id'}"/>
+						<filter string="Bank" name="bank_id" context="{'group_by':'bank_id'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- PDC Actions -->
+		<record id="sh_pdc_wizard_action" model="ir.actions.act_window">
+			<field name="name">PDC Payment</field>
+			<field name="res_model">pdc.wizard</field>
+			<field name="view_id" ref="sh_pdc_payment_form_view"/>
+			<field name="target">new</field>
+		</record>
+
+		<record id="sh_pdc_wizard_action_new" model="ir.actions.act_window">
+			<field name="name">PDC Payment</field>
+			<field name="res_model">pdc.wizard</field>
+			<field name="view_id" ref="sh_pdc_wizard_form_wizard"/>
+			<field name="target">new</field>
+		</record>
+
+		<record id="sh_pdc_payment_menu_action_customers" model="ir.actions.act_window">
+			<field name="name">PDC Customer Cheques</field>
+			<field name="res_model">pdc.wizard</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('payment_type', '=', 'receive_money')]</field>
+			<field name="context">{'default_payment_type':'receive_money'}</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('sh_pdc_tree_form')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('sh_pdc_payment_form_view')})]"/>
+		</record>
+
+		<record id="sh_pdc_payment_menu_action_vendors" model="ir.actions.act_window">
+			<field name="name">PDC Vendor Cheques</field>
+			<field name="res_model">pdc.wizard</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('payment_type', '=', 'send_money')]</field>
+			<field name="context">{'default_payment_type':'send_money'}</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('sh_pdc_tree_form')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('sh_pdc_payment_form_view')})]"/>
+		</record>
+
+		<!-- PDC Menu -->
+		<menuitem
+				id="menu_pdc_payment_customers"
+				name="PDC Customer Cheques"
+				groups="account.group_account_invoice"
+				parent="account.menu_finance_receivables"
+				sequence="25"
+				action="sh_pdc_payment_menu_action_customers"
+		/>
+
+		<menuitem
+				id="menu_pdc_payment_vendors"
+				name="PDC Vendor Cheques"
+				groups="account.group_account_invoice"
+				parent="account.menu_finance_payables"
+				sequence="25"
+				action="sh_pdc_payment_menu_action_vendors"
+		/>
+
+		<!-- account.move (Journal Entry) -->
+
+		<record id="sh_pdc_action_move_journal_line" model="ir.actions.act_window">
+			<field name="name">Journal Entries</field>
+			<field name="res_model">account.move</field>
+			<field name="view_mode">tree,kanban,form</field>
+			<field name="view_id" ref="account.view_move_tree"/>
+			<field name="search_view_id" ref="account.view_account_move_filter"/>
+			<field name="context">{'default_type': 'entry','view_no_maturity': True}</field>
+			<field name="help" type="html">
+				<p class="o_view_nocontent_smiling_face">
+					Create a journal entry
+				</p><p>
+				A journal entry consists of several journal items, each of
+				which is either a debit or a credit transaction.
+			</p>
+			</field>
+		</record>
+
+	</data>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- Sri Lanka PAYE/APIT Monthly Slabs (Y/A 2025/26) -->
+    <record id="payee_tax_lk_2025_26_m_below_150k" model="hr.payee.tax">
+        <field name="sequence">10</field>
+        <field name="condition_type">below</field>
+        <field name="amount_to">150000.00</field>
+        <field name="percentage">0.0</field>
+    </record>
+
+    <record id="payee_tax_lk_2025_26_m_between_15000001_23333333" model="hr.payee.tax">
+        <field name="sequence">20</field>
+        <field name="condition_type">between</field>
+        <field name="amount_from">150000.01</field>
+        <field name="amount_to">233333.33</field>
+        <field name="percentage">6.0</field>
+    </record>
+
+    <record id="payee_tax_lk_2025_26_m_between_23333334_27500000" model="hr.payee.tax">
+        <field name="sequence">30</field>
+        <field name="condition_type">between</field>
+        <field name="amount_from">233333.34</field>
+        <field name="amount_to">275000.00</field>
+        <field name="percentage">18.0</field>
+    </record>
+
+    <record id="payee_tax_lk_2025_26_m_between_27500001_31666667" model="hr.payee.tax">
+        <field name="sequence">40</field>
+        <field name="condition_type">between</field>
+        <field name="amount_from">275000.01</field>
+        <field name="amount_to">316666.67</field>
+        <field name="percentage">24.0</field>
+    </record>
+
+    <record id="payee_tax_lk_2025_26_m_between_31666668_35833333" model="hr.payee.tax">
+        <field name="sequence">50</field>
+        <field name="condition_type">between</field>
+        <field name="amount_from">316666.68</field>
+        <field name="amount_to">358333.33</field>
+        <field name="percentage">30.0</field>
+    </record>
+
+    <record id="payee_tax_lk_2025_26_m_above_35833333" model="hr.payee.tax">
+        <field name="sequence">60</field>
+        <field name="condition_type">above</field>
+        <field name="amount_from">358333.34</field>
+        <field name="percentage">36.0</field>
+    </record>
+</odoo>

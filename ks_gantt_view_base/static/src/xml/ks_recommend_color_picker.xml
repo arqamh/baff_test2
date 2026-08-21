@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="ks_gantt_color_picker" owl="1">
+        <input t-on-click="_ClickColor" type="color"
+               t-att-value="state.ks_gantt_color_picker"
+               t-on-input="(ev) => this.state.ks_gantt_color_picker = ev.target.value"
+               t-on-change="(ev) => this.props.update(ev.target.value)"/>
+    </t>
+
+</templates>

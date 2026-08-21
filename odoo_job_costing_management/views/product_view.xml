@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="product_normal_form_view_inherit_boq_type" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="boq_type" invisible="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="odoo_job_costing_management_product_supplierinfo_tree_view2" model="ir.ui.view">
+        <field name="name">inherit.product.supplierinfo.form</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="purchase.product_supplierinfo_tree_view2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price']" position="after">
+                <field name="job_cost_price"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

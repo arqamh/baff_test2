@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit menu_valuation and remove the group restriction -->
+    <record id="stock_account.menu_valuation" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('stock.group_stock_user')])]"/>
+    </record>
+</odoo>

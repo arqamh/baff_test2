@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="baff_manufacturing_modifications.SelectionPopup" t-inherit="mrp_workorder_hr.SelectionPopup" t-inherit-mode="extension" owl="1">
+        <xpath expr="//h3[@class='title']" position="after">
+            <div class="o_search_input_container">
+<!--                <input type="text" class="form-control" placeholder="Search " style="font-size: 12px; margin: 0.9rem; padding-left: 0.8rem; width: 70%; border-radius: 4px;" t-on-keyup="onKeyUp"/>-->
+                <input type="text" class="o_input o_form_input o_search_input" placeholder="Search Employee... Name or Job title"  t-on-keyup="onKeyUp"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@class='selection scrollable-y']" position="replace">
+            <div class="selection scrollable-y ">
+                <t t-foreach="state.filteredList" t-as="item" t-key="item.id">
+                    <div class="selection-item" t-att-class="{ 'selected': item.isSelected }" t-on-click="() => this.selectItem(item.id)">
+                        <t t-esc="item.label" />
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>
+

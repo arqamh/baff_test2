@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="field_readonly_rule__menu"
+              name="Field Readonly Rules"
+              parent="base.menu_security"
+              action="field_readonly_rule__action"
+              sequence="50"/>
+
+</odoo>

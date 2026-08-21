@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherit quality.alert.team form view to add notification users field -->
+    <record id="quality_alert_team_view_form_inherit" model="ir.ui.view">
+        <field name="name">quality.alert.team.view.form.inherit.baff</field>
+        <field name="model">quality.alert.team</field>
+        <field name="inherit_id" ref="quality_control.quality_alert_team_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Add notification users field after company_id -->
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="notification_user_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

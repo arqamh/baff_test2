@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Working Entry Type FORM view -->
+    <record id="payroll_leave_hr_work_entry_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.view.form.inherited.l10n_lk_hr_work_entry_holiday_type</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry_holidays_enterprise.payroll_leave_hr_work_entry_type_view_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='leave_type_ids']" position="after">
+                <field name="holiday_mapping"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

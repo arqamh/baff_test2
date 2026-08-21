@@ -1,0 +1,660 @@
+<odoo>
+    <!--    Email templates request approval-->
+    <record id="odoo_job_costing_management_request_for_approval_mail_template" model="mail.template">
+        <field name="name">Job Costing Approval Request - Professional Email</field>
+        <field name="email_from">{{user.email}}</field>
+        <field name="subject">🔔 {{ctx['subject']}} - Job Costing Sheet {{object.number}}</field>
+        <field name="partner_to">{{ctx['mail_to']}}</field>
+        <field name="model_id" ref="odoo_job_costing_management.model_job_costing"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+
+                <!-- Email Container -->
+                <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+                    <tr>
+                        <td align="center">
+                            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+                                <!-- Header with Company Logo -->
+                                <tr>
+                                    <td style="background: linear-gradient(135deg, #F39C12 0%, #D68910 100%); padding: 30px; position: relative;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td valign="middle">
+                                                    <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">
+                                                        🔔 Approval Required
+                                                    </h1>
+                                                    <p style="margin: 10px 0 0 0; color: #f0f0f0; font-size: 14px;">
+                                                        Action needed on Job Costing Sheet
+                                                    </p>
+                                                </td>
+                                                <td valign="middle" align="right">
+                                                    <img t-attf-src="/logo.png?company={{object.create_uid.company_id.id}}"
+                                                         style="padding: 0px; margin: 0px; height: auto; width: 80px; border-radius: 4px;"
+                                                         t-att-alt="object.create_uid.company_id.name"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <!-- Alert Banner -->
+                                <tr>
+                                    <td style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px 30px;">
+                                        <p style="margin: 0; color: #856404; font-size: 14px; font-weight: 600;">
+                                            ⚠️ <strong>Priority:</strong> This job costing sheet requires your approval before proceeding.
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <!-- Main Content -->
+                                <tr>
+                                    <td style="padding: 30px;">
+
+                                        <!-- Greeting -->
+                                        <p style="margin: 0 0 20px 0; color: #333333; font-size: 15px; line-height: 1.6;">
+                                            Hello <strong><t t-out="ctx.get('recipient_name', 'Approver')"/></strong>,
+                                        </p>
+
+                                        <p style="margin: 0 0 25px 0; color: #555555; font-size: 15px; line-height: 1.6;">
+                                            <t t-out="ctx['msg_type']"/>
+                                        </p>
+
+                                        <!-- Job Costing Details Card -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 6px; margin-bottom: 25px;">
+                                            <tr>
+                                                <td style="padding: 20px;">
+                                                    <h2 style="margin: 0 0 15px 0; color: #F39C12; font-size: 18px; font-weight: 600; border-bottom: 2px solid #F39C12; padding-bottom: 8px;">
+                                                        📊 Job Costing Sheet Details
+                                                    </h2>
+
+                                                    <table width="100%" cellpadding="8" cellspacing="0">
+                                                        <tr>
+                                                            <td width="40%" style="color: #666666; font-size: 14px;">
+                                                                <strong>Job Cost Number:</strong>
+                                                            </td>
+                                                            <td style="color: #333333; font-size: 14px; font-weight: 600;">
+                                                                <t t-esc="object.number"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Project Name:</strong>
+                                                            </td>
+                                                            <td style="color: #333333; font-size: 14px;">
+                                                                <t t-esc="object.name"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Customer:</strong>
+                                                            </td>
+                                                            <td style="color: #333333; font-size: 14px;">
+                                                                <t t-esc="object.partner_id.name"/>
+                                                            </td>
+                                                        </tr>
+                                                        <t t-if="object.sales_person_id">
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Salesperson:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="object.sales_person_id.name"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                        <t t-if="object.lead_id">
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Inquiry Number:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="object.lead_id.name"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Priority Level:</strong>
+                                                            </td>
+                                                            <td style="font-size: 14px;">
+                                                                <t t-if="object.priority == 'high'">
+                                                                    <span style="background-color: #dc3545; color: #fff; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                        🔴 High
+                                                                    </span>
+                                                                </t>
+                                                                <t t-elif="object.priority == 'moderate'">
+                                                                    <span style="background-color: #ffc107; color: #000; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                        🟡 Moderate
+                                                                    </span>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <span style="background-color: #28a745; color: #fff; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                        🟢 Low
+                                                                    </span>
+                                                                </t>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Date Ordered:</strong>
+                                                            </td>
+                                                            <td style="color: #333333; font-size: 14px;">
+                                                                <t t-esc="object.start_date.strftime('%B %d, %Y') if object.start_date else 'N/A'"/>
+                                                            </td>
+                                                        </tr>
+                                                        <t t-if="object.complete_date">
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Date Required:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="object.complete_date.strftime('%B %d, %Y')"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Current Status:</strong>
+                                                            </td>
+                                                            <td style="font-size: 14px;">
+                                                                <span style="background-color: #fff3cd; color: #856404; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                    ⏳ Pending Approval
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Cost Breakdown Card -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 25px;">
+                                            <tr>
+                                                <td style="padding: 20px;">
+                                                    <h3 style="margin: 0 0 15px 0; color: #F39C12; font-size: 16px; font-weight: 600;">
+                                                        💰 Cost Breakdown
+                                                    </h3>
+                                                    <table width="100%" cellpadding="6" cellspacing="0">
+                                                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                                                            <td style="color: #666666; font-size: 13px;">Material Cost:</td>
+                                                            <td style="text-align: right; color: #333; font-size: 13px; font-weight: 600;">
+                                                                <t t-esc="'{:,.2f}'.format(object.material_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                                                            <td style="color: #666666; font-size: 13px;">Labour Cost:</td>
+                                                            <td style="text-align: right; color: #333; font-size: 13px; font-weight: 600;">
+                                                                <t t-esc="'{:,.2f}'.format(object.labor_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="border-bottom: 1px solid #f0f0f0;">
+                                                            <td style="color: #666666; font-size: 13px;">Overhead Cost:</td>
+                                                            <td style="text-align: right; color: #333; font-size: 13px; font-weight: 600;">
+                                                                <t t-esc="'{:,.2f}'.format(object.overhead_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="border-bottom: 2px solid #F39C12;">
+                                                            <td style="color: #666666; font-size: 13px;"><strong>Gross Job Cost:</strong></td>
+                                                            <td style="text-align: right; color: #333; font-size: 14px; font-weight: 700;">
+                                                                <t t-esc="'{:,.2f}'.format(object.gross_jobcost_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="background-color: #f8f9fa;">
+                                                            <td style="color: #F39C12; font-size: 14px; padding-top: 10px;"><strong>Total Price:</strong></td>
+                                                            <td style="text-align: right; color: #F39C12; font-size: 18px; font-weight: 700; padding-top: 10px;">
+                                                                <t t-esc="'{:,.2f}'.format(object.jobcost_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 12px; padding-top: 5px;">Profit Margin:</td>
+                                                            <td style="text-align: right; color: #28a745; font-size: 13px; font-weight: 600; padding-top: 5px;">
+                                                                <t t-esc="'{:.2f}'.format(object.gross_profit_markup)"/>%
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Action Required Section -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #e7f3ff; border-left: 4px solid #0066cc; border-radius: 6px; margin-bottom: 25px;">
+                                            <tr>
+                                                <td style="padding: 20px;">
+                                                    <h3 style="margin: 0 0 10px 0; color: #0066cc; font-size: 16px; font-weight: 600;">
+                                                        ⚡ What You Need To Do
+                                                    </h3>
+                                                    <ol style="margin: 0; padding-left: 20px; color: #333333; font-size: 14px; line-height: 1.8;">
+                                                        <li>Review the job costing sheet details thoroughly</li>
+                                                        <li>Verify cost breakdown and profit margins</li>
+                                                        <li>Check customer information and project timeline</li>
+                                                        <li>Click the button below to approve or reject the job costing sheet</li>
+                                                    </ol>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Action Button -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 25px;">
+                                            <tr>
+                                                <td align="center" style="padding: 10px 0;">
+                                                    <a t-attf-href="{{ ctx['custom_url'] }}"
+                                                       style="display: inline-block; background: linear-gradient(135deg, #F39C12 0%, #D68910 100%); color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 25px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                                        Review &amp; Approve/Reject
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Additional Information -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 20px;">
+                                            <tr>
+                                                <td style="padding: 15px;">
+                                                    <p style="margin: 0; color: #666666; font-size: 13px; line-height: 1.6;">
+                                                        <strong>💡 Note:</strong> Your timely response is crucial for project planning and execution. Please review and take action at your earliest convenience.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Closing -->
+                                        <p style="margin: 0 0 10px 0; color: #555555; font-size: 14px; line-height: 1.6;">
+                                            If you have any questions or need additional information, please contact the project team or reach out to the sales department.
+                                        </p>
+
+                                        <p style="margin: 0; color: #333333; font-size: 14px; font-weight: 600;">
+                                            Thank you,<br/>
+                                            <t t-esc="object.create_uid.company_id.name"/>
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <!-- Footer -->
+                                <tr>
+                                    <td style="background-color: #2c3e50; padding: 20px; text-align: center;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="color: #ecf0f1; font-size: 12px; line-height: 1.6; text-align: left;">
+                                                    <strong><t t-esc="object.create_uid.company_id.name or ''"/></strong><br/>
+                                                    <t t-if="object.create_uid.company_id.phone">
+                                                        📞 <t t-esc="object.create_uid.company_id.phone"/><br/>
+                                                    </t>
+                                                </td>
+                                                <td style="color: #ecf0f1; font-size: 12px; line-height: 1.6; text-align: right;">
+                                                    <t t-if="object.create_uid.company_id.email">
+                                                        📧 <a t-attf-href="mailto:{{object.create_uid.company_id.email}}"
+                                                              style="text-decoration: none; color: #3498db;">
+                                                            <t t-esc="object.create_uid.company_id.email"/>
+                                                        </a><br/>
+                                                    </t>
+                                                    <t t-if="object.create_uid.company_id.website">
+                                                        🌐 <a t-attf-href="{{object.create_uid.company_id.website}}"
+                                                              style="text-decoration: none; color: #3498db;">
+                                                            <t t-esc="object.create_uid.company_id.website"/>
+                                                        </a>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <p style="margin: 15px 0 0 0; color: #95a5a6; font-size: 11px;">
+                                            This is an automated notification from your Odoo ERP System<br/>
+                                            © <t t-esc="datetime.datetime.now().year"/> - All rights reserved
+                                        </p>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </field>
+    </record>
+
+    <!--    Email templates after approve or reject-->
+    <record id="odoo_job_costing_management_reject_or_approve_template" model="mail.template">
+        <field name="name">Job Costing Approval Status Update - Professional Email</field>
+        <field name="email_from">{{user.email}}</field>
+        <field name="subject">✓ {{ctx['subject']}} - Job Costing Sheet {{object.number}}</field>
+        <field name="partner_to">{{ctx['mail_to']}}</field>
+        <field name="model_id" ref="odoo_job_costing_management.model_job_costing"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+
+                <!-- Email Container -->
+                <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+                    <tr>
+                        <td align="center">
+                            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+                                <!-- Dynamic Header Based on Status -->
+                                <tr>
+                                    <t t-if="'approved' in ctx.get('subject', '').lower() or 'Approved' in ctx.get('msg_type', '') or 'Reviewed' in ctx.get('subject', '')">
+                                        <td style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); padding: 30px; position: relative;">
+                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">
+                                                            ✓ Job Costing <t t-esc="ctx.get('subject', 'Approved')"/>
+                                                        </h1>
+                                                        <p style="margin: 10px 0 0 0; color: #f0f0f0; font-size: 14px;">
+                                                            Your job costing sheet has been <t t-esc="ctx.get('subject', 'approved').lower()"/>
+                                                        </p>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{object.create_uid.company_id.id}}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px; border-radius: 4px;"
+                                                             t-att-alt="object.create_uid.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); padding: 30px; position: relative;">
+                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">
+                                                            ✗ Job Costing Rejected
+                                                        </h1>
+                                                        <p style="margin: 10px 0 0 0; color: #f0f0f0; font-size: 14px;">
+                                                            Your job costing sheet has been rejected
+                                                        </p>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{object.create_uid.company_id.id}}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px; border-radius: 4px;"
+                                                             t-att-alt="object.create_uid.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </t>
+                                </tr>
+
+                                <!-- Status Banner -->
+                                <tr>
+                                    <t t-if="'approved' in ctx.get('subject', '').lower() or 'Approved' in ctx.get('msg_type', '') or 'Reviewed' in ctx.get('subject', '')">
+                                        <td style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 15px 30px;">
+                                            <p style="margin: 0; color: #155724; font-size: 14px; font-weight: 600;">
+                                                ✓ <strong>Great News!</strong> The job costing sheet has been <t t-esc="ctx.get('subject', 'approved').lower()"/> and can now proceed to the next stage.
+                                            </p>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 15px 30px;">
+                                            <p style="margin: 0; color: #721c24; font-size: 14px; font-weight: 600;">
+                                                ⚠️ <strong>Important:</strong> The job costing sheet has been rejected. Please review the details and take appropriate action.
+                                            </p>
+                                        </td>
+                                    </t>
+                                </tr>
+
+                                <!-- Main Content -->
+                                <tr>
+                                    <td style="padding: 30px;">
+
+                                        <!-- Greeting -->
+                                        <p style="margin: 0 0 20px 0; color: #333333; font-size: 15px; line-height: 1.6;">
+                                            Hello <strong><t t-esc="object.create_uid.name"/></strong>,
+                                        </p>
+
+                                        <p style="margin: 0 0 25px 0; color: #555555; font-size: 15px; line-height: 1.6;">
+                                            <t t-out="ctx['msg_type']"/>
+                                        </p>
+
+                                        <!-- Job Costing Details Card -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 6px; margin-bottom: 25px;">
+                                            <tr>
+                                                <td style="padding: 20px;">
+                                                    <h2 style="margin: 0 0 15px 0; color: #667eea; font-size: 18px; font-weight: 600; border-bottom: 2px solid #667eea; padding-bottom: 8px;">
+                                                        📊 Job Costing Sheet Summary
+                                                    </h2>
+
+                                                    <table width="100%" cellpadding="8" cellspacing="0">
+                                                        <tr>
+                                                            <td width="40%" style="color: #666666; font-size: 14px;">
+                                                                <strong>Job Cost Number:</strong>
+                                                            </td>
+                                                            <td style="color: #333333; font-size: 14px; font-weight: 600;">
+                                                                <t t-esc="object.number"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Project Name:</strong>
+                                                            </td>
+                                                            <td style="color: #333333; font-size: 14px;">
+                                                                <t t-esc="object.name"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Customer:</strong>
+                                                            </td>
+                                                            <td style="color: #333333; font-size: 14px;">
+                                                                <t t-esc="object.partner_id.name"/>
+                                                            </td>
+                                                        </tr>
+                                                        <t t-if="object.sales_person_id">
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Salesperson:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="object.sales_person_id.name"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Total Price:</strong>
+                                                            </td>
+                                                            <td style="color: #28a745; font-size: 18px; font-weight: 700;">
+                                                                <t t-esc="'{:,.2f}'.format(object.jobcost_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 14px;">
+                                                                <strong>Current Status:</strong>
+                                                            </td>
+                                                            <td style="font-size: 14px;">
+                                                                <t t-if="'approved' in ctx.get('subject', '').lower() or 'Approved' in ctx.get('msg_type', '') or 'Reviewed' in ctx.get('subject', '')">
+                                                                    <span style="background-color: #d4edda; color: #155724; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                        ✓ <t t-esc="ctx.get('subject', 'Approved')"/>
+                                                                    </span>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <span style="background-color: #f8d7da; color: #721c24; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                        ✗ Rejected
+                                                                    </span>
+                                                                </t>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Cost Summary Card -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 25px;">
+                                            <tr>
+                                                <td style="padding: 20px;">
+                                                    <h3 style="margin: 0 0 15px 0; color: #F39C12; font-size: 16px; font-weight: 600;">
+                                                        💰 Cost Summary
+                                                    </h3>
+                                                    <table width="100%" cellpadding="6" cellspacing="0">
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 13px; width: 50%;">Material + Labour + Overhead:</td>
+                                                            <td style="text-align: right; color: #333; font-size: 13px; font-weight: 600;">
+                                                                <t t-esc="'{:,.2f}'.format(object.gross_jobcost_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="color: #666666; font-size: 13px;">Profit Margin (<t t-esc="'{:.2f}'.format(object.gross_profit_markup)"/>%):</td>
+                                                            <td style="text-align: right; color: #28a745; font-size: 13px; font-weight: 600;">
+                                                                <t t-esc="'{:,.2f}'.format(object.profit_margin)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="border-top: 2px solid #F39C12;">
+                                                            <td style="color: #F39C12; font-size: 14px; padding-top: 8px;"><strong>Total Sale Price:</strong></td>
+                                                            <td style="text-align: right; color: #F39C12; font-size: 18px; font-weight: 700; padding-top: 8px;">
+                                                                <t t-esc="'{:,.2f}'.format(object.jobcost_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Approval Information (if available) -->
+                                        <t t-if="object.approved_by or object.first_approved_by">
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 25px;">
+                                                <tr>
+                                                    <td style="padding: 20px;">
+                                                        <h3 style="margin: 0 0 15px 0; color: #667eea; font-size: 16px; font-weight: 600;">
+                                                            📋 Approval Details
+                                                        </h3>
+                                                        <t t-if="object.first_approved_by">
+                                                            <p style="margin: 0 0 8px 0; color: #333; font-size: 13px;">
+                                                                <strong>Reviewed By:</strong>
+                                                                <t t-foreach="object.first_approved_by" t-as="approver">
+                                                                    <t t-esc="approver.name"/><t t-if="not approver_last">, </t>
+                                                                </t>
+                                                            </p>
+                                                            <p style="margin: 0 0 15px 0; color: #666; font-size: 12px;">
+                                                                <t t-if="object.first_approved_date">
+                                                                    on <t t-esc="object.first_approved_date.strftime('%B %d, %Y at %I:%M %p')"/>
+                                                                </t>
+                                                            </p>
+                                                        </t>
+                                                        <t t-if="object.approved_by">
+                                                            <p style="margin: 0 0 8px 0; color: #333; font-size: 13px;">
+                                                                <strong>Approved By:</strong>
+                                                                <t t-foreach="object.approved_by" t-as="approver">
+                                                                    <t t-esc="approver.name"/><t t-if="not approver_last">, </t>
+                                                                </t>
+                                                            </p>
+                                                            <p style="margin: 0; color: #666; font-size: 12px;">
+                                                                <t t-if="object.approved_date">
+                                                                    on <t t-esc="object.approved_date.strftime('%B %d, %Y at %I:%M %p')"/>
+                                                                </t>
+                                                            </p>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </t>
+
+                                        <!-- Next Steps Section -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #e7f3ff; border-left: 4px solid #0066cc; border-radius: 6px; margin-bottom: 25px;">
+                                            <tr>
+                                                <td style="padding: 20px;">
+                                                    <h3 style="margin: 0 0 10px 0; color: #0066cc; font-size: 16px; font-weight: 600;">
+                                                        ⚡ Next Steps
+                                                    </h3>
+                                                    <t t-if="'approved' in ctx.get('subject', '').lower() or 'Approved' in ctx.get('msg_type', '') or 'Reviewed' in ctx.get('subject', '')">
+                                                        <ul style="margin: 0; padding-left: 20px; color: #333333; font-size: 14px; line-height: 1.8;">
+                                                            <t t-if="'Reviewed' in ctx.get('subject', '')">
+                                                                <li>Proceed to final approval stage if required</li>
+                                                                <li>Update quotation with approved pricing</li>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <li>Proceed with quotation confirmation</li>
+                                                                <li>Begin project planning and resource allocation</li>
+                                                                <li>Coordinate with production team for execution</li>
+                                                                <li>Update customer on project timeline</li>
+                                                            </t>
+                                                        </ul>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <ul style="margin: 0; padding-left: 20px; color: #333333; font-size: 14px; line-height: 1.8;">
+                                                            <li>Review the rejection reasons with the approver</li>
+                                                            <li>Make necessary corrections to cost calculations</li>
+                                                            <li>Adjust profit margins or cost structure as needed</li>
+                                                            <li>Resubmit for approval once issues are resolved</li>
+                                                        </ul>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Call to Action Button -->
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 25px;">
+                                            <tr>
+                                                <td align="center" style="padding: 10px 0;">
+                                                    <t t-if="'approved' in ctx.get('subject', '').lower() or 'Approved' in ctx.get('msg_type', '') or 'Reviewed' in ctx.get('subject', '')">
+                                                        <a t-attf-href="{{ ctx['custom_url'] }}"
+                                                           style="display: inline-block; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 25px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                                            View Job Costing Sheet
+                                                        </a>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <a t-attf-href="{{ ctx['custom_url'] }}"
+                                                           style="display: inline-block; background: linear-gradient(135deg, #F39C12 0%, #D68910 100%); color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 25px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                                            Review &amp; Edit
+                                                        </a>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Closing -->
+                                        <p style="margin: 0 0 10px 0; color: #555555; font-size: 14px; line-height: 1.6;">
+                                            If you have any questions or need clarification on the decision, please don't hesitate to contact the approver or your manager.
+                                        </p>
+
+                                        <p style="margin: 0; color: #333333; font-size: 14px; font-weight: 600;">
+                                            Best regards,<br/>
+                                            <t t-esc="object.create_uid.company_id.name"/>
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <!-- Footer -->
+                                <tr>
+                                    <td style="background-color: #2c3e50; padding: 20px; text-align: center;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="color: #ecf0f1; font-size: 12px; line-height: 1.6; text-align: left;">
+                                                    <strong><t t-esc="object.create_uid.company_id.name or ''"/></strong><br/>
+                                                    <t t-if="object.create_uid.company_id.phone">
+                                                        📞 <t t-esc="object.create_uid.company_id.phone"/><br/>
+                                                    </t>
+                                                </td>
+                                                <td style="color: #ecf0f1; font-size: 12px; line-height: 1.6; text-align: right;">
+                                                    <t t-if="object.create_uid.company_id.email">
+                                                        📧 <a t-attf-href="mailto:{{object.create_uid.company_id.email}}"
+                                                              style="text-decoration: none; color: #3498db;">
+                                                            <t t-esc="object.create_uid.company_id.email"/>
+                                                        </a><br/>
+                                                    </t>
+                                                    <t t-if="object.create_uid.company_id.website">
+                                                        🌐 <a t-attf-href="{{object.create_uid.company_id.website}}"
+                                                              style="text-decoration: none; color: #3498db;">
+                                                            <t t-esc="object.create_uid.company_id.website"/>
+                                                        </a>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <p style="margin: 15px 0 0 0; color: #95a5a6; font-size: 11px;">
+                                            This is an automated notification from your Odoo ERP System<br/>
+                                            © <t t-esc="datetime.datetime.now().year"/> - All rights reserved
+                                        </p>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </field>
+    </record>
+</odoo>

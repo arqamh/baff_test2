@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="special_hr_attendance_category" model="ir.module.category" >
+            <field name="name">Special  -  HRM Attendance</field>
+            <field name="description">Access Level For Employee Attendance</field>
+            <field name="sequence">1</field>
+        </record>
+    </data>
+</odoo>

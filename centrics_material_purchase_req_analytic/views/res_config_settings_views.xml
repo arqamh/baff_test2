@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Configuration form view customizations-->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.centrics_material_purchase_req_analytic</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@data-key='purchase']" position="inside">
+				<h2>MRN Analytics</h2>
+				<div class="row mt16 o_settings_container" name="MRN Analytics">
+					<div class="col-12 col-lg-6 o_setting_box" title="Enabling this option will allow you to edit the analytic details in Material requisition">
+						<div class="o_setting_left_pane">
+							<field name="mrn_analytic_editable"/>
+						</div>
+						<div class="o_setting_right_pane">
+							<label for="mrn_analytic_editable"/>
+							<div class="text-muted">
+								Enabling this option will allow you to edit the analytic details in Material requisition
+							</div>
+						</div>
+					</div>
+				</div>
+			</xpath>
+
+        </field>
+    </record>
+
+</odoo>

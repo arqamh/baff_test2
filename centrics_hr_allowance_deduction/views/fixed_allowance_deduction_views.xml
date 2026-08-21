@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!--Fixed Allowance or Deduction tree view -->
+    <record id="fixed_allowance_deduction_view_tree" model="ir.ui.view">
+        <field name="name">fixed.allowance.deduction.view.tree</field>
+        <field name="model">fixed.allowance.deduction</field>
+        <field name="arch" type="xml">
+            <tree string="Fixed Allowance Or Deduction" editable="top">
+                <field name="name" required="1"/>
+                <field name="input_type_id" required="1" domain="[('fixed_type', 'in', ['fixed_allowance', 'fixed_deduction'])]"/>
+                <field name="is_standard"/>
+                <field name="amount" attrs="{'readonly':[('is_standard','!=',True)], 'required':[('is_standard', '=', True)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--View Action for the Fixed Allowance or Deduction-->
+    <record id="fixed_allowance_deduction_action" model="ir.actions.act_window">
+        <field name="name">Fixed Allowance/Deduction</field>
+        <field name="res_model">fixed.allowance.deduction</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="fixed_allowance_deduction_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Fixed Allowance or Deduction
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="fixed_allowance_deduction_menu"
+            name="Fixed Allowances/Deductions"
+            parent="hr_payroll.menu_hr_salary_configuration"
+            action="fixed_allowance_deduction_action"
+            sequence="41"
+    />
+
+
+</odoo>

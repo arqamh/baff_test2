@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="salary_adjustment_request_menu_root" name="Salary Adjustments"
+              parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root" sequence="55" groups="base.group_user"/>
+</odoo>

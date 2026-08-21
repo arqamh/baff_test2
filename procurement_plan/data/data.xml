@@ -1,0 +1,23 @@
+<odoo>
+            <!-- Create Request for Quotation in action menu -->
+        <record id="model_procurement_plan_action_purchase" model="ir.actions.server">
+            <field name="name">Create Request for Quotation</field>
+            <field name="model_id" ref="procurement_plan.model_procurement_plan"/>
+            <field name="binding_model_id" ref="procurement_plan.model_procurement_plan"/>
+            <field name="binding_view_types">tree</field>
+            <field name="state">code</field>
+            <field name="code">action = records.create_purchase_order()</field>
+            <field name="groups_id" eval="[(4, ref('procurement_plan.group_permission_rfq'))]"/>
+        </record>
+            <!-- Create Purchase Requisition in action menu -->
+        <record id="model_procurement_plan_action_purchase_requisition" model="ir.actions.server">
+            <field name="name">Create Purchase Requisition</field>
+            <field name="model_id" ref="procurement_plan.model_procurement_plan"/>
+            <field name="binding_model_id" ref="procurement_plan.model_procurement_plan"/>
+            <field name="binding_view_types">tree</field>
+            <field name="state">code</field>
+            <field name="code">action = records.create_purchase_requisition()</field>
+            <field name="groups_id" eval="[(4, ref('procurement_plan.group_permission_purchase_requisition'))]"/>
+        </record>
+
+</odoo>

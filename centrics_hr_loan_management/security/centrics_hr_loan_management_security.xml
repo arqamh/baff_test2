@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ir_module_category_employee_loan" model="ir.module.category">
+        <field name="name">Employee Loan Management</field>
+        <field name="sequence">62</field>
+    </record>
+</odoo>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View for Salary Change Request -->
+    <record id="view_salary_adjustment_request_tree" model="ir.ui.view">
+        <field name="name">salary.adjustment.request.tree</field>
+        <field name="model">salary.adjustment.request</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Adjustment Requests">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="contract_id"/>
+                <field name="state"/>
+                <field name="effective_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for Salary Change Request -->
+    <record id="view_salary_adjustment_request_form" model="ir.ui.view">
+        <field name="name">salary.adjustment.request.form</field>
+        <field name="model">salary.adjustment.request</field>
+        <field name="arch" type="xml">
+            <form string="Salary Adjustment Request">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="employee_id" required="1"/>
+                        <field name="contract_id" required="1"/>
+                        <field name="effective_date" required="1"/>
+                    </group>
+                    <group>
+                        <field name="state" readonly="1"/>
+                        <field name="requested_by" readonly="1"/>
+                        <field name="requested_date" readonly="1"/>
+                        <field name="approved_by" readonly="1"/>
+                        <field name="approved_date" readonly="1"/>
+                        <field name="rejected_by" readonly="1"/>
+                        <field name="rejected_date" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="reason"/>
+                        <field name="note"/>
+                    </group>
+                    <notebook>
+                        <page string="Salary Adjustments">
+                            <field name="line_ids">
+                                <tree>
+                                    <field name="type"/>
+                                    <field name="allowance_deduction_id"/>
+                                    <field name="existing_record_id" invisible="1"/>
+                                    <field name="current_amount"/>
+                                    <field name="new_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <!-- Search View for Salary Change Request -->
+    <record id="salary_adjustment_request_view_search" model="ir.ui.view">
+        <field name="name">salary.adjustment.request.view.search</field>
+        <field name="model">salary.adjustment.request</field>
+        <field name="arch" type="xml">
+            <search string="Search Salary Adjustment Requests">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <group expand="0" string="Group By">
+                    <field name="state"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Salary Change Request -->
+    <record id="salary_adjustment_request_action" model="ir.actions.act_window">
+        <field name="name">Salary Adjustment Requests</field>
+        <field name="res_model">salary.adjustment.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_salary_adjustment_request_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Salary Adjustment Request!
+            </p>
+        </field>
+    </record>
+
+
+    <!-- Action for My Salary Adjustment Requests -->
+    <record id="my_salary_adjustment_request_action" model="ir.actions.act_window">
+        <field name="name">My Salary Adjustment Requests</field>
+        <field name="res_model">salary.adjustment.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('requested_by', '=', uid)]</field>
+    </record>
+
+    <!-- Action for Salary Adjustment Requests to Approve -->
+    <record id="to_approve_salary_adjustment_request_action" model="ir.actions.act_window">
+        <field name="name">Salary Adjustment Requests to Approve</field>
+        <field name="res_model">salary.adjustment.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'to_approve')]</field>
+    </record>
+
+    <!-- Menu Entries for Salary Adjustments -->
+
+    <menuitem id="salary_adjustment_requests_menu_all_requests"
+              name="All Requests"
+              action="salary_adjustment_request_action"
+              parent="salary_adjustment_request_menu_root"
+              sequence="1"/>
+    <menuitem id="salary_adjustment_requests_menu_my_requests"
+              name="My Requests"
+              action="my_salary_adjustment_request_action"
+              parent="salary_adjustment_request_menu_root"
+              sequence="2"/>
+    <menuitem id="salary_adjustment_requests_menu_to_approve"
+              name="To Approve"
+              action="to_approve_salary_adjustment_request_action"
+              parent="salary_adjustment_request_menu_root"
+              sequence="3"/>
+
+</odoo>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!-- for showing the cancel button in Done state -->
+	<record id="inherit_stock_view_picking_form" model="ir.ui.view">
+		<field name="name">stock.picking.form</field>
+		<field name="model">stock.picking</field>
+		<field name="inherit_id" ref="stock.view_picking_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//button[@name='action_cancel']" position="attributes">
+				<attribute name="attrs">{'invisible': ['|', ('state', 'not in',
+					('assigned', 'confirmed', 'partially_available', 'draft', 'waiting', 'done')),
+					('is_locked', '=', False)]}
+				</attribute>
+				<attribute name="groups">eq_stock_move_cancel.group_cancel_stock_move</attribute>
+			</xpath>
+			<xpath expr="//header" position="inside">
+				<button name="btn_reset_to_draft" type="object" string="Reset to Draft"
+					states="cancel" groups="eq_stock_move_cancel.group_cancel_stock_move" />
+			</xpath>
+		</field>
+	</record>
+
+	<!-- Cancel Scrap Stock -->
+	<record id="inherit_stock_stock_scrap_form_view" model="ir.ui.view">
+		<field name="name">stock.scrap.form</field>
+		<field name="model">stock.scrap</field>
+		<field name="inherit_id" ref="stock.stock_scrap_form_view" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='state']" position="before">
+				<button name="btn_action_cancel" states="done" string="Cancel"
+					type="object" groups="eq_stock_move_cancel.group_cancel_stock_move" />
+			</xpath>
+			<field name="product_id" position="attributes">
+				<attribute name="attrs">{'readonly': [('state', 'in', ('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="scrap_qty" position="attributes">
+				<attribute name="attrs">{'readonly': [('state', 'in', ('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="product_uom_id" position="attributes">
+				<attribute name="attrs">{'readonly': [('state', 'in', ('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="lot_id" position="attributes">
+				<attribute name="attrs">{'invisible': [('tracking', '=', 'none')],
+					'required': [('tracking', '!=', 'none')],
+					'readonly': [('state',
+					'in',
+					('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="package_id" position="attributes">
+				<attribute name="attrs">{'readonly': [('state', 'in', ('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="owner_id" position="attributes">
+				<attribute name="attrs">{'readonly': [('state', 'in', ('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="location_id" position="attributes">
+				<attribute name="attrs">{'readonly': [('state', 'in', ('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="scrap_location_id" position="attributes">
+				<attribute name="attrs">{'readonly': [('state', 'in', ('done',
+					'cancel'))]}
+				</attribute>
+			</field>
+			<field name="picking_id" position="attributes">
+				<attribute name="attrs">{'invisible': [('picking_id', '=',
+					False)],
+					'readonly': [('state', 'in', ('done', 'cancel'))]}
+				</attribute>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.actions.server" id="server_action_cancel_moves">
+		<field name="name">Cancel Moves</field>
+		<field name="model_id" ref="stock.model_stock_move_line"/>
+		<field name="binding_model_id" ref="stock.model_stock_move_line"/>
+        <field name="binding_view_types">list</field>
+		<field name="groups_id" eval="[(4,ref('eq_stock_move_cancel.group_cancel_stock_move'))]"/>
+		<field name="state">code</field>
+		<field name="code">
+			action = records.action_cancel_moves()
+		</field>
+	</record>
+
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_advance_type_base_user,access_advance_type_base_user,model_advance_type,base.group_user,1,1,1,1
+access_hr_advance_request_base_user,access_hr_advance_request_base_user,model_hr_advance_request,base.group_user,1,1,1,1
+access_advance_installment_line_base_user,access_advance_installment_line_base_user,model_advance_installment_line,base.group_user,1,1,1,1
+access_hr_contract_advance_limit_line_base_user,access_hr_contract_advance_limit_line_base_user,model_hr_contract_advance_limit_line,base.group_user,1,1,1,1

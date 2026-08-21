@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.centrics.hr.overtime</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='information']/group[@name='salary_info']" position="after">b
+                <field name="enable_overtime" invisible="1"/>
+                <group name="overtime_configuration" string="Overtime Configurations"
+                       attrs="{'invisible':[('enable_overtime', '!=', True)]}">
+                    <group>
+                        <field name="is_eligible_for_overtime"/>
+                        <field name="overtime_template_id" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                        <label for="overtime_rate" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                        <div class="o_row mw-50" name="overtime_rate" attrs="{'invisible': [('is_eligible_for_overtime', '!=', True)]}">
+                            <field name="overtime_rate" class="oe_inline o_hr_narrow_field" nolabel="1" attrs="{'required': [('is_eligible_for_overtime', '=', True)],'invisible': [('is_eligible_for_overtime', '!=', True)]}"/>
+                            <div class="mb-3">/ hourly</div>
+                        </div>
+                    </group>
+                    <group></group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

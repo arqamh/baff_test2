@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+    
+    <record id="material_purchase_requisition_search_view_inherit_materials" model="ir.ui.view">
+        <field name="name">material.purchase.requisition.form</field>
+        <field name="model">material.purchase.requisition</field>
+        <field name="inherit_id" ref="material_purchase_requisitions.material_purchase_requisition_search_view"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="before">
+                <field name="requisition_line_ids" string="Job Sheet No" filter_domain="[('requisition_line_ids.job_costing_id', 'ilike', self)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="material_purchase_requisition_form_view_inherit_materials" model="ir.ui.view">
+        <field name="name">material.purchase.requisition.form</field>
+        <field name="model">material.purchase.requisition</field>
+        <field name="inherit_id" ref="material_purchase_requisitions.material_purchase_requisition_form_view"/>
+        <field name="arch" type="xml">
+            <field name="requisiton_responsible_id" position="after">
+<!--                <field name="task_id" attrs="{'readonly': [['state', 'in', ['reject','cancel','receive']]]}"/>-->
+                <field name="job_costing_id" attrs="{'readonly': [('state', 'in', ['reject','cancel','receive'])]}"/>
+                <field name="task_user_id" readonly="1" string="Prepared By"/>
+<!--                <field name="project_id" attrs="{'readonly': [['state', 'in', ['reject','cancel','receive']]]}"/>-->
+<!--                <field name="analytic_account_id"/-->
+                <field name="purchase_order_ids" invisible="1"/>
+            </field>
+<!--            <xpath expr="//div[@name='button_box']" position="inside">-->
+<!--                <button class="oe_stat_button" name="view_purchase_order" type="object"-->
+<!--                        icon="fa-shopping-cart">-->
+<!--                    <field string="Purchases" name="purchase_order_count" widget="statinfo"/>-->
+<!--                </button>-->
+<!--            </xpath>-->
+            <xpath expr="//field[@name='requisition_line_ids']/tree//field[@name='uom']" position="after">
+                <field name="show_job_costing" invisible="1"/>
+                <field name="job_costing_id" optional="hide" string="Source Document"/>
+                <field name="job_cost_line_id" optional="hide" domain="[('job_costing_id', '=', job_costing_id), ('material_type', '=', 'component')]" invisible="1"/>
+                <field name="job_prepared_by" optional="show" invisible="1"/>
+                <field name="analytic_plan_id" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='requisition_line_ids']/tree//field[@name='description']" position="after">
+                <field name="parent_bom_id" optional="hide"/>
+                <field name="component" optional="show"/>
+                <field name="parent_bom_name" invisible="1"/>
+                <field name="scheduled_date" widget="date"/>
+                <field name="required_quantity" readonly="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook" position="inside">
+                <page string="Materials / BOQ Cost" name="job_cost_stock_material_boq" invisible="1">
+                    <group>
+                        <field name="equipment_machine_total"/>
+                        <field name="worker_resource_total"/>
+                        <field name="work_cost_package_total"/>
+                        <field name="subcontract_total"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+   
+    
+    </data>
+</odoo>

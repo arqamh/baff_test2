@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Custom report.-->
+<!--check_with_account_payee_and_with_20-->
+<odoo>
+    <template id="cheque_boc_account_payment">
+        <t t-call="web.basic_layout">
+            <div class="page" style="font-size:14px;">
+                <t t-foreach="docs" t-as="o" >
+                    <table width="100%" style="border: 1px solid #ffffff">
+                        <t t-set="name" t-value="str(o.partner_id.name).split()"/>
+                        <t t-set="length" t-value="len(name)"/>
+                        <tr style="border: 1px solid #ffffff" height="30px">
+
+                            <!--<td  style="border: 1px solid #ffffff"  class="text-left"><span t-field="o.date"/></td>-->
+                            <td width="25%" class="text-right" style="border: 1px solid #ffffff">
+                                <div class="cheque-info" style="padding-left:250px">
+                                    <span style="border-top: 1px solid black; border-bottom: 1px solid black;">A/c Payee</span>
+                                </div>
+                            </td>
+                            <td style="border: 1px solid #ffffff"  width="10%">&#160;</td>
+                            <td width="25%" class="text-left"
+                                style="border: 1px solid #ffffff; font-size:16px; padding-top: 5px; padding-left:47px">
+                                <table width="100%" style="font-size:18px; padding-top: 1px;">
+                                    <tr  style="border: 1px solid #ffffff" >
+                                        <td  style="border: 1px solid #ffffff"  width="10%">
+                                            <span t-esc="str(o.date)[8:9]" style="font-size:20px;"/>
+                                        </td>
+                                        <td  style="border: 1px solid #ffffff"  width="12%">
+                                            <span t-esc="str(o.date)[9:10]" style="font-size:20px;"/>
+                                        </td>
+                                        <td  style="border: 1px solid #ffffff"  width="13%">
+                                            <span t-esc="str(o.date)[5:6]" style="font-size:20px;"/>
+                                        </td>
+                                        <td  style="border: 1px solid #ffffff"  width="12%">
+                                            <span t-esc="str(o.date)[6:7]" style="font-size:20px;"/>
+                                        </td>
+                                        <td  style="border: 1px solid #ffffff"  width="22%">&#160;</td>
+                                        <td  style="border: 1px solid #ffffff"  width="13%">
+                                            <span t-esc="str(o.date)[2:3]" style="font-size:20px;"/>
+                                        </td>
+                                        <td  style="border: 1px solid #ffffff"  width="9%">
+                                            <span t-esc="str(o.date)[3:4]" style="font-size:20px;"/>
+                                        </td>
+
+                                        <td style="border: 1px solid #ffffff" width="10%">&#160;</td>
+                                        <!--                                        <td  style="border: 1px solid #ffffff"  width="1%">&#160;</td>-->
+                                    </tr>
+                                </table>
+                            </td>
+
+                            <td style="border: 1px solid #ffffff" width="10%">&#160;</td>
+                            <td style="border: 1px solid #ffffff" width="10%">&#160;</td>
+                            <td style="border: 1px solid #ffffff" width="20%">&#160;</td>
+                        </tr>
+                        <tr  style="border: 1px solid #ffffff"  height="28px">
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff"  class="text-left">
+<!--                                <span t-esc="name[0]"/>&#160;<t t-if="length &gt;= 2">-->
+<!--                                <span t-esc="name[1]"/></t>-->
+                                &#160;
+                            </td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                        </tr>
+                        <tr  style="border: 1px solid #ffffff"  height="47px">
+                            <td style="border: 1px solid #ffffff">
+                                <div style="margin-top: 3px;">
+                                    <span t-field="o.partner_id"/>
+                                </div>
+                            </td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td style="border: 1px solid #ffffff">&#160;</td>
+                            <td style="border: 1px solid #ffffff">&#160;</td>
+                            <td style="border: 1px solid #ffffff" class="text-left">
+<!--                                PV0019-16666-->
+                                &#160;
+                            </td>
+                        </tr>
+                        <tr  style="border: 1px solid #ffffff"  height="34px">
+                            <td  rowspan="2" style="line-height: 2.0; border: 1px solid #ffffff"><span t-field="o.amount_in_words"/>&#160;Only
+                            </td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td style="border: 1px solid #ffffff">&#160;</td>
+                            <td style="border: 1px solid #ffffff">&#160;</td>
+                            <td style="border: 1px solid #ffffff">&#160;</td>
+                        </tr>
+                        <tr  style="border: 1px solid #ffffff"  height="30px">
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff ; padding-left:50px; padding-top:10px;">&#160;   <span class="text-left" t-esc="'{0:,.2f}'.format(float(o.amount)).replace(',', ',')"/></td>
+                            <td style="border: 1px solid #ffffff" class="text-left"> </td>
+                            <td  style="border: 1px solid #ffffff" >&#160;</td>
+                            <td  style="border: 1px solid #ffffff">&#160; &#160;</td>
+                            <td  style="border: 1px solid #ffffff" >&#160;&#160;</td>
+                        </tr>
+                    </table>
+                </t>
+            </div>
+        </t>
+
+    </template>
+
+    <record id="action_cheque_boc_account_payment" model="ir.actions.report">
+        <field name="name">BOC Cheque</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">check_printing_lk.cheque_boc_account_payment</field>
+        <field name="report_file">check_printing_lk.cheque_boc_account_payment</field>
+        <field name="binding_model_id" ref="account_payment.model_account_payment"/>
+        <field name="paperformat_id" ref="check_printing_lk.cheque_printing_paperformat_boc"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

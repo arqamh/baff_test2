@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.centrics.hr</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <!-- Buttons for Approval -->
+                <field name="to_show_statusbar" invisible="1"/>
+                <field name="to_generate_employee_number" invisible="1"/>
+                <field name="state" widget="statusbar" attrs="{'invisible':[('to_show_statusbar','=',False)]}"/>
+                <button name="action_send_for_approval" type="object" string="Send for Approval"
+                        attrs="{'invisible':['|',('state','!=','draft'),('to_show_statusbar','=',False)]}"
+                        class="oe_highlight btn-primary"/>
+                <button name="action_approved" type="object" string="Approve"
+                        attrs="{'invisible':[('state','!=','waiting')]}" class="oe_highlight btn-success"
+                        groups="centrics_hr.employee_profile_approve"/>
+                <button name="action_rejection" type="object" string="Reject" states="waiting"
+                        class="oe_highlight btn-danger"
+                        groups="centrics_hr.employee_profile_approve"/>
+                <button name="action_reset_to_draft" type="object" string="Reset to Draft" states='reject'
+                        class="oe_highlight btn-warning"/>
+            </xpath>
+            <!-- Making field required -->
+            <xpath expr="//field[@name='job_id']" position="attributes">
+                <attribute name="attrs">{'required': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mobile_phone']" position="attributes">
+                <attribute name="attrs">{'required': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_email']" position="attributes">
+                <attribute name="attrs">{'required': True}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='mobile_phone']" position="before">
+                <field name="name_initials"/>
+                <field name="first_name"/>
+                <field name="middle_name"/>
+                <field name="last_name"/>
+                <field name="employee_number" attrs="{'readonly': [('to_generate_employee_number', '=', True)],
+                'required': [('to_generate_employee_number', '=', False)]}"/>
+            </xpath>
+
+            <xpath expr="//group[@name='active_group']" position="inside">
+                <field name="joined_date"/>
+                <field name="retirement_date"/>
+            </xpath>
+
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="approver_id" attrs="{'invisible':[('to_show_statusbar', '!=',True)], 'required' :[('to_show_statusbar', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Action to display employees in the 'waiting' state and archived -->
+    <record id="hr_employee_action_employee_pending" model="ir.actions.act_window">
+        <field name="name">Pending Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr.view_employee_tree"/>
+        <field name="domain">[
+            ('state', '=', 'waiting'),
+            ('active', '=', False),
+            ('approver_id.id', '=', uid)
+            ]
+        </field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Separate menu item for pending employees -->
+    <menuitem id="menu_employee_pending"
+              name="Pending Employees"
+              action="hr_employee_action_employee_pending"
+              parent="hr.menu_hr_employee_payroll"
+              sequence="10"/>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_purchase_order_form_lock_qty" model="ir.ui.view">
+        <field name="name">purchase.order.form.lock.qty.on.approval</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']"
+                   position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

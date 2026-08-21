@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View for hr.attendance.import.configuration -->
+    <record id="hr_attendance_import_configuration_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.import.configuration.view.form</field>
+        <field name="model">hr.attendance.import.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Import Configuration">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1" force_save="1"/>
+                            <field name="field_id" domain="[('model', '=', 'hr.employee')]"/>
+                            <field name="file_type"/>
+                        </group>
+                        <group>
+                            <field name="column_name" required="1"/>
+                            <field name="check_in_column_name" required="1"/>
+                            <field name="check_out_column_name" required="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View for hr.attendance.import.configuration -->
+    <record id="hr_attendance_import_configuration_view_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.import.configuration.view.tree</field>
+        <field name="model">hr.attendance.import.configuration</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance Import Configurations">
+                <field name="name" force_save="1"/>
+                <field name="field_id"/>
+                <field name="column_name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for hr.attendance.import.configuration -->
+    <record id="hr_attendance_import_configuration_action" model="ir.actions.act_window">
+        <field name="name">Attendance Import Configuration</field>
+        <field name="res_model">hr.attendance.import.configuration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr_attendance_import_configuration_view_tree"/>
+        <field name="help" type="html">
+            <p>
+                Manage attendance import configurations here. You can specify the configuration name,
+                field, column name, and activate or deactivate them.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item for hr.attendance.import.configuration -->
+    <menuitem id="hr_attendance_import_configuration_menu"
+              name="Attendance Import Configuration"
+              parent="centrics_hr_attendance.attendance_manual_import_menu_root"
+              action="hr_attendance_import_configuration_action"
+              groups="hr_attendance_import_user"
+              sequence="1"/>
+</odoo>

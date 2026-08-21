@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="employee_profile_rejection_view_form" model="ir.ui.view">
+        <field name="name">employee.profile.rejection.view.form</field>
+        <field name="model">employee.profile.rejection</field>
+        <field name="arch" type="xml">
+            <!-- Rejection wizard -->
+            <form>
+                <group>
+                    <field name="rejection_reason" required="1"/>
+                    <field name="employee_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Confirm" name="action_confirm_reject" type="object" class="oe_highlight"
+                            data-hotkey="q"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fixed_allowance_deduction_template_view_form" model="ir.ui.view">
+        <field name="name">fixed.allowance.deduction.template.view.form</field>
+        <field name="model">fixed.allowance.deduction.template</field>
+        <field name="arch" type="xml">
+            <form string="Fixed Allowance and Deduction Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Allowance And Deduction Template Name"
+                                   required="True" style="font-size: min(4vw, 2.6rem);"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page id="fixed_allowance_template_line_ids" string="Allowance Lines">
+                            <field name="fixed_allowance_template_line_ids" context="{'filter_type': 'fixed_allowance'}">
+                                <tree editable="bottom">
+                                    <field name="type_id"/>
+                                    <field name="description"/>
+                                    <field name="is_standard"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page id="fixed_deduction_template_line_ids" string="Deduction Lines">
+                            <field name="fixed_deduction_template_line_ids"
+                                   context="{'filter_type': 'fixed_deduction'}">
+                                <tree editable="bottom">
+                                    <field name="type_id"/>
+                                    <field name="description"/>
+                                    <field name="is_standard"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fixed_allowance_deduction_template_view_tree" model="ir.ui.view">
+        <field name="name">fixed.allowance.deduction.template.view.tree</field>
+        <field name="model">fixed.allowance.deduction.template</field>
+        <field name="arch" type="xml">
+            <tree string="Allowance and Deduction Template">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!--View Action for the Fixed Allowance or Deduction-->
+    <record id="fixed_allowance_deduction_template_action" model="ir.actions.act_window">
+        <field name="name">Fixed Allowance/Deduction Template</field>
+        <field name="res_model">fixed.allowance.deduction.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="fixed_allowance_deduction_template_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Fixed Allowance/Deduction Template
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="fixed_allowance_deduction_template_menu"
+            name="Fixed Allowances/Deductions Template"
+            parent="hr_payroll.menu_hr_salary_configuration"
+            action="fixed_allowance_deduction_template_action"
+            groups="centrics_hr_allowance_deduction_group_template_user"
+            sequence="42"
+    />
+</odoo>

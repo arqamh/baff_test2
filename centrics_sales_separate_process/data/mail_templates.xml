@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="centrics_sales_separate_process_mail_template_quotation_confirm" model="mail.template">
+            <field name="name">Quotation Confirmation - Professional Email</field>
+            <field name="model_id" ref="centrics_sales_separate_process.model_sale_order"/>
+            <field name="subject">✓ Quotation {{ ctx['quotation_number'] }} Confirmed - Action Required</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+
+                    <!-- Email Container -->
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+                        <tr>
+                            <td align="center">
+                                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+                                    <!-- Header -->
+                                    <tr>
+                                        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
+                                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">
+                                                ✓ Quotation Confirmed
+                                            </h1>
+                                            <p style="margin: 10px 0 0 0; color: #f0f0f0; font-size: 14px;">
+                                                Ready for Production Process
+                                            </p>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Alert Banner -->
+                                    <tr>
+                                        <td style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 15px 30px;">
+                                            <p style="margin: 0; color: #155724; font-size: 14px;">
+                                                <strong>Status Update:</strong> The quotation has been successfully confirmed and is now ready to proceed to the next stage.
+                                            </p>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Main Content -->
+                                    <tr>
+                                        <td style="padding: 30px;">
+
+                                            <!-- Greeting -->
+                                            <p style="margin: 0 0 20px 0; color: #333333; font-size: 15px; line-height: 1.6;">
+                                                Hello Production Team,
+                                            </p>
+
+                                            <p style="margin: 0 0 25px 0; color: #555555; font-size: 15px; line-height: 1.6;">
+                                                This email is to inform you that the following quotation has been confirmed and requires your attention.
+                                            </p>
+
+                                            <!-- Quotation Details Card -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 6px; margin-bottom: 25px;">
+                                                <tr>
+                                                    <td style="padding: 20px;">
+                                                        <h2 style="margin: 0 0 15px 0; color: #667eea; font-size: 18px; font-weight: 600; border-bottom: 2px solid #667eea; padding-bottom: 8px;">
+                                                            Quotation Details
+                                                        </h2>
+
+                                                        <table width="100%" cellpadding="8" cellspacing="0">
+                                                            <tr>
+                                                                <td width="40%" style="color: #666666; font-size: 14px;">
+                                                                    <strong>Quotation Number:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px; font-weight: 600;">
+                                                                    {{ ctx['quotation_number'] }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Customer:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="object.partner_id.name"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Salesperson:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="object.user_id.name"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Order Date:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="object.date_order.strftime('%B %d, %Y') if object.date_order else 'N/A'"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Total Amount:</strong>
+                                                                </td>
+                                                                <td style="color: #28a745; font-size: 16px; font-weight: 700;">
+                                                                    <t t-esc="'{:,.2f}'.format(object.amount_total)"/> <t t-esc="object.currency_id.symbol"/>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Quotation Status Card -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 6px; margin-bottom: 25px;">
+                                                <tr>
+                                                    <td style="padding: 20px;">
+                                                        <h2 style="margin: 0 0 15px 0; color: #856404; font-size: 18px; font-weight: 600;">
+                                                            📋 Quotation Status &amp; Requirements
+                                                        </h2>
+
+                                                        <table width="100%" cellpadding="8" cellspacing="0">
+                                                            <tr>
+                                                                <td width="40%" style="color: #856404; font-size: 14px;">
+                                                                    <strong>Quotation Required:</strong>
+                                                                </td>
+                                                                <td style="font-size: 14px;">
+                                                                    <t t-if="object.quotation_required == 'yes'">
+                                                                        <span style="background-color: #d4edda; color: #155724; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                            ✓ YES
+                                                                        </span>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span style="background-color: #f8d7da; color: #721c24; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                            ✗ NO
+                                                                        </span>
+                                                                    </t>
+                                                                </td>
+                                                            </tr>
+
+                                                            <t t-if="object.quotation_required == 'yes'">
+                                                                <tr>
+                                                                    <td style="color: #856404; font-size: 14px; padding-left: 20px;">
+                                                                        Customer PO Available:
+                                                                    </td>
+                                                                    <td style="font-size: 14px;">
+                                                                        <t t-if="object.customer_po_available">
+                                                                            <span style="color: #28a745; font-weight: 600;">✓ Yes</span>
+                                                                        </t>
+                                                                        <t t-else="">
+                                                                            <span style="color: #dc3545; font-weight: 600;">✗ No</span>
+                                                                        </t>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="color: #856404; font-size: 14px; padding-left: 20px;">
+                                                                        Confirmed Email/Text:
+                                                                    </td>
+                                                                    <td style="font-size: 14px;">
+                                                                        <t t-if="object.confirmed_email_text">
+                                                                            <span style="color: #28a745; font-weight: 600;">✓ Yes</span>
+                                                                        </t>
+                                                                        <t t-else="">
+                                                                            <span style="color: #dc3545; font-weight: 600;">✗ No</span>
+                                                                        </t>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+
+                                                            <t t-if="object.quotation_required == 'no'">
+                                                                <tr>
+                                                                    <td colspan="2" style="font-size: 14px; padding-top: 8px;">
+                                                                        <t t-if="object.customer_po_available">
+                                                                            <span style="color: #28a745; font-weight: 600;">✓ Customer PO Available</span>
+                                                                        </t>
+                                                                        <t t-if="object.cash_project_confirmation">
+                                                                            <br/><span style="color: #28a745; font-weight: 600;">✓ Cash Project Confirmed</span>
+                                                                        </t>
+                                                                        <t t-if="object.confirmed_email_text">
+                                                                            <br/><span style="color: #28a745; font-weight: 600;">✓ Confirmed Email/Text Received</span>
+                                                                        </t>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Action Required -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #e7f3ff; border-left: 4px solid #0066cc; border-radius: 6px; margin-bottom: 25px;">
+                                                <tr>
+                                                    <td style="padding: 20px;">
+                                                        <h3 style="margin: 0 0 10px 0; color: #0066cc; font-size: 16px; font-weight: 600;">
+                                                            ⚡ Next Steps
+                                                        </h3>
+                                                        <ul style="margin: 0; padding-left: 20px; color: #333333; font-size: 14px; line-height: 1.8;">
+                                                            <li>Review the quotation details and requirements</li>
+                                                            <li>Verify job costing sheet approval status</li>
+                                                            <li>Prepare for sales order creation</li>
+                                                            <li>Coordinate with relevant departments for production planning</li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Call to Action Button -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 25px;">
+                                                <tr>
+                                                    <td align="center" style="padding: 10px 0;">
+                                                        <a t-attf-href="/web#id={{object.id}}&amp;model=sale.order&amp;view_type=form"
+                                                           style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 25px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                                            View Quotation in System
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Closing -->
+                                            <p style="margin: 0 0 10px 0; color: #555555; font-size: 14px; line-height: 1.6;">
+                                                If you have any questions or need additional information, please don't hesitate to reach out.
+                                            </p>
+
+                                            <p style="margin: 0; color: #333333; font-size: 14px; font-weight: 600;">
+                                                Best regards,
+                                            </p>
+
+                                            <t t-if="not is_html_empty(user.signature)">
+                                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                                                    <t t-out="user.signature"/>
+                                                </div>
+                                            </t>
+
+                                        </td>
+                                    </tr>
+
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                                            <p style="margin: 0 0 8px 0; color: #666666; font-size: 12px;">
+                                                This is an automated notification from your Odoo ERP System
+                                            </p>
+                                            <p style="margin: 0; color: #999999; font-size: 11px;">
+                                                © <t t-esc="datetime.datetime.now().year"/> <t t-esc="object.company_id.name"/> - All rights reserved
+                                            </p>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

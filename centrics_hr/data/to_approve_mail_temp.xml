@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <data>
+      <record id="to_approve_mail_template" model="mail.template">
+         <field name="name">EMPLOYEE CREATION APPROVAL EMAIL</field>
+         <field name="model_id" ref="model_hr_employee" />
+         <field name="email_from">{{ object.env.user.login }}</field>
+         <field name="email_to">{{ ctx['order']['user'] }}</field>
+         <field name="subject">Request for Approval!</field>
+         <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+               <div style="margin: 0px; padding: 0px;">
+                  <p style="margin: 0px; padding: 0px; font-size: 15px;color:black;">
+                     <b>Dear
+                     <t t-out="ctx['order']['name']"/>
+                     ,</b>
+                     <br />
+                     <br />
+                     I hope this email finds you well. I am writing to seek your approval for the creation of a new employee.<br/>
+                     <br/>
+                     <b>Employee Details</b><br/>
+                     <b>Employee Name :</b> <t t-out="object.name"/>, <br/>
+                     <b>Job Position :</b> <t t-out="object.job_id.name"/>,<br/>
+                     <b>Department :</b> <t t-out="object.department_id.name"/>.<br/>
+                     <br />
+                     Thank you for your time and consideration.If you have any questions or require further information, please feel free to reach out.<br/>
+                     <br />
+                     <br />
+                     Click Below Button to view the Employee
+                     <p style="margin: 16px 0px 16px 0px; text-align: left;">
+                         <a t-att-href="'/web#id=%s&amp;cids=%s&amp;model=hr.employee&amp;view_type=form' % (object.id,object.company_id.id)" style="background-color: #9E588B; margin-top: 10px; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">VIEW EMPLOYEE</a>
+                     </p>
+                     <br/>
+                     <br/>
+                     Best Regards,
+                     <br />
+                     <t t-out="object.env.user.name"/>
+                      <br />
+                     <t t-out="object.env.user.phone"/>
+                     <br />
+                     <t t-out="object.company_id.name" />
+                  </p>
+               </div>
+            </div>
+         </field>
+      </record>
+   </data>
+</odoo>

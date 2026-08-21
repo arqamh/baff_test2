@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.centrics.hr.allowance.deduction</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='wage']" position="after">
+                <field name="template_adding_option"/>
+                <label for="fixed_allowance_deduction_template_id"/>
+                <div class="o_row mw-50" name="fixed_allowance_deduction_template_id">
+                    <field name="fixed_allowance_deduction_template_id" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                    <div class="mb-3">
+                        <button type="object" name="action_process_template_info"  string="Process"
+                        confirm="Do you want to update the Allowance and Deductions from the Selected Template ?"
+                        groups="centrics_hr_allowance_deduction.centrics_hr_allowance_deduction_group_template_user"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//notebook/page[@name='information']" position="after">
+                <page string="Fixed Allowance">
+                    <field name="fixed_allowance_ids" context="{'filter_type': 'fixed_allowance'}">
+                        <tree editable="bottom">
+                            <field name="type_id" required="1"/>
+                            <field name="description" readonly="1"/>
+                            <field name="is_standard" invisible="1"/>
+                            <field name="amount" required="1" attrs="{'readonly': [('is_standard', '!=', False)]}" force_save="1"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Fixed Deduction">
+                    <field name="fixed_deduction_ids" context="{'filter_type': 'fixed_deduction'}">
+                        <tree editable="bottom">
+                            <field name="type_id" required="1"/>
+                            <field name="description" readonly="1"/>
+                            <field name="is_standard" invisible="1"/>
+                            <field name="amount" required="1" attrs="{'readonly': [('is_standard', '!=', False)]}" force_save="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

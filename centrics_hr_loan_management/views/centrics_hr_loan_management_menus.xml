@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem
+            id="loan_management_menu_root"
+            name="Loan Management"
+            sequence="10"
+            web_icon="centrics_hr_loan_management,static/description/menu_icon.png"
+            groups="centrics_hr_loan_management.group_loan_user"
+
+    />
+    <menuitem
+            id="loan_management_menu"
+            name="Loan Management"
+            parent="loan_management_menu_root"
+            sequence="1"
+    />
+    <menuitem
+            id="loan_management_configurations"
+            name="Configurations"
+            parent="loan_management_menu_root"
+            sequence="50"
+    />
+</odoo>

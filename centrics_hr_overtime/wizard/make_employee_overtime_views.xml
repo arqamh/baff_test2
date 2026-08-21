@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="make_employee_overtime_view_form" model="ir.ui.view">
+        <field name="name">make_employee.overtime.view.form</field>
+        <field name="model">make.employee.overtime</field>
+        <field name="arch" type="xml">
+            <form string="Print wizard">
+                <group>
+                    <group>
+                        <field name="start_date"/>
+                        <field name="is_all_employees"/>
+                        <field name="employee_id" attrs="{'invisible': [('is_all_employees', '!=', False)]}"/>
+
+                    </group>
+                    <group>
+                        <field name="end_date"/>
+                        <field name="department_id" attrs="{'invisible': [('is_all_employees', '!=', True)]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="print_employee_overtime" type="object" string="Create Report" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="make_employee_overtime_action" model="ir.actions.act_window">
+        <field name="name">Employee Overtime</field>
+        <field name="res_model">make.employee.overtime</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

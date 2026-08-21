@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+    <data>
+        <record id="inherit_purchase_order_form_view" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='notes']" position="after">
+                    <!-- <group> -->
+
+                    <field name="global_discount_type" groups="discount_account_invoice.group_order_global_discount"
+                           class="oe_inline"
+                           attrs="{'required':[('global_order_discount','>', 0.0)], 'readonly':[('state', 'not in', ('draft', 'sent'))]}"/>
+                    <field name="global_order_discount" groups="discount_account_invoice.group_order_global_discount"
+                           class="oe_inline" attrs="{'readonly':[('state', 'not in', ('draft', 'sent'))]}"/>
+                    <field name="total_global_discount" groups="discount_account_invoice.group_order_global_discount"
+                           class="oe_inline"
+                           attrs="{'invisible':['|', ('global_discount_type', '!=', 'percent'), ('global_discount_type', '=', 0.00)]}"/>
+                    <button groups="discount_account_invoice.group_order_global_discount" name="action_update_discount"
+                            type="object"
+                            string=" Add Discount"
+                            help=""
+                            class="btn-link mb-1 px-0" icon="fa-percent"
+                            attrs="{'invisible':['|', ('is_global_discount_applied', '=', True), ('state', 'in', ['purchase', 'done', 'cancel'])]}"/>
+
+                    <button groups="discount_account_invoice.group_order_global_discount" name="action_update_discount"
+                            type="object"
+                            string=" Update Discount"
+                            help=""
+                            class="btn-link mb-1 px-0" icon="fa-refresh"
+                            attrs="{'invisible':['|', ('is_global_discount_applied', '=', False), ('state', 'in', ['purchase', 'done', 'cancel'])]}"/>
+
+                    <button groups="discount_account_invoice.group_order_global_discount" name="remove_global_discount"
+                            type="object"
+                            string=" Remove Discount"
+                            help=""
+                            class="btn-link mb-1 px-0" icon="fa-remove"
+                            attrs="{'invisible':['|', ('is_global_discount_applied', '=', False), ('state', 'in', ['purchase', 'done', 'cancel'])]}"/>
+                    <field name="is_global_discount_applied" invisible="1"/>
+                    <!-- </group> -->
+                </xpath>
+                <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="replace">
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="total_discount" widget='monetary' options="{'currency_field': 'currency_id'}" groups="discount_account_invoice.group_order_global_discount,product.group_discount_per_so_line" />
+                            <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_total"  widget="monetary" class="oe_subtotal_footer_separator" options="{'currency_field': 'currency_id'}"/>
+
+                        </group>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']//form//field[@name='price_unit']" position="after">
+                    <field name="line_sub_total" string="Subtotal" widget="monetary" groups="product.group_discount_per_so_line"/>
+                    <field name="discount" groups="product.group_discount_per_so_line" class="oe_inline"/>
+                    <field name="discount_type" groups="product.group_discount_per_so_line" class="oe_inline"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="after">
+                    <field name="line_sub_total" string="Subtotal" widget="monetary" sum="line subtotal" groups="product.group_discount_per_so_line"/>
+                    <field name="discount_type" groups="product.group_discount_per_so_line" attrs="{'required':[('discount', '>', 0.0)]}"/>
+                    <field name="discount" groups="product.group_discount_per_so_line"/>
+                    <field name="global_discount_amount" groups="discount_account_invoice.group_order_global_discount" optional="show"/>  
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']//tree//field[@name='price_subtotal']" position="replace">
+                    <field name="price_subtotal" string="Discounted Subtotal" widget="monetary" sum="discounted subtotal"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

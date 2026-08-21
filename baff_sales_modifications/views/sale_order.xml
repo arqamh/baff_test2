@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="baff_sales_modifications_view_order_form" model="ir.ui.view">
+        <field name="name">baff.sales.modifications.view.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="date_order" position="after">
+                <field name="project_start_date" required="1"/>
+            </field>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="boat_type_id"/>
+                <field name="options" widget="many2many_tags"/>
+                <field name="analytic_plan_id" required="1"/>
+                <field name="finished_good_location_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="inquiry_number"/>
+                <field name="doc_type" invisible="1"/>
+                <field name="so_created" invisible="1"/>
+                <field name="sale_id" invisible="1"/>
+                <field name="quotation_id" readonly="1" attrs="{'invisible': [('doc_type', '=', 'quotation')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                 <field name="offer_print_header"/>
+                 <field name="offer_print_text"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

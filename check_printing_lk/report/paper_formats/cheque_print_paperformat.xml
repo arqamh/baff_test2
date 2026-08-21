@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--paperformats for seylan & commercial cheques-->
+<odoo>
+    <record id="cheque_printing_paperformat_seylan" model="report.paperformat">
+        <field name="name">Seylan Cheque Printing</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">74</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">61</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="cheque_printing_paperformat_commercial" model="report.paperformat">
+        <field name="name">Commercial Cheque Printing</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">68</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">61</field>
+        <field name="dpi">90</field>
+    </record>
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Email to the Approval User to inform about new loan to approve -->
+    <record id="email_template_loan_submission_approval_user" model="mail.template">
+        <field name="name">Loan Information Submission - Approval User</field>
+        <field name="model_id" ref="centrics_hr_loan_management.model_employee_loan"/>
+        <field name="subject">Loan Information Submission</field>
+        <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">${object.approval_user_id.email}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <![CDATA[
+            <p>Dear ${object.approval_user_id.name},</p>
+            <p>The loan information submitted by ${object.employee_id.name} is now available for your review.</p>
+            
+            <h2>Loan Details</h2>
+            <table>
+                <tr>
+                    <td><strong>Loan ID:</strong></td>
+                    <td>${object.loan_id}</td>
+                </tr>
+                <tr>
+                    <td><strong>Employee Name:</strong></td>
+                    <td>${object.employee_id.name}</td>
+                </tr>
+                <tr>
+                    <td><strong>Loan Amount:</strong></td>
+                    <td>${object.loan_amount}</td>
+                </tr>
+                <tr>
+                    <td><strong>Submission Date:</strong></td>
+                    <td>${object.submission_date}</td>
+                </tr>
+                <tr>
+                    <td><strong>Loan Purpose:</strong></td>
+                    <td>${object.loan_purpose}</td>
+                </tr>
+            </table>
+            
+            <p>You can review the loan details and take action using the button below:</p>
+            
+            <a 
+                href="${object.get_base_url()}/web#id=${object.id}&model=your_module.model_model_name_here&view_type=form"
+                style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 5px; font-size: 16px;">
+                Review Loan
+            </a>
+            
+            <p>Thank you,</p>
+            <p>Loan Management Team</p>
+            ]]>
+        </field>
+    </record>
+
+    <!-- Email template  -  To the Employee that informing the loan was successfully submitted for the Approval-->
+    <record id="email_template_loan_submission_employee" model="mail.template">
+        <field name="name">Loan Information Submission - Employee</field>
+        <field name="model_id" ref="centrics_hr_loan_management.model_employee_loan"/>
+        <field name="subject">Your Loan Application is Submitted</field>
+        <field name="email_from">${object.user_id.email or 'noreply@example.com'}</field>
+        <field name="email_to">${object.employee_id.email}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <![CDATA[
+            <p>Dear ${object.employee_id.name},</p>
+            <p>Your loan application has been submitted successfully and is currently under review by ${object.approval_user_id.name}.</p>
+            
+            <h2>Loan Details</h2>
+            <table>
+                <tr>
+                    <td><strong>Loan ID:</strong></td>
+                    <td>${object.loan_id}</td>
+                </tr>
+                <tr>
+                    <td><strong>Loan Amount:</strong></td>
+                    <td>${object.loan_amount}</td>
+                </tr>
+                <tr>
+                    <td><strong>Submission Date:</strong></td>
+                    <td>${object.submission_date}</td>
+                </tr>
+                <tr>
+                    <td><strong>Loan Purpose:</strong></td>
+                    <td>${object.loan_purpose}</td>
+                </tr>
+            </table>
+            
+            <p>You can view the status of your loan using the button below:</p>
+            
+            <a 
+                href="${object.get_base_url()}/web#id=${object.id}&model=your_module.model_model_name_here&view_type=form"
+                style="display: inline-block; background-color: #2196F3; color: white; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 5px; font-size: 16px;">
+                View Loan
+            </a>
+            
+            <p>Thank you,</p>
+            <p>Loan Management Team</p>
+            ]]>
+        </field>
+    </record>
+</odoo>

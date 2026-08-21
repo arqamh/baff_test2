@@ -1,0 +1,18 @@
+<odoo>
+    <record id="baff_purchase_order_form_view" model="ir.ui.view">
+        <field name="name">purchase.order.baff.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object" name="action_view_procurement_plans" class="oe_stat_button" icon="fa-pencil-square-o"
+                        attrs="{'invisible':[('procurement_plan_line_count', '=', 0)]}" groups="procurement_plan.access_group_procurement_plan_user">Procurement
+                    <field name="procurement_plan_line_count" widget="statinfo" string="Count" invisible="1"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='products']//field[@name='product_qty']" position="after">
+                <field name="procurement_plan_ids" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

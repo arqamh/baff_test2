@@ -1,0 +1,59 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.centrics.hr</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Boolean to configure in settings for approvals needed or not -->
+                <xpath expr="//div[hasclass('app_settings_block')]/div[@name='employees_setting_container']/div[@id='presence_control_setting']"
+                       position="after">
+                    <div class="col-12 col-lg-6 o_setting_box" id="allow_company_wise_control_for_mail">
+                        <div class="o_setting_left_pane">
+                            <field name="employee_approval_needed"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="employee_approval_needed"/>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[hasclass('app_settings_block')]/div[@name='employees_setting_container']/div[@id='presence_reporting_setting']"
+                       position="after">
+                    <div class="col-12 col-lg-6 o_setting_box" id="allow_generate_auto_employee_number" title="Employee Number Generating">
+                        <div class="o_setting_left_pane">
+                            <field name="employee_number_auto_generate"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="employee_number_auto_generate"/>
+                        </div>
+                    </div>
+
+
+                    <div class="col-12 col-lg-6 o_setting_box" title="Employee Retirement Age" id="allow_to_set_default_retirement_age">
+                        <div class="o_setting_right_pane">
+                            <label for="retirement_age"/>
+                            <div class="text-muted" >
+                                Set the retirement age.
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <field name="retirement_age"/>
+                        </div>
+                    </div>
+
+                    <!-- Onboarding Configuration -->
+                    <div class="col-12 col-lg-6 o_setting_box" title="Enable Onboarding? " id="enable_onboarding_process">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_onboarding"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_onboarding"/>
+                        </div>
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

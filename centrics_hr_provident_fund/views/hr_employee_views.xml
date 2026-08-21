@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--
+        Employee Form View Extension for EPF/ETF Management
+
+        This view extends the base employee form to add EPF (Employees' Provident Fund)
+        and ETF (Employees' Trust Fund) related fields in the HR Settings tab.
+
+        Fields are organized in a two-column layout under "EPF/ETF Information":
+        - Left column: EPF eligibility, EPF number, registration date
+        - Right column: Occupational group, employment type
+
+        All EPF-specific fields are conditionally visible based on the EPF eligibility checkbox.
+        Required fields (EPF number and registration date) are enforced when EPF is enabled.
+
+        Note: name_initials and last_name validation is handled via Python constraints
+        in the hr.employee model to avoid security group conflicts.
+    -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.centrics.hr.profident.fund</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- Add EPF/ETF Information section to HR Settings tab -->
+            <xpath expr="//page[@name='hr_settings']" position="inside">
+                <group string="EPF/ETF Information" name="epf_etf_information">
+                    <!-- Left column: Core EPF information -->
+                    <group>
+                        <field name="is_provident_fund_eligible"/>
+                        <field name="epf_number" attrs="{'invisible': [('is_provident_fund_eligible', '!=', True)], 'required': [('is_provident_fund_eligible', '=', True)]}"/>
+                        <field name="date_of_epf_resisted" attrs="{'invisible': [('is_provident_fund_eligible', '!=', True)], 'required': [('is_provident_fund_eligible', '=', True)]}"/>
+                    </group>
+                    <!-- Right column: Classification and categorization -->
+                    <group>
+                        <field name="occupational_group_id" attrs="{'invisible': [('is_provident_fund_eligible', '!=', True)]}"/>
+                        <field name="epf_employment_type_id" attrs="{'invisible': [('is_provident_fund_eligible', '!=', True)]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

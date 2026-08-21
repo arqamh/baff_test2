@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+
+        <record id="baff_a4_format_invoice" model="report.paperformat">
+            <field name="name">Baff Invoice</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">25</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">30</field>
+            <field name="dpi">100</field>
+        </record>
+
+        <record id="baff_a4_format_purchase_order" model="report.paperformat">
+            <field name="name">Baff Purchase</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">52</field>
+            <field name="margin_bottom">60</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">40</field>
+            <field name="dpi">100</field>
+        </record>
+
+        <record id="baff_a4_format_offer_order" model="report.paperformat">
+            <field name="name">Baff Offer Order</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">30</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">10</field>
+            <field name="dpi">100</field>
+        </record>
+
+    </data>
+</odoo>

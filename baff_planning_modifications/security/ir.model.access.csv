@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_slot_planning_wizard,access.slot.planning.wizard,model_slot_planning_wizard,base.group_user,1,1,1,1
+access_planning_task_lines,access.planning.task.lines,model_planning_task_lines,base.group_user,1,1,1,1

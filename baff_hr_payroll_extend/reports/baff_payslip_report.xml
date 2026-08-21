@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="baff_payslip_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-family: Times New Roman, Times, serif; font-size: 14px;">
+                        <t t-set="doc_length" t-value="len(doc) or 0"/>
+                        <table style="width: 100%; border-spacing: 50px;border-collapse: separate;">
+                            <tr>
+                                <t t-if="doc_length >= 2">
+                                    <t t-foreach="doc" t-as="o" t-enumerate="index">
+                                        <td style="width: 48%; vertical-align: top; padding: 20px;border: 1px solid #333;">
+                                            <div style="width: 100%; box-sizing: border-box;">
+                                                <div class="text-center">
+                                                    <strong>
+                                                        <span t-field="o.company_id.name"/>
+                                                    </strong>
+                                                </div>
+                                                <hr style="height:2px;border:none;color:#333;background-color:#333;"/>
+                                                <table style="width:100%;">
+                                                    <tr>
+                                                        <td colspan="4" width="30%" class="text-center"
+                                                            style="padding-left:5px;">
+                                                            <strong>
+                                                                <span t-field="o.name"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="25%" style="padding-left:5px;">
+                                                            <strong>EPF NO.</strong>
+                                                        </td>
+                                                        <td width="25%" style="padding-left:5px;">
+                                                            <span t-field="o.employee_id.epf_number"/>
+                                                        </td>
+                                                        <td width="25%" style="padding-left:5px;">
+                                                        </td>
+                                                        <td width="25%" style="padding-left:5px;">
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="1" style="padding-left:5px;">
+                                                            <strong>Employee</strong>
+                                                        </td>
+                                                        <td colspan="3" style="padding-left:5px;">
+                                                            <span t-field="o.employee_id.name"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="1" style="padding-left:5px;">
+                                                            <strong>Department</strong>
+                                                        </td>
+                                                        <td colspan="3" style="padding-left:5px;">
+                                                            <span t-field="o.employee_id.department_id"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="1" style="padding-left:5px;">
+                                                            <strong>Designation</strong>
+                                                        </td>
+                                                        <td colspan="3" style="padding-left:5px;">
+                                                            <span t-field="o.employee_id.job_id"/>
+                                                        </td>
+                                                    </tr>
+
+                                                    <!-- Remaining Table Content -->
+                                                </table>
+                                                <hr style="height:2px;border:none;color:#333;background-color:#333;"/>
+                                                <br/>
+                                                <table style="width:100%;">
+                                                    <t t-foreach="o.line_ids.mapped('category_id')" t-as="category">
+                                                        <tr>
+                                                            <td style="padding-left:5px;">
+                                                                <b>
+                                                                    <span t-esc="category.name.upper()"/>
+                                                                </b>
+                                                            </td>
+                                                            <td style="text-align:center;">
+                                                                <strong>
+                                                                    <span t-esc="o.company_id.currency_id.name.upper()"/>
+                                                                </strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id == category and line.appears_on_payslip and line.total != 0)"
+                                                            t-as="line">
+                                                            <t t-if="line.salary_rule_id.appear_as_subtotal_in_payslip">
+                                                                <td style="padding-left:5px;">
+                                                                    <span t-field="line.name"/>
+                                                                </td>
+                                                                <td style="border-bottom: 1px solid;border-top: 1px solid;text-align:right;padding-right:5px;">
+                                                                    <span t-esc="line.total"
+                                                                          t-options='{"widget": "float", "precision": 2}'/>
+                                                                </td>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <td style="padding-left:5px;">
+                                                                    <span t-field="line.name"/>
+                                                                </td>
+                                                                <td style="text-align:right;padding-right:5px;">
+                                                                    <span t-esc="line.total"
+                                                                          t-options='{"widget": "float", "precision": 2}'/>
+                                                                </td>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-foreach="doc[0]" t-as="o" t-enumerate="index">
+                                        <td style="padding:15px; width: 50%">
+                                            <div class="text-center">
+                                                <strong>
+                                                    <span t-field="o.company_id.name"/>
+                                                </strong>
+                                            </div>
+                                            <hr style="height:2px;border:none;color:#333;background-color:#333;"/>
+                                            <table style="width:100%;">
+                                                <tr>
+                                                    <td colspan="4" width="30%" class="text-center">
+                                                        <strong>
+                                                            <span t-field="o.name"/>
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="25%" style="padding-left:5px;">
+                                                        <strong>EPF NO.</strong>
+                                                    </td>
+                                                    <td width="25%" style="padding-left:5px;">
+                                                        <span t-field="o.employee_id.epf_number"/>
+                                                    </td>
+                                                    <td width="25%" style="padding-left:5px;">
+                                                    </td>
+                                                    <td width="25%" style="padding-left:5px;">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="1" style="padding-left:5px;">
+                                                        <strong>Employee</strong>
+                                                    </td>
+                                                    <td colspan="3" style="padding-left:5px;">
+                                                        <span t-field="o.employee_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="1" style="padding-left:5px;">
+                                                        <strong>Department</strong>
+                                                    </td>
+                                                    <td colspan="3" style="padding-left:5px;">
+                                                        <span t-field="o.employee_id.department_id"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="1" style="padding-left:5px;">
+                                                        <strong>Designation</strong>
+                                                    </td>
+                                                    <td colspan="3" style="padding-left:5px;">
+                                                        <span t-field="o.employee_id.job_id"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <hr style="height:2px;border:none;color:#333;background-color:#333;"/>
+                                            <br/>
+                                            <table style="width:100%;">
+                                                <t t-foreach="o.line_ids.mapped('category_id')" t-as="category">
+                                                    <tr>
+                                                        <td style="padding-left:5px;">
+                                                            <b>
+                                                                <span t-esc="category.name.upper()"/>
+                                                            </b>
+                                                        </td>
+                                                        <td style="text-align:center;">
+                                                            <strong>
+                                                                <span t-esc="o.company_id.currency_id.name.upper()"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id == category and line.appears_on_payslip and line.total != 0)"
+                                                        t-as="line">
+                                                        <t t-if="line.salary_rule_id.appear_as_subtotal_in_payslip">
+                                                            <td style="padding-left:5px;">
+                                                                <span t-field="line.name"/>
+                                                            </td>
+                                                            <td style="border-bottom: 1px solid;border-top: 1px solid;text-align:right;padding-right:5px;">
+                                                                <span t-esc="line.total"
+                                                                      t-options='{"widget": "float", "precision": 2}'/>
+                                                            </td>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <td style="padding-left:5px;">
+                                                                <span t-field="line.name"/>
+                                                            </td>
+                                                            <td style="text-align:right;padding-right:5px;">
+                                                                <span t-esc="line.total"
+                                                                      t-options='{"widget": "float", "precision": 2}'/>
+                                                            </td>
+                                                        </t>
+                                                    </tr>
+                                                </t>
+                                            </table>
+                                        </td>
+                                    </t>
+                                    <td style="padding:15px; width: 50%">&#160;</td>
+                                </t>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <record id="paperformat_baff_payslip" model="report.paperformat">
+        <field name="name">Payslip Paper Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">28</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">5</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="baff_hr_payslip_report_action" model="ir.actions.report">
+        <field name="name">Print Detailed Payslip</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">baff_hr_payroll_extend.baff_payslip_report</field>
+        <field name="report_file">baff_hr_payroll_extend.baff_payslip_report</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">
+            'Payslip.pdf'
+        </field>
+    </record>
+
+</odoo>

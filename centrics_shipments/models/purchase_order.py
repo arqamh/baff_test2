@@ -1,0 +1,38 @@
+from odoo import fields, models, api
+
+
+class PurchaseOrder(models.Model):
+    _inherit = 'purchase.order'
+
+    shipments_details_id = fields.Many2one('shipments.details', string='Shipments Number')
+    shipments_details_ids = fields.Many2many('shipments.details', 'shipment_purchase_order_rel', 'purchase_id', 'shipments_id', string='Shipment(s)')
+    project = fields.Many2many(related="shipments_details_id.project")
+    tt_number = fields.Char(related="shipments_details_id.tt_number")
+    shipper_supplier = fields.Char(related="shipments_details_id.shipper_supplier")
+    finalized_date = fields.Date(related="shipments_details_id.finalized_date")
+    mode_of_transport = fields.Selection(related="shipments_details_id.mode_of_transport")
+    shipment_state = fields.Selection(related="shipments_details_id.state")
+    proforma_invoice_no = fields.Char(string='Proforma Invoice No')
+    proforma_invoice_date = fields.Date(string='Proforma Invoice Date')
+    description = fields.Char(string="Description")
+    amount = fields.Float(string="Amount")
+    payment_date = fields.Date(string="Payment Date")
+    boi_approval = fields.Char(string="Boi Approval")
+    country = fields.Many2one('res.country', string="Country")
+    incoterm = fields.Char(string="Incoterm")
+    etd = fields.Date(string="ETD")
+    revised_etd = fields.Char(string="Revised ETD")
+    eta = fields.Date(string="ETA")
+    pick_up_local_agent = fields.Char(string="Pick Up/Local Agent")
+    freight_cost = fields.Float(string="Freight Cost")
+    port_airport = fields.Char(string="Port/Airport")
+    vessel_flight = fields.Char(string="Vessel/Flight")
+    clearance_agent = fields.Char(string="Clearance Agent")
+    date = fields.Date(string="Date")
+    cus_dec_no = fields.Char(string="Cus Dec No")
+    koggala_delivery_date = fields.Date(string="Koggala Delivery Date")
+    type_of_vehicle = fields.Char(string="Type Of Vehicle")
+    package_size = fields.Float(string="Package Size")
+    remarks_notes = fields.Char(string="Remarks/Notes")
+    freight_invoice_no = fields.Char(string="Freight Invoice No")
+    clearance_invoice_no = fields.Char(string="Clearance Invoice No")

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="job_cost_mrp_bom_form_view" model="ir.ui.view">
+        <field name="name">job.cost.mrp.bom.form</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="before">
+                <field name="analytic_plan_id"/>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="before">
+                <field name="name" readonly="1" force_save="1" attrs="{'invisible': [('name', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="job_cost_mrp_bom_tree_view" model="ir.ui.view">
+        <field name="name">job.cost.mrp.bom.tree</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sequence']" position="after">
+                <field name="name" readonly="1" force_save="1" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

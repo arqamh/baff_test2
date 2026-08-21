@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!--    Overtime Root Menu item-->
+    <menuitem
+            id="hr_overtime_rule_menu_root"
+            name="Overtime"
+            parent="hr_attendance.menu_hr_attendance_root"
+            groups="centrics_hr_overtime_group_overtime_user"
+            sequence="20"
+    />
+</odoo>

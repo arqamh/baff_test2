@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+
+        <record id="calendar_view_extend" model="ir.ui.view">
+            <field name="name">calendar.event.form</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='page_invitations']" position="after">
+                    <page string="Google">
+                        <group string="Google Meet">
+                            <group col="4" colspan="4">
+                                <field name="meet_link"/>
+                                <field name="meet_code"/>
+                                <field name="organizer_id"/>
+                                <field name="status" widget="selection"/>
+                                <field name="gc_id"/>
+                                <field name="gc_etag"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

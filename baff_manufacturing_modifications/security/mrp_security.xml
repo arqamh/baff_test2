@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--user group for allow edit real time duration-->
+        <record model="ir.module.category" id="module_category_manufacturing_modifications">
+            <field name="name">Manufacturing Modifications</field>
+            <field name="description">Allow to edit real time duration in Manufacturing Modifications</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="group_manufacturing_modification_allow_edit_real_time_access" model="res.groups">
+            <field name="name">Allow Edit Real Time Duration Access</field>
+            <field name="category_id" ref="module_category_manufacturing_modifications"/>
+        </record>
+
+        <!--user group for quality check supervisor level-->
+        <record id="group_manufacturing_modification_allow_check_qc_by_supervisor" model="res.groups">
+            <field name="name">Quality Check Supervisor</field>
+            <field name="category_id" ref="module_category_manufacturing_modifications"/>
+        </record>
+
+        <!--user group for mo approval or reject access-->
+        <record id="group_component_request_approve" model="res.groups">
+            <field name="name">Component Request Approve or Reject</field>
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+            <field name="category_id" ref="module_category_manufacturing_modifications"/>
+        </record>
+    </data>
+</odoo>

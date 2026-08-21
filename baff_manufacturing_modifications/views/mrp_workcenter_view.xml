@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fine_finish_erp_mrp_workcenter_form_view_inherit" model="ir.ui.view">
+        <field name="name">fine.finish.erp.mrp.workcenter.form.view.inherit</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp_workorder_hr.mrp_workcenter_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='workorder_employee']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fine_finish_erp_mrp_workcenter_form_view" model="ir.ui.view">
+        <field name="name">fine.finish.erp.mrp.workcenter.form.view</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='resource_calendar_id']" position='after'>
+                <group>
+                    <field name="allow_employee"/>
+                    <field name="employee_ids" widget="many2many_tags"
+                           string="Allowed Employees"
+                           domain="[('company_id', '=', company_id)]"
+                           attrs="{'invisible': [('allow_employee', '=', False)]}"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook//page[@name='general_info']" position="after">
+                <page string="Employees" name="emp" attrs="{'invisible': [('allow_employee', '=', False)]}">
+                    <field name="employee_lines">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="employee_id"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
