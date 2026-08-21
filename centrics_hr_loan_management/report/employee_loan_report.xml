@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <template id="employee_loan_template">
+            <t t-call="web.html_container">
+                <div class="article" data-oe-model="employee.loan" t-att-data-oe-id="docs[:1].id if docs else None">
+                    <div class="page" style="margin-top: 0; padding-top: 0;">
+                        <!-- Company Information -->
+                        <div>
+                            <h5 style="text-decoration: underline"><strong>Company Information</strong></h5>
+                            Company Name : <t t-esc="env.company.name"/><br/>
+                            Company Address : <t t-esc="env.company.street"/><br/>
+                            Company Contact Number : <t t-esc="env.company.phone"/><br/><br/><br/>
+                        </div>
+                        <!-- Employee Information -->
+                        <div>
+                            <h5 style="text-decoration: underline"><strong>Employee Information</strong></h5>
+                            <t t-foreach="docs" t-as="doc">
+                                Employee Name : <t t-esc="doc.employee_id.name"/><br/>
+                                Employee Street 1 : <t t-esc="doc.employee_id.address_home_id.street"/><br/>
+                                Employee Street 2 : <t t-esc="doc.employee_id.address_home_id.street2"/><br/>
+                                Employee City : <t t-esc="doc.employee_id.address_home_id.city"/><br/>
+                                Employee State : <t t-esc="doc.employee_id.address_home_id.country_id.name"/><br/>
+                                Employee Department : <t t-esc="doc.employee_id.department_id.name"/><br/><br/>
+                            </t>
+                        </div>
+                        <!-- Loan Information -->
+                        <div>
+                            <t t-foreach="docs" t-as="doc">
+                                <h4 style="text-decoration: underline; text-align: center;"><strong>LOAN AGREEMENT - <t t-esc="doc.name"/></strong></h4>
+                            </t><br/>
+                            <t t-foreach="docs" t-as="doc">
+                                Loan Amount : <t t-esc="doc.processed_amount"/> <t t-esc="env.company.currency_id.name"/><br/>
+                                Loan Type : <t t-esc="doc.loan_type.name"/><br/>
+                                Loan Interest : <t t-esc="doc.interest_rate"/> %<br/>
+                                No of Installments : <t t-esc="doc.number_of_installments"/><br/>
+                                Calculate Type : <t t-esc="dict(doc.fields_get(allfields=['calculation_type'])['calculation_type']['selection'])[doc.calculation_type]"/><br/><br/>
+                                Payroll Effective Month : <t t-esc="dict(doc.fields_get(allfields=['payroll_effective_month'])['payroll_effective_month']['selection'])[doc.payroll_effective_month]"/><br/>
+                                Approved Date : <t t-esc="doc.loan_approved_date"/><br/><br/>
+                            </t>
+                        </div>
+                        <!-- Loan Installments table -->
+                        <table class="table table-bordered mt32">
+                            <h5 style="text-decoration: underline"><strong>Loan Installments Information</strong></h5>
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Month</th>
+                                    <th style="text-align: right;">Capital Amount</th>
+                                    <th style="text-align: right;">Interest Amount</th>
+                                    <th style="text-align: right;">Installment Amount</th>
+                                    <th style="text-align: right;">Running Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs.employee_loan_installment_line_ids" t-as="doc">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="doc.year"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.month"/>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="'%.2f' % doc.capital_amount"/>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="'%.2f' % doc.interest_amount"/>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="'%.2f' % doc.installment_amount"/>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="'%.2f' % doc.running_balance"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <!-- Guarantors Information -->
+                        <table class="table table-bordered mt32">
+                            <thead>
+                                <h5 style="text-decoration: underline"><strong>Guarantors Information</strong></h5>
+                                <tr>
+                                    <th>Guarantor</th>
+                                    <th>Job Title</th>
+                                    <th>Department</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs.loan_guarantor_ids" t-as="doc">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="doc.employee_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.job_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="doc.department_id.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table><br/><br/>
+                        <div>
+                            <t t-foreach="docs" t-as="doc">
+                                Approved By : <t t-esc="user.name"/><br/><br/>
+                                Approved Date : <t t-esc="doc.loan_approved_date"/><br/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <record id="paperformat_employee_loan" model="report.paperformat">
+            <field name="name">Employee Loan Report Format</field>
+            <field name="default" eval="False"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_report_employee_loan" model="ir.actions.report">
+            <field name="name">Employee Loan</field>
+            <field name="model">employee.loan</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">centrics_hr_loan_management.employee_loan_template</field>
+            <field name="report_file">centrics_hr_loan_management.employee_loan_template</field>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="paperformat_employee_loan"/>
+        </record>
+    </data>
+</odoo>

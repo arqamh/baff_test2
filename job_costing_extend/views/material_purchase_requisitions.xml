@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!--Material purchase requisition form view customizations-->
+    <record id="material_purchase_requisition_tree_view" model="ir.ui.view">
+        <field name="name">material.purchase.requisition.view.tree.inherit.job_costing_extend</field>
+        <field name="model">material.purchase.requisition</field>
+        <field name="inherit_id" ref="material_purchase_requisitions.material_purchase_requisition_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="job_costing_id"/>
+                <field name="mp_project_id"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

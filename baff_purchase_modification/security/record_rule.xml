@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+        <record id="procurement_plan_comp_rule" model="ir.rule">
+            <field name="name">Procurement Plan multi company rule</field>
+            <field name="model_id" ref="model_procurement_plan"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>

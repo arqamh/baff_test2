@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="odoo_job_costing_management_account_analytic_plan_form_view" model="ir.ui.view">
+            <field name="name">odoo.job.costing.management.account.analytic.plan.form.view</field>
+            <field name="model">account.analytic.plan</field>
+            <field name="inherit_id" ref="analytic.account_analytic_plan_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="code" required="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

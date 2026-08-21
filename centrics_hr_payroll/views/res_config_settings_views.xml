@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.centrics.hr</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Boolean to configure in settings for approvals needed or not -->
+                <xpath expr="//div[hasclass('app_settings_block')]/div[@id='hr_payroll_localization']/div[1]"
+                       position="after">
+                    <div class="col-12 col-lg-6 o_setting_box" id="standard_day_for_payroll">
+                        <div class="o_setting_left_pane">
+                            <field name="is_standard_day_for_payroll"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_standard_day_for_payroll"/>
+                            <div class="text-muted">
+                                Consider Buffer time for the Overtime
+                            </div>
+                            <div class="mt16" attrs="{'invisible': [('is_standard_day_for_payroll', '=', False)]}">
+                                <label for="standard_payroll_day" class="o_form_label">
+                                    Standard Day for the Payroll
+                                </label>
+                                <div class="text-muted">
+                                    Allow to map the fixed date to run the payroll.
+                                </div>
+                                <span>Date of the Month</span>
+                                <field name="standard_payroll_day" class="text-center"
+                                       attrs="{'required': [('is_standard_day_for_payroll', '=', True)]}"
+                                       style="width: 10%; min-width: 4rem;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="skip_work_entry_validation"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="skip_work_entry_validation"/>
+                            <div class="text-muted">
+                                Skip work entry validation when generating payslips.
+                                Worked days will be calculated based on employee calendar instead.
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Payslip Input Types used by Ocean Voyager structure (no sequence field) -->
+
+    <!-- OT/Attendance counters — computed from attendance records, not contract lines -->
+    <record id="baff_input_norm_ot_hours" model="hr.payslip.input.type">
+        <field name="name">Normal OT Hours</field>
+        <field name="code">NORM_OT_HRS</field>
+    </record>
+
+    <record id="baff_input_dbl_ot_hours" model="hr.payslip.input.type">
+        <field name="name">Double OT Hours</field>
+        <field name="code">DBL_OT_HRS</field>
+    </record>
+
+    <record id="baff_input_tpl_ot_hours" model="hr.payslip.input.type">
+        <field name="name">Triple OT Hours</field>
+        <field name="code">TRPL_OT_HRS</field>
+    </record>
+
+    <record id="baff_input_holiday_hours" model="hr.payslip.input.type">
+        <field name="name">Holiday Hours</field>
+        <field name="code">HOL_HRS</field>
+    </record>
+
+    <record id="baff_input_attendance_day_count" model="hr.payslip.input.type">
+        <field name="name">Attendance Count</field>
+        <field name="code">ATTND_CNT</field>
+    </record>
+
+    <record id="input_no_of_experience" model="hr.payslip.input.type">
+        <field name="name">No of Experience</field>
+        <field name="code">NO_EXP</field>
+    </record>
+
+    <record id="input_no_pay_days" model="hr.payslip.input.type">
+        <field name="name">No Pay Days</field>
+        <field name="code">NOPAY</field>
+    </record>
+
+    <record id="baff_input_no_pay" model="hr.payslip.input.type">
+        <field name="name">No Pay Deduction</field>
+        <field name="code">NOPAY_DED</field>
+    </record>
+
+    <!-- Fixed allowance types — fixed_type='fixed_allowance' makes them visible in the
+         contract Fixed Allowance tab dropdown (domain filters by input_type_id.fixed_type) -->
+    <record id="baff_input_attendance_allowance" model="hr.payslip.input.type">
+        <field name="name">Attendance Allowance</field>
+        <field name="code">ATTND_ALLW</field>
+        <field name="fixed_type">fixed_allowance</field>
+    </record>
+
+    <record id="baff_input_special_allowance" model="hr.payslip.input.type">
+        <field name="name">Special Allowance</field>
+        <field name="code">SPEC_ALLW</field>
+        <field name="fixed_type">fixed_allowance</field>
+    </record>
+
+    <record id="baff_input_relocation_allowance" model="hr.payslip.input.type">
+        <field name="name">Relocation Allowance</field>
+        <field name="code">REl_ALW</field>
+        <field name="fixed_type">fixed_allowance</field>
+    </record>
+
+    <record id="baff_input_leave_allowance" model="hr.payslip.input.type">
+        <field name="name">Leave Allowance</field>
+        <field name="code">LEAVE_ALLW</field>
+        <field name="fixed_type">fixed_allowance</field>
+    </record>
+
+    <record id="baff_input_special_incentive" model="hr.payslip.input.type">
+        <field name="name">Special Incentive</field>
+        <field name="code">SPEC_INCNTV</field>
+        <field name="fixed_type">fixed_allowance</field>
+    </record>
+
+    <record id="baff_input_leader_allowance" model="hr.payslip.input.type">
+        <field name="name">Leader Allowance</field>
+        <field name="code">LDR_ALLW</field>
+        <field name="fixed_type">fixed_allowance</field>
+    </record>
+
+    <!-- Fixed deduction types — fixed_type='fixed_deduction' makes them visible in the
+         contract Fixed Deduction tab dropdown -->
+    <record id="baff_input_salary_advance" model="hr.payslip.input.type">
+        <field name="name">Salary Advance</field>
+        <field name="code">SAL_ADV</field>
+        <field name="fixed_type">fixed_deduction</field>
+    </record>
+
+    <record id="baff_input_team_help" model="hr.payslip.input.type">
+        <field name="name">Team Help Fund</field>
+        <field name="code">TEAM_HELP</field>
+        <field name="fixed_type">fixed_deduction</field>
+    </record>
+</odoo>

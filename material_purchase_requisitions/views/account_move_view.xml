@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_move_form_asset" model="ir.ui.view">
+            <field name="name">account.move.form.asset.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <widget name="web_ribbon" title="Asset Purchase" bg_color="bg-success"
+                            attrs="{'invisible': [('is_asset_purchase', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//group[@id='header_right_group']" position="inside">
+                    <field name="is_asset_purchase" readonly="1"
+                           attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                    <field name="asset_location_id" readonly="1"
+                           attrs="{'invisible': ['|', ('is_asset_purchase', '=', False),
+                                                     ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                    <field name="custom_requisition_id" readonly="1"
+                           attrs="{'invisible': ['|', ('custom_requisition_id', '=', False),
+                                                     ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter_asset" model="ir.ui.view">
+            <field name="name">account.invoice.filter.asset.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <filter string="Asset Purchases" name="filter_asset_purchase"
+                            domain="[('is_asset_purchase', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

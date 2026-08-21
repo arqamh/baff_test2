@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Schedule the server action to run every 30 minutes -->
+        <record id="ir_cron_process_manual_attendance_draft_records" model="ir.cron">
+            <field name="name">Process Manual Attendance Draft Records</field>
+            <field name="model_id" ref="model_hr_attendance_manual_log"/>
+            <field name="state">code</field>
+            <field name="code">
+                model.process_draft_records()
+            </field>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field> <!-- -1 means it will run indefinitely -->
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

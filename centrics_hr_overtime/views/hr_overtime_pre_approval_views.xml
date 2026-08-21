@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_overtime_pre_approval_view_form" model="ir.ui.view">
+        <field name="name">hr.overtime.pre.approval.view.form</field>
+        <field name="model">hr.overtime.pre.approval</field>
+        <field name="arch" type="xml">
+            <form string="Overtime Pre-Approval">
+                <header>
+                    <button name="action_submit" type="object" string="Submit for Approval" class="btn-primary"
+                            attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                    <button name="action_approve" type="object" string="Approve" class="btn-success"
+                            attrs="{'invisible': [('status', '!=', 'submitted')]}" groups="centrics_hr_overtime.centrics_hr_overtime_group_pre_approval_manager"/>
+                    <button name="action_reject" type="object" string="Reject" class="btn-danger"
+                            attrs="{'invisible': [('status', '!=', 'submitted')]}" groups="centrics_hr_overtime.centrics_hr_overtime_group_pre_approval_manager"/>
+
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="btn-secondary"
+                            attrs="{'invisible': [('status', 'not in', ('approved', 'rejected'))]}"
+                            groups="centrics_hr_overtime.centrics_hr_overtime_group_pre_approval_manager"/>
+                    <field name="status" widget="statusbar" readonly="True"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Approved" bg_color="bg-success"
+                            attrs="{'invisible': [('status', '!=', 'approved')]}"/>
+                    <widget name="web_ribbon" title="Rejected" bg_color="bg-danger"
+                            attrs="{'invisible': [('status', '!=', 'rejected')]}"/>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="New" style="font-size: min(4vw, 2.6rem);" readonly="1" force_save="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="start_date" required="1" attrs="{'readonly': [('status', '=', 'approved')]}"/>
+                            <field name="end_date" required="1" attrs="{'readonly': [('status', '=', 'approved')]}"/>
+                        </group>
+                        <group>
+                            <field name="department_id" required="1"
+                                   attrs="{'readonly': [('status', '=', 'approved')]}"/>
+                            <field name="job_id" required="1" attrs="{'readonly': [('status', '=', 'approved')]}"/>
+                            <field name="employee_ids" widget="many2many_tags" options="{'no_create': False}"
+                                   required="1" attrs="{'readonly': [('status', '=', 'approved')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Details">
+                            <field name="description" placeholder="Enter details..."
+                                   attrs="{'readonly': [('status', '=', 'approved')]}"/>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Additional notes..."
+                                   attrs="{'readonly': [('status', '=', 'approved')]}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_overtime_pre_approval_search_view" model="ir.ui.view">
+        <field name="name">hr.overtime.pre.approval.search.view</field>
+        <field name="model">hr.overtime.pre.approval</field>
+        <field name="arch" type="xml">
+            <search string="Overtime Pre-Approval Search">
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="status"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                </group>
+
+                <filter name="filter_status_pending" string="Pending" domain="[('status', '=', 'submitted')]"/>
+                <filter name="filter_status_approved" string="Approved" domain="[('status', '=', 'approved')]"/>
+                <filter name="filter_status_rejected" string="Rejected" domain="[('status', '=', 'rejected')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_overtime_pre_approval_view_tree" model="ir.ui.view">
+        <field name="name">hr.overtime.pre.approval.view.tree</field>
+        <field name="model">hr.overtime.pre.approval</field>
+        <field name="arch" type="xml">
+            <tree string="Overtime Pre-Approval">
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="hr_overtime_pre_approval_action" model="ir.actions.act_window">
+        <field name="name">Overtime Pre-Approval</field>
+        <field name="res_model">hr.overtime.pre.approval</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hr_overtime_pre_approval_search_view"/>
+        <field name="domain">[]</field>
+    </record>
+
+    <menuitem id="hr_overtime_pre_approval_menu"
+              name="Overtime Pre-Approval"
+              parent="centrics_hr_overtime.hr_overtime_rule_menu_root"
+              sequence="3"
+              action="hr_overtime_pre_approval_action"
+               groups="centrics_hr_overtime_group_pre_approval_user,centrics_hr_overtime_group_pre_approval_manager"
+    />
+
+</odoo>

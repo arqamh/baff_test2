@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_salary_sheet_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.sheet.wizard.view.form</field>
+        <field name="model">hr.salary.sheet.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Salary Sheet">
+                <group>
+                    <field name="payslip_run_id"/>
+                    <field name="employee_category"/>
+                </group>
+                <footer>
+                    <button name="action_generate_report" type="object"
+                            string="Generate Excel" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_salary_sheet_wizard" model="ir.actions.act_window">
+        <field name="name">Salary Sheet</field>
+        <field name="res_model">hr.salary.sheet.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_salary_sheet_wizard_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Custom Reports sub-menu under Payroll > Reporting -->
+    <menuitem id="menu_hr_payroll_custom_reports"
+              name="Custom Reports"
+              parent="hr_payroll.menu_hr_payroll_report"
+              sequence="100"/>
+
+    <menuitem id="menu_hr_salary_sheet"
+              name="Salary Sheet"
+              parent="menu_hr_payroll_custom_reports"
+              action="action_hr_salary_sheet_wizard"
+              sequence="10"/>
+
+</odoo>

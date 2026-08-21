@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_procurement_plan_all,access.procurement_plan.all,model_procurement_plan,,1,0,0,0
+access_procurement_plan_user,access.procurement_plan.user,model_procurement_plan,procurement_plan.access_group_procurement_plan_user,1,1,1,1
+access_merge_procurementplan_wizard_user,access.merge.procurementplan.wizard.user,model_merge_procurementplan_wizard,procurement_plan.access_group_procurement_plan_user,1,1,1,1
+access_merge_procurementplan_wizard_line_user,access.merge.procurementplan.wizard.line.user,model_merge_procurementplan_wizard_line,procurement_plan.access_group_procurement_plan_user,1,1,1,1
+access_procurement_plan_color_user,access.procurement.plan.color.user,model_procurement_plan_color,,1,1,1,1

@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ========================================== -->
+    <!-- SALARY STRUCTURES -->
+    <!-- ========================================== -->
+
+    <!-- Legacy: Ocean Voyager Salary Structure (kept for backward compatibility) -->
+    <record id="baff_hr_payroll_structure_ocean_voyager" model="hr.payroll.structure">
+        <field name="name">Ocean Voyager Salary Structure (Legacy)</field>
+        <field name="code">OCEAN_VOYAGER</field>
+        <field name="type_id" ref="hr_contract.structure_type_employee"/>
+    </record>
+
+    <!-- Staff Salary Structure -->
+    <record id="baff_hr_payroll_structure_staff" model="hr.payroll.structure">
+        <field name="name">Ocean Voyager - Staff Salary Structure</field>
+        <field name="code">OCEAN_VOYAGER_STAFF</field>
+        <field name="type_id" ref="hr_contract.structure_type_employee"/>
+    </record>
+
+    <!-- Non-Staff Salary Structure -->
+    <record id="baff_hr_payroll_structure_non_staff" model="hr.payroll.structure">
+        <field name="name">Ocean Voyager - Non-Staff Salary Structure</field>
+        <field name="code">OCEAN_VOYAGER_NON_STAFF</field>
+        <field name="type_id" ref="hr_contract.structure_type_employee"/>
+    </record>
+
+    <!-- Optional informative category to show totals (doesn't affect Net) -->
+    <record id="baff_rule_category_info" model="hr.salary.rule.category">
+        <field name="name">Information</field>
+        <field name="code">INFO</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- FIXED ALLOWANCE/DEDUCTION TYPE REGISTRY    -->
+    <!-- Must be defined before any salary rule     -->
+    <!-- that references them via                   -->
+    <!-- fixed_allowance_deduction_id               -->
+    <!-- ========================================== -->
+
+    <record id="fixed_allowance_deduction_attendance_allowance" model="fixed.allowance.deduction">
+        <field name="name">Attendance Allowance</field>
+        <field name="input_type_id" ref="baff_input_attendance_allowance"/>
+    </record>
+
+    <record id="fixed_allowance_deduction_special_allowance" model="fixed.allowance.deduction">
+        <field name="name">Special Allowance</field>
+        <field name="input_type_id" ref="baff_input_special_allowance"/>
+    </record>
+
+    <record id="fixed_allowance_deduction_relocation_allowance" model="fixed.allowance.deduction">
+        <field name="name">Relocation Allowance</field>
+        <field name="input_type_id" ref="baff_input_relocation_allowance"/>
+    </record>
+
+    <record id="fixed_allowance_deduction_leave_allowance" model="fixed.allowance.deduction">
+        <field name="name">Leave Allowance</field>
+        <field name="input_type_id" ref="baff_input_leave_allowance"/>
+    </record>
+
+    <record id="fixed_allowance_deduction_special_incentive" model="fixed.allowance.deduction">
+        <field name="name">Special Incentive</field>
+        <field name="input_type_id" ref="baff_input_special_incentive"/>
+    </record>
+
+    <record id="fixed_allowance_deduction_leader_allowance" model="fixed.allowance.deduction">
+        <field name="name">Leader Allowance</field>
+        <field name="input_type_id" ref="baff_input_leader_allowance"/>
+    </record>
+
+    <record id="fixed_deduction_salary_advance" model="fixed.allowance.deduction">
+        <field name="name">Salary Advance</field>
+        <field name="input_type_id" ref="baff_input_salary_advance"/>
+    </record>
+
+    <record id="fixed_deduction_team_help_fund" model="fixed.allowance.deduction">
+        <field name="name">Team Help Fund</field>
+        <field name="input_type_id" ref="baff_input_team_help"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- LEGACY SALARY RULES (Ocean Voyager) -->
+    <!-- ========================================== -->
+
+    <!-- 1. Basic Salary -->
+    <record id="baff_hr_salary_rule_basic" model="hr.salary.rule">
+        <field name="name">Basic Salary</field>
+        <field name="code">BAFF_BASIC</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.wage or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 2. Amount of Normal OT Hours -->
+    <record id="baff_hr_salary_rule_norm_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Normal OT Hours</field>
+        <field name="code">NORM_OT_AMT</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = ((inputs.NORM_OT_HRS.amount if inputs.NORM_OT_HRS else 0.0) * ((contract.wage/240) *1.5) or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 3. Amount of Double OT hours -->
+    <record id="baff_hr_salary_rule_dbl_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Double OT hours</field>
+        <field name="code">DBL_OT_AMT</field>
+        <field name="sequence">31</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = ((inputs.DBL_OT_HRS.amount if inputs.DBL_OT_HRS else 0.0) * ((contract.wage/240) *2) or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 4. Amount of Triple OT hours -->
+    <record id="baff_hr_salary_rule_tpl_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Triple OT hours</field>
+        <field name="code">TRPL_OT_AMT</field>
+        <field name="sequence">32</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = ((inputs.TRPL_OT_HRS.amount if inputs.TRPL_OT_HRS else 0.0) * ((contract.wage/240) *3) or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 5. Amount of Holiday hours -->
+    <record id="baff_hr_salary_rule_hod_amount" model="hr.salary.rule">
+        <field name="name">Amount of Holiday hours</field>
+        <field name="code">HOL_AMT</field>
+        <field name="sequence">33</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.HOL_HRS.amount if inputs.HOL_HRS else 0.0) * ((contract.wage/26)*1.5) or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 6. Attendance Allowance (input) -->
+    <record id="baff_hr_salary_rule_attendance_allowance" model="hr.salary.rule">
+        <field name="name">Attendance Allowance</field>
+        <field name="code">ATTND_ALLW</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.ATTND_ALLW.amount if inputs.ATTND_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_attendance_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 7. Special Allowance (input) -->
+    <record id="baff_hr_salary_rule_special_allowance" model="hr.salary.rule">
+        <field name="name">Special Allowance</field>
+        <field name="code">SPEC_ALLW</field>
+        <field name="sequence">41</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.SPEC_ALLW.amount if inputs.SPEC_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_special_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 8. Relocation Allowance (input) -->
+    <record id="baff_hr_salary_rule_relocation_allowance" model="hr.salary.rule">
+        <field name="name">Relocation Allowance</field>
+        <field name="code">REL_ALLW</field>
+        <field name="sequence">42</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.REl_ALW.amount if inputs.REl_ALW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_relocation_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 9. Leave Allowance (input) -->
+    <record id="baff_hr_salary_rule_leave_allowance" model="hr.salary.rule">
+        <field name="name">Leave Allowance</field>
+        <field name="code">LEAVE_ALLW</field>
+        <field name="sequence">43</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.LEAVE_ALLW.amount if inputs.LEAVE_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_leave_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 10. Gross Salary = Basic + Allowances (incl. OT amounts) -->
+    <record id="baff_hr_salary_rule_gross" model="hr.salary.rule">
+        <field name="name">Gross Salary</field>
+        <field name="code">BAFF_GROSS</field>
+        <field name="sequence">100</field>
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (categories.BASIC or 0.0) + (categories.ALW or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 9. Salary Advances (deduction via input) -->
+    <record id="baff_hr_salary_rule_salary_advance" model="hr.salary.rule">
+        <field name="name">Salary Advances</field>
+        <field name="code">SAL_ADV</field>
+        <field name="sequence">110</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.SAL_ADV.amount if inputs.SAL_ADV else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_deduction_salary_advance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 10. Team Help Fund (deduction via input) -->
+    <record id="baff_hr_salary_rule_team_help" model="hr.salary.rule">
+        <field name="name">Team Help Fund</field>
+        <field name="code">TEAM_HELP</field>
+        <field name="sequence">115</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.TEAM_HELP.amount if inputs.TEAM_HELP else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_deduction_team_help_fund"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 11. EPF 8% (employee deduction) - on EPF/ETF Base -->
+    <record id="baff_hr_salary_rule_epf_8" model="hr.salary.rule">
+        <field name="name">EPF 8% (Employee)</field>
+        <field name="code">EPF_EE_8</field>
+        <field name="sequence">120</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -1 * epf_etf_base() * 0.08</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="epf_8" eval="True"/>
+    </record>
+
+    <!-- 12. Payee TAX -->
+    <record id="baff_hr_salary_rule_paye_tax" model="hr.salary.rule">
+        <field name="name">Payee TAX</field>
+        <field name="code">PAYE_TAX</field>
+        <field name="sequence">130</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = employee.compute_payee_tax_amount(categories.GROSS or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 13. No Pay deductions (input) -->
+    <record id="baff_hr_salary_rule_nopay" model="hr.salary.rule">
+        <field name="name">No Pay deductions</field>
+        <field name="code">NOPAY_DED</field>
+        <field name="sequence">150</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.NOPAY_DED.amount if inputs.NOPAY_DED else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 14. Total Deductions (informational) -->
+    <record id="baff_hr_salary_rule_total_deductions" model="hr.salary.rule">
+        <field name="name">Total Deductions</field>
+        <field name="code">TOT_DED</field>
+        <field name="sequence">180</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.DED or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 15. Net Salary -->
+    <record id="baff_hr_salary_rule_net" model="hr.salary.rule">
+        <field name="name">Net Salary</field>
+        <field name="code">BAFF_NET</field>
+        <field name="sequence">190</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = BAFF_GROSS + TOT_DED</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 16. EPF 3% (Employer Contribution) - on EPF/ETF Base -->
+    <record id="baff_hr_salary_rule_epf_3" model="hr.salary.rule">
+        <field name="name">EPF 3% (Employer)</field>
+        <field name="code">EPF_ER_3</field>
+        <field name="sequence">200</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = epf_etf_base() * 0.03</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="etf_3" eval="True"/>
+    </record>
+
+    <!-- 17. EPF 12% (Employer Contribution) - on EPF/ETF Base -->
+    <record id="baff_hr_salary_rule_epf_12" model="hr.salary.rule">
+        <field name="name">EPF 12% (Employer)</field>
+        <field name="code">EPF_ER_12</field>
+        <field name="sequence">210</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = epf_etf_base() * 0.12</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="epf_12" eval="True"/>
+    </record>
+
+    <!-- 18. Normal OT Hours (display qty only) -->
+    <record id="baff_hr_salary_rule_norm_ot_hours" model="hr.salary.rule">
+        <field name="name">Normal OT Hours</field>
+        <field name="code">NORM_OT_HRS</field>
+        <field name="sequence">250</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.NORM_OT_HRS.amount if inputs.NORM_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 19. Double OT Hours (display qty only) -->
+    <record id="baff_hr_salary_rule_dbl_ot_hours" model="hr.salary.rule">
+        <field name="name">Double OT Hours</field>
+        <field name="code">DBL_OT_HRS</field>
+        <field name="sequence">251</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.DBL_OT_HRS.amount if inputs.DBL_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 20. Triple OT Hours (display qty only) -->
+    <record id="baff_hr_salary_rule_tpl_ot_hours" model="hr.salary.rule">
+        <field name="name">Triple OT Hours</field>
+        <field name="code">TRPL_OT_HRS</field>
+        <field name="sequence">252</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.TRPL_OT_HRS.amount if inputs.TRPL_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_ocean_voyager"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- STAFF SALARY RULES -->
+    <!-- ========================================== -->
+
+    <!-- 1. Basic Salary -->
+    <record id="baff_staff_hr_salary_rule_basic" model="hr.salary.rule">
+        <field name="name">Basic Salary</field>
+        <field name="code">BAFF_BASIC</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.wage or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+
+
+    <!-- 2. Amount of Normal OT Hours -->
+    <record id="baff_staff_hr_salary_rule_norm_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Normal OT Hours</field>
+        <field name="code">NORM_OT_AMT</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.NORM_OT_HRS.amount if inputs.NORM_OT_HRS else 0.0) * (contract.baff_ot_rate_normal or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 3. Amount of Double OT hours -->
+    <record id="baff_staff_hr_salary_rule_dbl_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Double OT hours</field>
+        <field name="code">DBL_OT_AMT</field>
+        <field name="sequence">31</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.DBL_OT_HRS.amount if inputs.DBL_OT_HRS else 0.0) * (contract.baff_ot_rate_double or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 4. Amount of Triple OT hours -->
+    <record id="baff_staff_hr_salary_rule_tpl_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Triple OT hours</field>
+        <field name="code">TRPL_OT_AMT</field>
+        <field name="sequence">32</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.TRPL_OT_HRS.amount if inputs.TRPL_OT_HRS else 0.0) * (contract.baff_ot_rate_triple or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 5. Amount of Holiday hours -->
+    <record id="baff_staff_hr_salary_rule_hod_amount" model="hr.salary.rule">
+        <field name="name">Amount of Holiday hours</field>
+        <field name="code">HOL_AMT</field>
+        <field name="sequence">33</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.HOL_HRS.amount if inputs.HOL_HRS else 0.0) * ((contract.wage/30)*1.5) or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <record id="baff_staff_hr_salary_rule_special_incentive" model="hr.salary.rule">
+        <field name="name">Special Incentive</field>
+        <field name="code">SPEC_INCNTV</field>
+        <field name="sequence">35</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.SPEC_INCNTV.amount if inputs.SPEC_INCNTV else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_special_incentive"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 7. Attendance Allowance (input) -->
+    <record id="baff_staff_hr_salary_rule_attendance_allowance" model="hr.salary.rule">
+        <field name="name">Attendance Allowance</field>
+        <field name="code">ATTND_ALLW</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.ATTND_ALLW.amount if inputs.ATTND_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_attendance_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 7. Special Allowance (input) -->
+    <record id="baff_staff_hr_salary_rule_special_allowance" model="hr.salary.rule">
+        <field name="name">Special Allowance</field>
+        <field name="code">SPEC_ALLW</field>
+        <field name="sequence">41</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.SPEC_ALLW.amount if inputs.SPEC_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_special_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 8. Relocation Allowance (input) -->
+    <record id="baff_staff_hr_salary_rule_relocation_allowance" model="hr.salary.rule">
+        <field name="name">Relocation Allowance</field>
+        <field name="code">REL_ALLW</field>
+        <field name="sequence">42</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.REl_ALW.amount if inputs.REl_ALW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_relocation_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 9. Leave Allowance (input) -->
+    <record id="baff_staff_hr_salary_rule_leave_allowance" model="hr.salary.rule">
+        <field name="name">Leave Allowance</field>
+        <field name="code">LEAVE_ALLW</field>
+        <field name="sequence">43</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.LEAVE_ALLW.amount if inputs.LEAVE_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_leave_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 10. Gross Salary = Basic + Allowances (incl. OT amounts) -->
+    <record id="baff_staff_hr_salary_rule_gross" model="hr.salary.rule">
+        <field name="name">Gross Salary</field>
+        <field name="code">BAFF_GROSS</field>
+        <field name="sequence">100</field>
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (categories.BASIC or 0.0) + (categories.ALW or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 9. Salary Advances (deduction via input) -->
+    <record id="baff_staff_hr_salary_rule_salary_advance" model="hr.salary.rule">
+        <field name="name">Salary Advances</field>
+        <field name="code">SAL_ADV</field>
+        <field name="sequence">110</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.SAL_ADV.amount if inputs.SAL_ADV else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_deduction_salary_advance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 10. Team Help Fund (deduction via input) -->
+    <record id="baff_staff_hr_salary_rule_team_help" model="hr.salary.rule">
+        <field name="name">Team Help Fund</field>
+        <field name="code">TEAM_HELP</field>
+        <field name="sequence">115</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.TEAM_HELP.amount if inputs.TEAM_HELP else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_deduction_team_help_fund"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 11. EPF 8% (employee deduction) - on EPF/ETF Base -->
+    <record id="baff_staff_hr_salary_rule_epf_8" model="hr.salary.rule">
+        <field name="name">EPF 8% (Employee)</field>
+        <field name="code">EPF_EE_8</field>
+        <field name="sequence">120</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -1 * epf_etf_base() * 0.08</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="epf_8" eval="True"/>
+    </record>
+
+    <!-- 12. Payee TAX -->
+    <record id="baff_staff_hr_salary_rule_paye_tax" model="hr.salary.rule">
+        <field name="name">Payee TAX</field>
+        <field name="code">PAYE_TAX</field>
+        <field name="sequence">130</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = employee.compute_payee_tax_amount(categories.GROSS or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 13. No Pay deductions (input) -->
+    <record id="baff_staff_hr_salary_rule_nopay" model="hr.salary.rule">
+        <field name="name">No Pay deductions</field>
+        <field name="code">NOPAY_DED</field>
+        <field name="sequence">150</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.NOPAY_DED.amount if inputs.NOPAY_DED else 0.0) * (contract.wage / 30)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 14. Total Deductions (informational) -->
+    <record id="baff_staff_hr_salary_rule_total_deductions" model="hr.salary.rule">
+        <field name="name">Total Deductions</field>
+        <field name="code">TOT_DED</field>
+        <field name="sequence">180</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.DED or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 15. Net Salary -->
+    <record id="baff_staff_hr_salary_rule_net" model="hr.salary.rule">
+        <field name="name">Net Salary</field>
+        <field name="code">BAFF_NET</field>
+        <field name="sequence">190</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = BAFF_GROSS + TOT_DED</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 16. EPF 3% (Employer Contribution) - on EPF/ETF Base -->
+    <record id="baff_staff_hr_salary_rule_epf_3" model="hr.salary.rule">
+        <field name="name">EPF 3% (Employer)</field>
+        <field name="code">EPF_ER_3</field>
+        <field name="sequence">200</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = epf_etf_base() * 0.03</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="etf_3" eval="True"/>
+    </record>
+
+    <!-- 17. EPF 12% (Employer Contribution) - on EPF/ETF Base -->
+    <record id="baff_staff_hr_salary_rule_epf_12" model="hr.salary.rule">
+        <field name="name">EPF 12% (Employer)</field>
+        <field name="code">EPF_ER_12</field>
+        <field name="sequence">210</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = epf_etf_base() * 0.12</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="epf_12" eval="True"/>
+    </record>
+
+    <!-- 18. Normal OT Hours (display qty only) -->
+    <record id="baff_staff_hr_salary_rule_norm_ot_hours" model="hr.salary.rule">
+        <field name="name">Normal OT Hours</field>
+        <field name="code">NORM_OT_HRS</field>
+        <field name="sequence">250</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.NORM_OT_HRS.amount if inputs.NORM_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 19. Double OT Hours (display qty only) -->
+    <record id="baff_staff_hr_salary_rule_dbl_ot_hours" model="hr.salary.rule">
+        <field name="name">Double OT Hours</field>
+        <field name="code">DBL_OT_HRS</field>
+        <field name="sequence">251</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.DBL_OT_HRS.amount if inputs.DBL_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 20. Triple OT Hours (display qty only) -->
+    <record id="baff_staff_hr_salary_rule_tpl_ot_hours" model="hr.salary.rule">
+        <field name="name">Triple OT Hours</field>
+        <field name="code">TRPL_OT_HRS</field>
+        <field name="sequence">252</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.TRPL_OT_HRS.amount if inputs.TRPL_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- NON-STAFF SALARY RULES -->
+    <!-- ========================================== -->
+
+    <!-- 1. Basic Salary -->
+    <record id="baff_non_staff_hr_salary_rule_basic" model="hr.salary.rule">
+        <field name="name">Basic Salary</field>
+        <field name="code">BAFF_BASIC</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.wage or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 2. Amount of Normal OT Hours -->
+    <record id="baff_non_staff_hr_salary_rule_norm_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Normal OT Hours</field>
+        <field name="code">NORM_OT_AMT</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.NORM_OT_HRS.amount if inputs.NORM_OT_HRS else 0.0) * (contract.baff_ot_rate_normal or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 3. Amount of Double OT hours -->
+    <record id="baff_non_staff_hr_salary_rule_dbl_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Double OT hours</field>
+        <field name="code">DBL_OT_AMT</field>
+        <field name="sequence">31</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.DBL_OT_HRS.amount if inputs.DBL_OT_HRS else 0.0) * (contract.baff_ot_rate_double or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 4. Amount of Triple OT hours -->
+    <record id="baff_non_staff_hr_salary_rule_tpl_ot_amount" model="hr.salary.rule">
+        <field name="name">Amount of Triple OT hours</field>
+        <field name="code">TRPL_OT_AMT</field>
+        <field name="sequence">32</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.TRPL_OT_HRS.amount if inputs.TRPL_OT_HRS else 0.0) * (contract.baff_ot_rate_triple or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 5. Amount of Holiday hours -->
+    <record id="baff_non_staff_hr_salary_rule_hod_amount" model="hr.salary.rule">
+        <field name="name">Amount of Holiday hours</field>
+        <field name="code">HOL_AMT</field>
+        <field name="sequence">33</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.HOL_HRS.amount if inputs.HOL_HRS else 0.0) * ((contract.wage/26)*1.5) or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 6. Leader Allowance (Non-Staff only, sourced from contract fixed allowances) -->
+    <record id="baff_non_staff_hr_salary_rule_leader_allowance" model="hr.salary.rule">
+        <field name="name">Leader Allowance</field>
+        <field name="code">LDR_ALLW</field>
+        <field name="sequence">36</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.LDR_ALLW.amount if inputs.LDR_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_leader_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 7. Attendance Allowance (input) -->
+    <record id="baff_non_staff_hr_salary_rule_attendance_allowance" model="hr.salary.rule">
+        <field name="name">Attendance Allowance</field>
+        <field name="code">ATTND_ALLW</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.ATTND_ALLW.amount if inputs.ATTND_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_attendance_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 7. Special Allowance (input) -->
+    <record id="baff_non_staff_hr_salary_rule_special_allowance" model="hr.salary.rule">
+        <field name="name">Special Allowance</field>
+        <field name="code">SPEC_ALLW</field>
+        <field name="sequence">41</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.SPEC_ALLW.amount if inputs.SPEC_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_special_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 8. Relocation Allowance (input) -->
+    <record id="baff_non_staff_hr_salary_rule_relocation_allowance" model="hr.salary.rule">
+        <field name="name">Relocation Allowance</field>
+        <field name="code">REL_ALLW</field>
+        <field name="sequence">42</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.REl_ALW.amount if inputs.REl_ALW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_relocation_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 9. Leave Allowance (input) -->
+    <record id="baff_non_staff_hr_salary_rule_leave_allowance" model="hr.salary.rule">
+        <field name="name">Leave Allowance</field>
+        <field name="code">LEAVE_ALLW</field>
+        <field name="sequence">43</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.LEAVE_ALLW.amount if inputs.LEAVE_ALLW else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_allowance_deduction_leave_allowance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 10. Gross Salary = Basic + Allowances (incl. OT amounts) -->
+    <record id="baff_non_staff_hr_salary_rule_gross" model="hr.salary.rule">
+        <field name="name">Gross Salary</field>
+        <field name="code">BAFF_GROSS</field>
+        <field name="sequence">100</field>
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (categories.BASIC or 0.0) + (categories.ALW or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 9. Salary Advances (deduction via input) -->
+    <record id="baff_non_staff_hr_salary_rule_salary_advance" model="hr.salary.rule">
+        <field name="name">Salary Advances</field>
+        <field name="code">SAL_ADV</field>
+        <field name="sequence">110</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.SAL_ADV.amount if inputs.SAL_ADV else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_deduction_salary_advance"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 10. Team Help Fund (deduction via input) -->
+    <record id="baff_non_staff_hr_salary_rule_team_help" model="hr.salary.rule">
+        <field name="name">Team Help Fund</field>
+        <field name="code">TEAM_HELP</field>
+        <field name="sequence">115</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.TEAM_HELP.amount if inputs.TEAM_HELP else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="fixed_allowance_deduction_id" ref="fixed_deduction_team_help_fund"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 11. EPF 8% (employee deduction) - on EPF/ETF Base -->
+    <record id="baff_non_staff_hr_salary_rule_epf_8" model="hr.salary.rule">
+        <field name="name">EPF 8% (Employee)</field>
+        <field name="code">EPF_EE_8</field>
+        <field name="sequence">120</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -1 * epf_etf_base() * 0.08</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="epf_8" eval="True"/>
+    </record>
+
+    <!-- 12. Payee TAX -->
+    <record id="baff_non_staff_hr_salary_rule_paye_tax" model="hr.salary.rule">
+        <field name="name">Payee TAX</field>
+        <field name="code">PAYE_TAX</field>
+        <field name="sequence">130</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = employee.compute_payee_tax_amount(categories.GROSS or 0.0)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 13. No Pay deductions (input) -->
+    <record id="baff_non_staff_hr_salary_rule_nopay" model="hr.salary.rule">
+        <field name="name">No Pay deductions</field>
+        <field name="code">NOPAY_DED</field>
+        <field name="sequence">150</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = (inputs.NOPAY_DED.amount if inputs.NOPAY_DED else 0.0) * (contract.wage / 26)</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 14. Total Deductions (informational) -->
+    <record id="baff_non_staff_hr_salary_rule_total_deductions" model="hr.salary.rule">
+        <field name="name">Total Deductions</field>
+        <field name="code">TOT_DED</field>
+        <field name="sequence">180</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.DED or 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 15. Net Salary -->
+    <record id="baff_non_staff_hr_salary_rule_net" model="hr.salary.rule">
+        <field name="name">Net Salary</field>
+        <field name="code">BAFF_NET</field>
+        <field name="sequence">190</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = BAFF_GROSS + TOT_DED</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="appear_as_subtotal_in_payslip">True</field>
+    </record>
+
+    <!-- 16. EPF 3% (Employer Contribution) - on EPF/ETF Base -->
+    <record id="baff_non_staff_hr_salary_rule_epf_3" model="hr.salary.rule">
+        <field name="name">EPF 3% (Employer)</field>
+        <field name="code">EPF_ER_3</field>
+        <field name="sequence">200</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = epf_etf_base() * 0.03</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="etf_3" eval="True"/>
+    </record>
+
+    <!-- 17. EPF 12% (Employer Contribution) - on EPF/ETF Base -->
+    <record id="baff_non_staff_hr_salary_rule_epf_12" model="hr.salary.rule">
+        <field name="name">EPF 12% (Employer)</field>
+        <field name="code">EPF_ER_12</field>
+        <field name="sequence">210</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = epf_etf_base() * 0.12</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+        <field name="epf_12" eval="True"/>
+    </record>
+
+    <!-- 18. Normal OT Hours (display qty only) -->
+    <record id="baff_non_staff_hr_salary_rule_norm_ot_hours" model="hr.salary.rule">
+        <field name="name">Normal OT Hours</field>
+        <field name="code">NORM_OT_HRS</field>
+        <field name="sequence">250</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.NORM_OT_HRS.amount if inputs.NORM_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 19. Double OT Hours (display qty only) -->
+    <record id="baff_non_staff_hr_salary_rule_dbl_ot_hours" model="hr.salary.rule">
+        <field name="name">Double OT Hours</field>
+        <field name="code">DBL_OT_HRS</field>
+        <field name="sequence">251</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.DBL_OT_HRS.amount if inputs.DBL_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <!-- 20. Triple OT Hours (display qty only) -->
+    <record id="baff_non_staff_hr_salary_rule_tpl_ot_hours" model="hr.salary.rule">
+        <field name="name">Triple OT Hours</field>
+        <field name="code">TRPL_OT_HRS</field>
+        <field name="sequence">252</field>
+        <field name="category_id" ref="baff_rule_category_info"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.TRPL_OT_HRS.amount if inputs.TRPL_OT_HRS else 0.0</field>
+        <field name="struct_id" ref="baff_hr_payroll_structure_non_staff"/>
+        <field name="appears_on_payslip">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Public Holiday work entry type (covers public, poya, religious via holiday_mapping filter) -->
+    <record id="hr_work_entry_type_public_holiday" model="hr.work.entry.type">
+        <field name="name">Public Holiday</field>
+        <field name="code">PUBLIC_HOLIDAY</field>
+        <field name="holiday_mapping">public</field>
+        <field name="is_leave">True</field>
+    </record>
+
+    <!-- Mercantile Holiday work entry type -->
+    <record id="hr_work_entry_type_mercantile_holiday" model="hr.work.entry.type">
+        <field name="name">Mercantile Holiday</field>
+        <field name="code">MERCANTILE_HOLIDAY</field>
+        <field name="holiday_mapping">mercantile</field>
+        <field name="is_leave">True</field>
+    </record>
+
+    <!-- Time Off type for Public Holiday -->
+    <record id="hr_leave_type_public_holiday" model="hr.leave.type">
+        <field name="name">Public Holiday</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">day</field>
+        <field name="time_type">leave</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_type_public_holiday"/>
+    </record>
+
+    <!-- Time Off type for Mercantile Holiday -->
+    <record id="hr_leave_type_mercantile_holiday" model="hr.leave.type">
+        <field name="name">Mercantile Holiday</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">day</field>
+        <field name="time_type">leave</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_type_mercantile_holiday"/>
+    </record>
+
+</odoo>

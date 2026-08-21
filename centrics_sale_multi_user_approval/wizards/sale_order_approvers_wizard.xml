@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Approval User wizard and action -->
+    <record id="sale_order_approvers_wizard" model="ir.ui.view">
+        <field name="name">sale.order.approvers.wizard.form</field>
+        <field name="model">sale.order.approvers.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Approvers">
+                <sheet>
+                    <h2>This Customer triggered the following validations, therefore this sales order will have to go
+                        through an approval process.
+                    </h2>
+                    <group>
+                        <group>
+                            <field name="msg" invisible="1"/>
+                            <field name="payment_term" readonly="1"/>
+                            <field name="gp_margin" readonly="1"/>
+                            <field name="credit_limit" readonly="1"/>
+                            <separator/>
+                            <field name="order_id" invisible="1"/>
+                            <field name="model_id" invisible="1"/>
+                        </group>
+                        <separator/>
+                        <separator/>
+                        <field name="name" readonly="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="sale_order_approver_line_ids">
+                            <tree editable="top">
+                                <field name="sequence" required="1" widget="handle"/>
+                                <field name="user_id" required="1"/>
+                                <field name="so_approve_line_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string='Send for Approval' name="send_for_approval" type="object" class="btn-primary"/>
+                    <button string="Abort" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="request_approval_user_wizard_action" model="ir.actions.act_window">
+        <field name="name">Request for Approval</field>
+        <field name="res_model">sale.order.approvers.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_order_approvers_wizard"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_salary_rule_form_epf" model="ir.ui.view">
+        <field name="name">hr.salary.rule.form.inherit.centrics.hr.provident.fund</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+        <field name="arch" type="xml">
+            <!-- Add EPF/ETF fields to Report Settings page -->
+            <xpath expr="//page[@name='custom_settings']" position="inside">
+                <group string="EPF/ETF Settings">
+                    <group>
+                        <field name="epf_20"/>
+                        <field name="epf_12"/>
+                    </group>
+                    <group>
+                        <field name="epf_8"/>
+                        <field name="etf_3"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

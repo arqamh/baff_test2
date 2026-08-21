@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_overtime_template_view_form" model="ir.ui.view">
+        <field name="name">hr.overtime.template.view.form</field>
+        <field name="model">hr.overtime.template</field>
+        <field name="arch" type="xml">
+            <form string="Overtime Template">
+                <header>
+                    <button name="action_lock" type="object" string="Lock" class="oe_highlight" attrs="{'invisible': [('state', '=', 'lock')]}"/>
+                    <button name="action_set_to_draft" type="object" string="Set to Draft" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,lock"/>
+                </header>
+                <sheet>
+                    <div class="ribbon ribbon-top-right">
+                        <span class="bg-success" attrs="{'invisible': [('active', '=', False)]}">Active</span>
+                        <span class="bg-danger" attrs="{'invisible': [('active', '=', True)]}">Inactive</span>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Overtime Template Name"
+                                   required="True" style="font-size: min(4vw, 2.6rem);" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Applicable For">
+                            <field name="is_global" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                            <field name="job_position_ids" widget="many2many_tags" options="{'no_create': False}" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                        </group>
+                        <group string="Working Day Configurations">
+                            <field name="for_working_days" widget="radio" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                            <field name="check_in_time" attrs="{'invisible': [('for_working_days', '!=', 'predefined')], 'readonly': [('state', '=', 'lock')]}" widget="float_time"/>
+                            <field name="check_out_time" attrs="{'invisible': [('for_working_days', '!=', 'predefined')], 'readonly': [('state', '=', 'lock')]}" widget="float_time"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Enable Overtime for Multiple Days">
+                            <field name="enable_multiple_days" widget="boolean_toggle" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                            <field name="need_to_continue_from_first_day" widget="boolean_toggle" attrs="{'invisible':[('enable_multiple_days', '!=', True)], 'readonly': [('state', '=', 'lock')]}"/>
+                            <field name="use_separate_overtime_rule" widget="boolean_toggle" attrs="{'invisible':[('need_to_continue_from_first_day', '!=', False)], 'readonly': [('state', '=', 'lock')]}"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <group>
+                        <group string="Dynamic Deduction Configurations">
+                            <field name="deduction_source" widget="radio" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <group string="System Configurations">
+                        <group>
+                            <field name="active" widget="boolean_toggle" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                        </group>
+                        <group>
+                            <field name="company_id" attrs="{'readonly': [('state', '=', 'lock')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="overtime_rules" string="Overtime Rules">
+                            <field name="rule_ids" mode="tree" context="{'default_template_id': active_id}" attrs="{'readonly': [('state', '=', 'lock')]}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="apply_on" required="1"/>
+                                    <field name="rule_type" required="1"/>
+                                    <field name="condition" required="1"/>
+                                    <field name="threshold_hours" attrs="{'readonly': [('condition', '=', 'after_hours')]}" force_save="1" widget="float_time"/>
+                                    <field name="deduction_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="multiple_rule_ids" string="Overtime Rules(For the Extra Days)" attrs="{'invisible':[('use_separate_overtime_rule', '!=', True)]}">
+                            <field name="multiple_rule_ids" mode="tree" context="{'default_secondary_template_id': active_id}" attrs="{'readonly': [('state', '=', 'lock')]}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="apply_on" required="1"/>
+                                    <field name="rule_type" required="1"/>
+                                    <field name="condition" required="1"/>
+                                    <field name="threshold_hours" attrs="{'readonly': [('condition', '=', 'after_hours')]}" force_save="1" widget="float_time"/>
+                                    <field name="deduction_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_overtime_template_view_tree" model="ir.ui.view">
+        <field name="name">hr.overtime.template.view.tree</field>
+        <field name="model">hr.overtime.template</field>
+        <field name="arch" type="xml">
+            <tree string="Overtime Template">
+                <field name="name"/>
+                <field name="is_global"/>
+                <field name="job_position_ids" widget="many2many_tags" options="{'no_create': False}"/>
+            </tree>
+        </field>
+    </record>
+
+     <!--View Action for the Overtime Templates-->
+    <record id="hr_overtime_template_action" model="ir.actions.act_window">
+        <field name="name">Overtime Template</field>
+        <field name="res_model">hr.overtime.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr_overtime_template_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Overtime Template
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="hr_overtime_template_menu"
+            name="Overtime Templates"
+            parent="centrics_hr_overtime.hr_overtime_rule_menu_root"
+            action="hr_overtime_template_action"
+            groups="centrics_hr_overtime_group_overtime_user"
+            sequence="1"
+    />
+</odoo>

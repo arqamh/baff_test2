@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hr_payslip_form" model="ir.ui.view">
+        <field name="name">hr.payslip.view.form.inherit.baff_hr_payroll_extend</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='worked_days_input']/field[@name='input_line_ids']" position="before">
+                <button type="object" name="action_recall_payslip_input_lines_calculation" icon="fa-retweet" help="Re-update Other Inputs"
+                        title = "Re-update Other Inputs" confirm="Are you sure to want to update the Input values ?"/>
+            </xpath>
+            <xpath expr="//form/header" position="inside">
+                <button
+                    name="%(baff_hr_payroll_extend.baff_hr_payslip_report_action)d"
+                    type="action"
+                    class="btn-primary"
+                    string="Download Payslip (PDF)"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.view.tree.inherited.baff_hr_payroll_extend</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button
+                        name="%(baff_hr_payroll_extend.baff_hr_payslip_report_action)d"
+                        type="action"
+                        class="btn-primary"
+                        string="Download Payslip (PDF)"
+                        context="{'active_model': 'hr.payslip', 'active_ids': active_ids}"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

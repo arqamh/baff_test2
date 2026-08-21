@@ -1,0 +1,21 @@
+<odoo>
+    <record id="baff_accounting_modifications_view_account_move_form" model="ir.ui.view">
+        <field name="name">baff.accounting.modifications.view.account.move.forml</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='ref']" position="before">
+                <field name="bill_reference"/>
+            </xpath>
+            <xpath expr="//label[@for='ref']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ref'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ref'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

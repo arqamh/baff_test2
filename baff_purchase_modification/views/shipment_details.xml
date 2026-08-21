@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_purchase_shipment_details_form" model="ir.ui.view">
+            <field name="name">purchase.shipment.details.form</field>
+            <field name="model">purchase.shipment.details</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment" edit="false">
+                    <sheet>
+                        <header>
+                        </header>
+                        <group>
+                            <group>
+                                <field name="purchase_id"/>
+                                <field name="date"/>
+                                <field name="project" optional="hide"/>
+                                <field name="partner_id" optional="hide"/>
+                                <field name="proforma_invoice_no" optional="hide"/>
+                                <field name="proforma_invoice_date" optional="hide"/>
+                                <field name="description" optional="hide"/>
+                                <field name="amount" optional="hide"/>
+                                <field name="tt_number" optional="hide"/>
+                                <field name="payment_date" optional="hide"/>
+                                <field name="boi_approval" optional="hide"/>
+                                <field name="mode_of_transport" optional="hide"/>
+                                <field name="incoterm" optional="hide"/>
+                                <field name="etd" optional="hide"/>
+
+                            </group>
+                            <group>
+                                <field name="revised_etd" optional="hide"/>
+                                <field name="eta" optional="hide"/>
+                                <field name="local_agent" optional="hide"/>
+                                <field name="freight_cost" optional="hide"/>
+                                <field name="finalized_date" optional="hide"/>
+                                <field name="airport" optional="hide"/>
+                                <field name="flight" optional="hide"/>
+                                <field name="clearance_agent" optional="hide"/>
+                                <field name="cus_dec_no" optional="hide"/>
+                                <field name="koggala_delivery_date" optional="hide"/>
+                                <field name="type_of_vehicle" optional="hide"/>
+                                <field name="package_size" optional="hide"/>
+                                <field name="remarks" optional="hide"/>
+                                <field name="clearance_invoice_no" optional="hide"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_purchase_shipment_details_list" model="ir.ui.view">
+            <field name="name">purchase.shipment.details.tree</field>
+            <field name="model">purchase.shipment.details</field>
+            <field name="arch" type="xml">
+                <tree string="Procurement Plan">
+                    <field name="purchase_id" />
+                    <field name="date" />
+                    <field name="project" optional="hide" />
+                    <field name="partner_id" optional="hide" />
+                    <field name="proforma_invoice_no" optional="hide" />
+                    <field name="proforma_invoice_date" optional="hide" />
+                    <field name="description" optional="hide" />
+                    <field name="amount" optional="hide" />
+                    <field name="tt_number" optional="hide" />
+                    <field name="payment_date" optional="hide" />
+                    <field name="boi_approval" optional="hide" />
+                    <field name="mode_of_transport" optional="hide" />
+                    <field name="incoterm" optional="hide" />
+                    <field name="etd" optional="hide" />
+                    <field name="revised_etd" optional="hide" />
+                    <field name="eta" optional="hide" />
+                    <field name="local_agent" optional="hide" />
+                    <field name="freight_cost" optional="hide" />
+                    <field name="finalized_date" optional="hide" />
+                    <field name="airport" optional="hide" />
+                    <field name="flight" optional="hide" />
+                    <field name="clearance_agent" optional="hide" />
+                    <field name="cus_dec_no" optional="hide" />
+                    <field name="koggala_delivery_date" optional="hide" />
+                    <field name="type_of_vehicle" optional="hide" />
+                    <field name="package_size" optional="hide" />
+                    <field name="remarks" optional="hide" />
+                    <field name="clearance_invoice_no" optional="hide" />
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_purchase_shipment_details_search" model="ir.ui.view">
+            <field name="name">purchase.shipment.details.search</field>
+            <field name="model">purchase.shipment.details</field>
+            <field name="arch" type="xml">
+                <search string="Shipment Details">
+                    <field name="purchase_id" />
+                    <field name="project" />
+                    <field name="project" />
+                    <field name="partner_id"/>
+                    <field name="date"/>
+                    <separator/>
+
+                    <group expand="1" string="Group By">
+                        <filter string="Supplier" name="group_by_partner_id" domain="[]"
+                                context="{'group_by':'partner_id'}"/>
+                        <filter string="Purchase Order" name="group_by_purchase_id" domain="[]"
+                                context="{'group_by':'purchase_id'}"/>
+                        <filter string="Date" name="group_by__date" domain="[]"
+                                context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_purchase_shipment_details" model="ir.actions.act_window">
+            <field name="name">Shipment Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.shipment.details</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no records
+                </p>
+            </field>
+        </record>
+
+
+        <record id="action_purchase_shipment_details_all" model="ir.actions.act_window">
+            <field name="name">Shipment Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.shipment.details</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no records
+                </p>
+            </field>
+        </record>
+            <menuitem name="Shipment Details" id="menuitem_purchase_shipment_details"  action="action_purchase_shipment_details"  parent="purchase.menu_procurement_management"/>
+
+    </data>
+</odoo>

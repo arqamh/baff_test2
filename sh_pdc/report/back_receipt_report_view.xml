@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cheque_report_account_payment">
+        <t t-call="web.html_container">
+<!--             <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"> -->
+                <t t-call="web.external_layout">
+					<div class="container">
+							<div class="row ">
+		                        <div class="col-12 text-center">
+		                            <span class=" text-center" style="border-bottom:2px solid #000;font-size:24px;margin:0 auto;">Authoraization checks receipt</span>
+		                        </div>
+		                    </div>
+		                    <div class='width:100%;text-align:right;'>
+	                    	<table class="table table-bordered float-right" style="width:90px;margin:20px 0;">
+		                        <tr>
+		                            <td></td>
+		                            <td></td>
+		                        </tr>
+		    	            </table>
+	                    </div>
+							
+							
+		                    <table width='100%'>
+		                        <tr>
+		                            <td style='width:20%;padding-bottom: 14px;padding-top: 12px;'>
+		                                <p > We Received</p>
+		                            </td>
+		
+		                            <td colspan='3'>
+		                            	<p style="border-bottom:2px dotted #000;">
+		                                :
+		                                <span t-if="doc.partner_id" t-field="doc.partner_id" />
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        <tr>
+		                            <td style='width:20%;padding-bottom: 14px;'>
+		                                <p >Date</p>
+		                            </td>
+		                            <td colspan='3'>
+		                            	<p style="border-bottom:2px dotted #000;">
+		                                :
+		                                <span t-if="doc.payment_date" t-field="doc.payment_date" />
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        <tr>
+		                            <td style='width:20%;padding-bottom: 14px;'>
+		                                <p >Due Date</p>
+		                            </td>
+		                            <td colspan='3'>
+		                            	<p style="border-bottom:2px dotted #000;">
+		                                :
+		                                <span t-if="doc.due_date" t-field="doc.due_date" />
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        <tr>
+		                            <td style='width:20%;padding-bottom: 14px;'>
+		                                <p > Cheque Number</p>
+		                            </td>
+		                            <td style='width:31%;'>
+		                            	<p style="border-bottom:2px dotted #000;"> : <span  t-if="doc.reference" t-field="doc.reference" /></p>
+		                            </td>
+		                            <td style='width:7%;padding-bottom: 14px;'>
+		                                <p >Bank</p>
+		                            </td>
+		                            <td style='width:38%;'>
+		                            	<p style="border-bottom:2px dotted #000;" > : <span t-if="doc.bank_id" t-field="doc.bank_id" /></p>
+		                            </td>
+		                        </tr>
+		                        <tr>
+		                            <td style='width:20%;padding-bottom: 14px;'>
+		                                <p >The Amount</p>
+		                            </td>
+		                            <td colspan='3'>
+		                            	<p style="border-bottom:2px dotted #000;">
+		                                :
+		                                <span t-if="doc.payment_amount" t-field="doc.payment_amount" />
+		                                </p>
+		                            </td>
+		                        </tr>
+		                        <tr>
+		                            <td style='width:20%;padding-bottom: 14px;'>
+		                                <p>The Amount in word</p>
+		                            </td>
+		                            <td colspan='3' >
+		                            	<p style="border-bottom:2px dotted #000;">
+		                                :
+		                                <span t-if="doc.check_amount_in_words" t-field="doc.check_amount_in_words" />
+		                                </p>
+		                            </td>
+		                        </tr>
+		                    </table>
+		                    <div class="row" style='margin-top:15px;'>
+		                        <div class="col-3"></div>
+		                        <div class="col-4">
+		                            <p>The recipient</p>
+		                            <p>...........</p>
+		                        </div>
+		                        <div class="col-4">
+		                            <p>Review</p>
+		                            <p>...........</p>
+		                        </div>
+		                    </div>
+						</div>
+                </t>
+            </t>
+	
+    </template>
+    
+    <template id="report_bank_receipt">
+	    <t t-call="web.html_container">
+	        <t t-foreach="docs" t-as="doc">
+	            <t t-call="sh_pdc.cheque_report_account_payment" t-lang="doc.partner_id.lang"/>
+	        </t>
+	    </t>
+	</template>
+    
+    <record id="cheque_report_account_payment_action" model="ir.actions.report">
+        <field name="name">Cheque Payment Receipt</field>
+        <field name="model">pdc.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sh_pdc.report_bank_receipt</field>
+        <field name="report_file">sh_pdc.report_bank_receipt</field>
+        <field name="print_report_name">'Account_payment - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_pdc_wizard" />
+        <field name="binding_type">report</field>
+    </record>
+    
+</odoo>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

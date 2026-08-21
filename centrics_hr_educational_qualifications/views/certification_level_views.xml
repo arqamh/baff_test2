@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Certification Level form view -->
+    <record id="certification_level_view_form" model="ir.ui.view">
+        <field name="name">certification.level.view.form</field>
+        <field name="model">certification.level</field>
+        <field name="arch" type="xml">
+            <form string="Certification">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Certification Level tree view -->
+    <record id="certification_level_view_tree" model="ir.ui.view">
+        <field name="name">certification.level.view.tree</field>
+        <field name="model">certification.level</field>
+        <field name="arch" type="xml">
+            <tree string="Certification">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- View Action for the Certification Level -->
+    <record id="certification_level_action" model="ir.actions.act_window">
+        <field name="name">Certification Level</field>
+        <field name="res_model">certification.level</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="educational_info_menu"
+            name="Educational"
+            parent="hr.menu_human_resources_configuration"
+            groups="hr.group_hr_user"
+            sequence="100"/>
+
+    <!-- menuitem for the certification level -->
+    <menuitem
+            id="certification_level_menu"
+            name="Certification Level"
+            parent="educational_info_menu"
+            action="certification_level_action"
+            groups="hr.group_hr_user"
+            sequence="1"
+    />
+
+
+
+
+</odoo>

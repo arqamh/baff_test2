@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+
+        <menuitem name="Google Connect" id="google_credentials_menu_root"/>
+
+        <menuitem name="Credentials" id="google_credentials_menu_1" parent="google_credentials_menu_root" action="google_credentials_action_window"/>
+        <menuitem name="Connector" id="google_credentials_menu_2" parent="google_credentials_menu_root" action="google_connector_action_window"/>
+        <menuitem name="History" id="google_credentials_menu_3" parent="google_credentials_menu_root"/>
+        <menuitem name="Import History" id="google_credentials_menu_3_sub_1" parent="google_credentials_menu_3" action="google_import_stats_action_window"/>
+        <menuitem name="Export History" id="google_credentials_menu_3_sub_2" parent="google_credentials_menu_3" action="google_export_stats_action_window"/>
+        <menuitem name="Settings" id="google_credentials_menu_4" parent="google_credentials_menu_root"/>
+        <menuitem name="CronJob Settings" id="google_credentials_menu_4_sub_1" parent="google_credentials_menu_4" action="google_cron_settings_action_window"/>
+
+    </data>
+</odoo>

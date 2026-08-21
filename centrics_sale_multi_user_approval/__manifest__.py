@@ -1,0 +1,25 @@
+{
+    'name': 'Centrics Sales Multi User Approval',
+    'sequence': 0,
+    'version': '15.0.0.1',
+    'license': 'LGPL-3',
+    'summary': "This module contains multi user approval for sales orders",
+    'author': 'Centrics Business Solutions PVT Ltd',
+    'company': 'Centrics Business Solutions PVT Ltd',
+    'website': 'http://www.centrics.cloud/',
+    'depends': ['base', 'sale', 'sale_margin', 'product_margin', 'account'],
+    'data': [
+        'data/mail_template.xml',
+        'security/ir.model.access.csv',
+        'security/security_groups.xml',
+        'views/res_company.xml',
+        'views/res_partners.xml',
+        'views/sale_order.xml',
+        'wizards/sale_order_approvers_wizard.xml',
+    ],
+    'demo': [
+    ],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+}

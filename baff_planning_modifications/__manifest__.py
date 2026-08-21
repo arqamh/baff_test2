@@ -1,0 +1,22 @@
+{
+    'name': 'Baff Planning Modifications',
+    'version': '16.0.0',
+    'sequence': 0,
+    'summary': 'This module contains all the modifications of the planning module of the Baff',
+    'author': 'Centrics Business Solutions PVT Ltd',
+    'company': 'Centrics Business Solutions PVT Ltd',
+    'website': 'http://www.centrics.cloud/',
+    'depends': ['base', 'planning', 'mrp', 'mrp_workorder'],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/security.xml',
+        'wizard/slot_planning_wizard_view.xml',
+        'views/planning_slot_view.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_users_view.xml',
+    ],
+    'demo': [],
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}

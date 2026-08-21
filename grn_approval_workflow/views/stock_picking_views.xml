@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit picking form: add approval header buttons and tracking, and
+         show the approval values in the native statusbar for GRNs. -->
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.view.form.inherit.grn.approval.workflow</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Hidden flags driving button visibility -->
+            <xpath expr="//field[@name='picking_type_code']" position="after">
+                <field name="is_grn" invisible="1"/>
+                <field name="show_grn_submit" invisible="1"/>
+                <field name="show_grn_approve_reject" invisible="1"/>
+                <field name="show_grn_reset" invisible="1"/>
+            </xpath>
+
+            <!-- Approval buttons -->
+            <xpath expr="//header/button[@name='action_confirm']" position="before">
+                <button name="action_grn_submit_for_approval"
+                        string="Submit for Approval"
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': [('show_grn_submit', '=', False)]}"/>
+                <button name="action_grn_approve"
+                        string="Approve" type="object" class="oe_highlight"
+                        attrs="{'invisible': [('show_grn_approve_reject', '=', False)]}"/>
+                <button name="action_grn_open_reject_wizard"
+                        string="Reject" type="object" class="btn-danger"
+                        attrs="{'invisible': [('show_grn_approve_reject', '=', False)]}"/>
+                <button name="action_grn_reset_to_draft"
+                        string="Reset to Draft" type="object"
+                        attrs="{'invisible': [('show_grn_reset', '=', False)]}"/>
+            </xpath>
+
+            <!-- Hide the two native Validate buttons for GRNs that aren't yet approved -->
+            <xpath expr="//header/button[@name='button_validate'][1]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('show_validate', '=', False), ('state', 'in', ('waiting','confirmed')), '&amp;', ('is_grn', '=', True), ('state', 'not in', ('approved', 'done'))]}</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='button_validate'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('show_validate', '=', False), ('state', 'not in', ('waiting','confirmed')), '&amp;', ('is_grn', '=', True), ('state', 'not in', ('approved', 'done'))]}</attribute>
+            </xpath>
+
+            <!-- Native statusbar: hide for GRNs (they get the approval-flavored one below) -->
+            <xpath expr="//header/field[@name='state']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_grn', '=', True)]}</attribute>
+            </xpath>
+
+            <!-- GRN-flavored statusbar: shows draft -> waiting_approval -> approved -> done -->
+            <xpath expr="//header/field[@name='state']" position="after">
+                <field name="state" widget="statusbar"
+                       statusbar_visible="draft,waiting_approval,approved,done"
+                       attrs="{'invisible': [('is_grn', '=', False)]}"/>
+            </xpath>
+
+            <!-- Approval tracking page -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Approval"
+                      attrs="{'invisible': [('is_grn', '=', False)]}">
+                    <group>
+                        <group string="Submission">
+                            <field name="submitted_by" readonly="1"/>
+                            <field name="submitted_date" readonly="1"/>
+                            <field name="grn_approver_ids" widget="many2many_tags"
+                                   readonly="1"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="Decision">
+                            <field name="approved_by" readonly="1"
+                                   attrs="{'invisible': [('approved_by', '=', False)]}"/>
+                            <field name="approval_date" readonly="1"
+                                   attrs="{'invisible': [('approval_date', '=', False)]}"/>
+                            <field name="approval_remarks" readonly="1"
+                                   attrs="{'invisible': [('approval_remarks', '=', False)]}"/>
+                            <field name="rejected_by" readonly="1"
+                                   attrs="{'invisible': [('rejected_by', '=', False)]}"/>
+                            <field name="rejection_date" readonly="1"
+                                   attrs="{'invisible': [('rejection_date', '=', False)]}"/>
+                            <field name="rejection_reason" readonly="1"
+                                   attrs="{'invisible': [('rejection_reason', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <separator string="Approval History"/>
+                    <field name="approval_log_ids" readonly="1">
+                        <tree create="false" delete="false" edit="false">
+                            <field name="event_date"/>
+                            <field name="action"/>
+                            <field name="user_id"/>
+                            <field name="reason" optional="show"/>
+                            <field name="remarks" optional="hide"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree view: extra decorations for the new state values -->
+    <record id="vpicktree" model="ir.ui.view">
+        <field name="name">stock.picking.view.tree.inherit.grn.approval.workflow</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="decoration-info">state == 'waiting_approval'</attribute>
+                <attribute name="decoration-success">state in ('approved','done')</attribute>
+                <attribute name="decoration-danger">state in ('cancel','rejected')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search view: filter by approval status -->
+    <record id="view_picking_internal_search" model="ir.ui.view">
+        <field name="name">stock.picking.view.search.inherit.grn.approval.workflow</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter string="Waiting Approval" name="filter_grn_waiting_approval"
+                        domain="[('state', '=', 'waiting_approval')]"/>
+                <filter string="Approved" name="filter_grn_approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter string="Rejected" name="filter_grn_rejected"
+                        domain="[('state', '=', 'rejected')]"/>
+                <filter string="Pending My Approval" name="filter_grn_pending_my_approval"
+                        domain="[('state', '=', 'waiting_approval'),
+                                 ('grn_approver_ids', 'in', [uid])]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action: GRNs Pending My Approval -->
+    <record id="stock_picking_action_grn_pending_my_approval" model="ir.actions.act_window">
+        <field name="name">GRNs Pending My Approval</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('picking_type_id.code', '=', 'incoming'),
+                              ('state', '=', 'waiting_approval'),
+                              ('grn_approver_ids', 'in', [uid])]</field>
+        <field name="context">{'search_default_filter_grn_pending_my_approval': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No GRNs are awaiting your approval.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_receipt_payment,access.account.receipt.payment,model_account_receipt_payment,base.group_user,1,1,1,1
+access_temp_account_move,access.temp.account.move,model_temp_account_move,base.group_user,1,1,1,1
+access_payment_sendfor_approval_wizard,access.payment.sendfor.approval.wizard,model_payment_sendfor_approval_wizard,base.group_user,1,1,1,1
+access_payment_approve_reject_comment_wizard,access.payment.approve.reject.comment.wizard,model_payment_approve_reject_comment_wizard,base.group_user,1,1,1,1
+
+
+
+
+

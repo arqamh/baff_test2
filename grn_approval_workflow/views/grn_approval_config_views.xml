@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="grn_approval_config_view_tree" model="ir.ui.view">
+        <field name="name">grn.approval.config.view.tree</field>
+        <field name="model">grn.approval.config</field>
+        <field name="arch" type="xml">
+            <tree string="GRN Approval Configurations">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="action_type"/>
+                <field name="picking_type_ids" widget="many2many_tags" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="active" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="grn_approval_config_view_form" model="ir.ui.view">
+        <field name="name">grn.approval.config.view.form</field>
+        <field name="model">grn.approval.config</field>
+        <field name="arch" type="xml">
+            <form string="GRN Approval Configuration">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Submit - Inbound Approvers"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="action_type"/>
+                            <field name="picking_type_ids" widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="template_id" options="{'no_create': True}"/>
+                            <field name="notify_creator"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Approvers"
+                              attrs="{'invisible': [('action_type', '!=', 'submit')]}">
+                            <p class="text-muted">
+                                Users listed here (directly or as members of the listed roles)
+                                can approve or reject GRNs matched by this configuration.
+                            </p>
+                            <group>
+                                <field name="approver_user_ids" widget="many2many_tags"/>
+                                <field name="approver_group_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Email Recipients">
+                            <p class="text-muted">
+                                Users listed here (directly or as members of the listed roles)
+                                will receive the notification email for this workflow action.
+                            </p>
+                            <group>
+                                <field name="recipient_user_ids" widget="many2many_tags"/>
+                                <field name="recipient_group_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Internal notes about this configuration..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="grn_approval_config_view_search" model="ir.ui.view">
+        <field name="name">grn.approval.config.view.search</field>
+        <field name="model">grn.approval.config</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="picking_type_ids"/>
+                <filter string="Submit" name="filter_submit"
+                        domain="[('action_type', '=', 'submit')]"/>
+                <filter string="Approve" name="filter_approve"
+                        domain="[('action_type', '=', 'approve')]"/>
+                <filter string="Reject" name="filter_reject"
+                        domain="[('action_type', '=', 'reject')]"/>
+                <separator/>
+                <filter string="Archived" name="filter_archived"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Workflow Action" name="group_action"
+                            context="{'group_by': 'action_type'}"/>
+                    <filter string="Company" name="group_company"
+                            context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="grn_approval_config_action" model="ir.actions.act_window">
+        <field name="name">GRN Approval Configuration</field>
+        <field name="res_model">grn.approval.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a GRN approval configuration.
+            </p>
+            <p>
+                Configure approvers and email recipients for the
+                Submit / Approve / Reject workflow actions.
+            </p>
+        </field>
+    </record>
+
+</odoo>

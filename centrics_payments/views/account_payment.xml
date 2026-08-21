@@ -1,0 +1,70 @@
+<odoo>
+    <record id="account_view_account_payment_form_inherit" model="ir.ui.view">
+        <field name="name">account.view.account.payment.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='action_post']" position="before">
+                <field name="is_available_payment_approval" invisible="1"/>
+                <field name="custom_url" invisible="1"/>
+                <button name="action_send_for_approval_payment" type="object" string="Send for Approval" class="btn btn-primary" attrs="{'invisible': [('is_available_payment_approval', '=', False)]}"/>
+                <button name="action_approve_payment" type="object" string="Approve" class="btn btn-primary" attrs="{'invisible': [('state', '!=', 'waiting_approval')]}"/>
+                <button name="action_reject_payment" type="object" string="Reject" class="btn btn-danger" attrs="{'invisible': [('state', '!=', 'waiting_approval')]}"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_post']" position="replace">
+                <button name="action_post" string="Confirm" type="object"  class="oe_highlight" invisible="1" data-hotkey="v"/>
+                <button name="button_action_post" string="Confirm" type="object" attrs="{'invisible': ['|',('state', '!=', 'draft'), ('is_available_payment_approval','=', True)]}" class="oe_highlight" data-hotkey="v"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="bill_ids" invisible="1"/>
+                <button name="button_open_bills" type="object" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': ['|',('bill_ids', '=', []), ('state', '!=', 'waiting_approval')]}">
+                    Bills
+                </button>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_method_line_id']" position="after">
+                <field name="payment_method_name" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="attributes">
+                <attribute name="required" >1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group2']" position="after">
+                <group name="deposit" attrs="{'invisible': [('payment_method_name', '!=', 'Direct Deposit')]}">
+                    <field name="main_bank_id" attrs="{ 'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="branch_id" attrs="{ 'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="partner_bank_account_id" attrs="{ 'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="reference_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="deposited_date" />
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='partner_bank_id']" position="after">
+                <field name="main_bank_id" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}"/>
+                <field name="cheque_no" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque'))], 'required': [('payment_method_name', 'in', ('Checks', 'Cheque'))],}"/>
+                <field name="cheque_date" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque'))]}"/>
+                <field name="reference_no" attrs="{'invisible': [('payment_method_name', 'not in', ('Direct Deposit'))]}"/>
+                <field name="deposited_date" attrs="{'invisible': [('payment_method_name', 'not in', ('Direct Deposit'))]}"/>
+                <field name="is_cheque_ac_payee" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}"/>
+                <field name="branch_id"  attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}" />
+                <field name="partner_bank_account_id"  attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}" />
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="centrics_payments_view_account_payment_tree" model="ir.ui.view">
+        <field name="name">centrics.payments.view.account.payment.tree</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_method_line_id']" position="after">
+                <field name="cheque_no" optional="show"/>
+                <field name="cheque_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

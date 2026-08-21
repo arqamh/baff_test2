@@ -1,0 +1,37 @@
+{
+    'name': 'HR Overtime',
+    'version': '16.0.1.1.0',
+    'sequence': 1,
+    'category': 'Human Resources/Attendances',
+    'license': 'OPL-1',
+    'author': "Centrics Business Solutions (Pvt) Ltd",
+    'website': 'http://www.centrics.cloud/',
+    'summary': 'Multiple Education Qualifications in the HR Module',
+    'description': """
+    """,
+    'depends': [
+        'base',
+        'hr',
+        'hr_attendance',
+    ],
+    'data': [
+        'security/centrics_hr_overtime_security.xml',
+        'security/centrics_hr_overtime_groups.xml',
+        'security/ir.model.access.csv',
+        'wizard/make_employee_overtime_views.xml',
+        'views/centrics_hr_overtime_menus.xml',
+        'views/res_config_settings_views.xml',
+        'views/hr_contract_views.xml',
+        'views/hr_attendance_views.xml',
+        'views/hr_overtime_rule_views.xml',
+        'views/hr_overtime_template_views.xml',
+        'views/hr_overtime_pre_approval_views.xml',
+        'views/buffer_time_configuration_views.xml',
+        'views/overtime_dynamic_deduction_views.xml',
+        'data/ir_sequence_data.xml',
+        'report/employee_overtime_report.xml'
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

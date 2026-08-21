@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="baff_inventory_modifications_mrp_bom_form_view" model="ir.ui.view">
+        <field name="name">baff.inventory.modifications.mrp.bom.form</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="before">
+                <field name="boat_type_ids" widget="many2many_tags" force_save="1"/>
+                <label for="is_this_standard_bom"/>
+                <div>
+                    <field name="is_this_standard_bom" readonly="1" force_save="1" class="oe_inline"/>
+                    <button name="action_true_standard_bom"
+                         string="Make Standard BOM" type="object"
+                         class="btn-danger oe_inline" style="border-radius: 10px;"
+                         attrs="{'invisible':[('is_this_standard_bom','=',True)]}"
+                         confirm="Are you want to Sure This Make to Standard BOM" />
+                <button name="action_false_standard_bom"
+                        string="Not Make Standard BOM" type="object"
+                        class="btn-danger oe_inline" style="border-radius: 10px;"
+                        attrs="{'invisible':[('is_this_standard_bom','=',False)]}"
+                        confirm="Are you want to Sure This Not Make to Standard BOM" />
+                </div>
+                <field name="bom_type"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

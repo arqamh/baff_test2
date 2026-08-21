@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="advance_type_view_tree" model="ir.ui.view">
+        <field name="name">advance.type.view.tree</field>
+        <field name="model">advance.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="calculation_method"/>
+                <field name="fixed_amount"/>
+                <field name="percentage_of_wage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="advance_type_view_form" model="ir.ui.view">
+        <field name="name">advance.type.view.form</field>
+        <field name="model">advance.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Advance Type"
+                                   style="font-size: min(4vw, 2.6rem);"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="advance_sequence_prefix" required="1"/>
+                            <field name="advance_sequence_id" readonly="1"/>
+                            <button name="action_generate_advance_sequence" type="object"
+                                    class="btn-primary o_enable btn"
+                                    icon="fa-plus-circle"
+                                    title="Generate Loan Sequence"
+                                    attrs="{'invisible': [('advance_sequence_id', '!=', False)]}"/>
+                        </group>
+                        <group></group>
+
+                    </group>
+                    <group>
+                        <group>
+
+                            <field name="calculation_method"/>
+                            <field name="fixed_amount" attrs="{'invisible': [('calculation_method', '!=', 'fixed')]}"/>
+                            <field name="percentage_of_wage"
+                                   attrs="{'invisible': [('calculation_method', '!=', 'percentage')]}"/>
+                            <field name="python_code" attrs="{'invisible': [('calculation_method', '!=', 'python')]}"/>
+                        </group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="time_period"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Default Accounts">
+                            <field name="journal_id"/>
+                            <field name="debit_account_id"/>
+                            <field name="credit_account_id"/>
+                        </group>
+                        <group string="Account for Allowance">
+                            <field name="allowance_debit_account_id"/>
+                            <field name="allowance_credit_account_id"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <field name="enable_payroll_integration" invisible="1"/>
+                    </group>
+                    <group string="Payroll Configurations"
+                           attrs="{'invisible':[('enable_payroll_integration', '!=', True)]}">
+                        <group>
+                            <field name="hr_payslip_input_type_id" readonly="1"/>
+                            <button name="action_create_hr_payslip_input_type" type="object"
+                                    title="Create Payslip Input Type"
+                                    class="btn-primary o_enable btn"
+                                    icon="fa-plus"/>
+                        </group>
+                        <group>
+                            <field name="hr_salary_rule_id" readonly="1"/>
+                            <button name="action_create_hr_salary_rule" type="object"
+                                    title="Create Payslip Input Type"
+                                    class="btn-primary o_enable btn"
+                                    icon="fa-plus"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="advance_type_action" model="ir.actions.act_window">
+        <field name="name">Advance Type</field>
+        <field name="res_model">advance.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Advance Type
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="advance_type_action_menu"
+              name="Advance Type"
+              parent="advance_management_configuration_menu"
+              action="advance_type_action"
+              sequence="2"/>
+</odoo>

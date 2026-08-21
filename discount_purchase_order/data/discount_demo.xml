@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('product.group_discount_per_so_line'))]"/>
+        </record>
+
+        <record id="wk_purchase_order_1" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="global_discount_type">fixed</field>
+            <field name="global_order_discount">5</field>
+        </record>
+
+        <record id="wk_purchase_order_line_1" model="purchase.order.line">
+            <field name="order_id" ref="wk_purchase_order_1"/>
+            <field name="name">RAM SR3</field>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="discount_type">fixed</field>
+            <field name="discount">10</field>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">50</field>
+            <field name="date_planned" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <record id="action_client_purchase_order_menu" model="ir.actions.client">
+            <field name="name">Open Purcahse Order Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('purchase.menu_purchase_rfq')}"/>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_purchase_order_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+</odoo>

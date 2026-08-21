@@ -1,0 +1,16 @@
+<odoo>
+  <data>
+    <record id="mrp_bom_form" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+          <xpath expr="//notebook" position="before">
+              <group>
+                 <field name="exceeded_consumed_quantity"/>
+              </group>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

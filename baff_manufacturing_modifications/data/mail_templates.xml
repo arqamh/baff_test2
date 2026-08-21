@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <!-- ================================================================
+             1. Estimation Exceeded Email Notification
+             ================================================================ -->
+        <record id="estimation_exceed_email_notification" model="mail.template">
+            <field name="name">Estimation Exceeded Email</field>
+            <field name="model_id" ref="baff_manufacturing_modifications.model_mrp_production"/>
+            <field name="subject">{{ ctx['subject'] }}</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-collapse: collapse;">
+                    <!-- HEADER BAR -->
+                    <tr>
+                        <td style="background-color: #D4A017; padding: 20px 30px;">
+                            <span style="font-size: 20px; font-weight: 600; color: #FFFFFF;">
+                                <t t-esc="ctx['heading']"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td style="background-color: #FFFFFF; padding: 30px;">
+                            <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
+                                Dear <t t-esc="ctx['receiver']"/>,
+                            </p>
+                            <!-- Cost Exceeded -->
+                            <t t-if="ctx.get('exceed_type') == 'cost'">
+                                <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
+                                    Manufacturing Order <strong><t t-esc="ctx['mo_name']"/></strong>
+                                    (<t t-esc="ctx['mo_product']"/>) has exceeded the budget cost.
+                                </p>
+                            </t>
+
+                            <!-- Duration Exceeded -->
+                            <t t-if="ctx.get('exceed_type') == 'duration'">
+                                <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
+                                    Manufacturing Order <strong><t t-esc="ctx['mo_name']"/></strong>
+                                    (<t t-esc="ctx['mo_product']"/>) has exceeded the expected duration.
+                                </p>
+                            </t>
+
+                            <!-- REFERENCE INFORMATION -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Manufacturing Order Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Manufacturing Order</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Product</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_product']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Project</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('project', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Job Costing No.</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('job_costing_number', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Analytic Account</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('analytic_account', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Bill of Materials</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('bom', 'N/A')"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- EXCEEDED VALUES -->
+                            <t t-if="ctx.get('exceed_type') == 'cost'">
+                                <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #C0392B;">
+                                    Cost Details
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                    <tr>
+                                        <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Budget Cost</td>
+                                        <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['budget_cost']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Actual Cost</td>
+                                        <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6; color: #C0392B; font-weight: 600;"><t t-esc="ctx['actual_cost']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Exceeded By</td>
+                                        <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6; color: #C0392B; font-weight: 600;"><t t-esc="ctx['exceeded_by']"/></td>
+                                    </tr>
+                                </table>
+                            </t>
+                            <t t-if="ctx.get('exceed_type') == 'duration'">
+                                <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #C0392B;">
+                                    Duration Details
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                    <tr>
+                                        <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Expected Duration</td>
+                                        <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['expected_duration']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Actual Duration</td>
+                                        <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6; color: #C0392B; font-weight: 600;"><t t-esc="ctx['actual_duration']"/></td>
+                                    </tr>
+                                </table>
+                            </t>
+
+                            <p style="margin: 0; font-size: 14px; color: #555555;">
+                                Thank You.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background-color: #F4F5F7; padding: 16px 30px; border-top: 1px solid #E0E0E0;">
+                            <p style="margin: 0; font-size: 11px; color: #999999;">
+                                This is an automated notification from the Manufacturing module.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <!-- ================================================================
+             2. New Components and Operations Email Notification
+             ================================================================ -->
+        <record id="new_components_email_notification" model="mail.template">
+            <field name="name">New Components and Operations Email</field>
+            <field name="model_id" ref="baff_manufacturing_modifications.model_mrp_production"/>
+            <field name="subject">{{ ctx['subject'] }}</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-collapse: collapse;">
+                    <!-- HEADER BAR -->
+                    <tr>
+                        <td style="background-color: #2C3E50; padding: 20px 30px;">
+                            <span style="font-size: 20px; font-weight: 600; color: #FFFFFF;">
+                                <t t-esc="ctx['heading']"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td style="background-color: #FFFFFF; padding: 30px;">
+                            <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
+                                Dear <t t-esc="ctx['receiver']"/>,
+                            </p>
+                            <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
+                                New components and/or operations have been added to Manufacturing Order
+                                <strong><t t-esc="ctx['mo_name']"/></strong>
+                                (<t t-esc="ctx['mo_product']"/>).
+                                Details are listed below.
+                            </p>
+
+                            <!-- REFERENCE INFORMATION -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Manufacturing Order Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Manufacturing Order</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Product</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_product']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Project</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('project', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Job Costing No.</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('job_costing_number', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Analytic Account</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('analytic_account', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Bill of Materials</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('bom', 'N/A')"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- COMPONENTS TABLE -->
+                            <t t-if="ctx.get('component_details')">
+                                <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                    Components
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #2C3E50;">#</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: left; border: 1px solid #2C3E50;">Product</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">Quantity</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #2C3E50;">UOM</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">Unit Cost</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="ctx['component_details']" t-as="values">
+                                            <tr>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: center; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="values['serial']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="values['product_id']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="values['quantity']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: center; border: 1px solid #DEE2E6;"><t t-esc="values['uom']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="values['cost_price']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; font-weight: 600;"><t t-esc="values['total']"/></td>
+                                            </tr>
+                                        </t>
+                                        <!-- Total row -->
+                                        <tr>
+                                            <td colspan="5" style="padding: 10px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #2C3E50; color: #FFFFFF; font-weight: 600;">Total</td>
+                                            <td style="padding: 10px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #2C3E50; color: #FFFFFF; font-weight: 600;"><t t-esc="ctx.get('component_total', '')"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <!-- OPERATIONS TABLE -->
+                            <t t-if="ctx.get('operation_details')">
+                                <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                    Operations
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #2C3E50;">#</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: left; border: 1px solid #2C3E50;">Name</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: left; border: 1px solid #2C3E50;">Work Center</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">Duration</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">Hour Cost</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="ctx['operation_details']" t-as="vals">
+                                            <tr>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: center; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="vals['serial']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="vals['operation_name']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: left; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="vals['work_center']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6;"><t t-esc="vals['duration']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="vals['cost_price']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; font-weight: 600;"><t t-esc="vals['total']"/></td>
+                                            </tr>
+                                        </t>
+                                        <!-- Total row -->
+                                        <tr>
+                                            <td colspan="5" style="padding: 10px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #2C3E50; color: #FFFFFF; font-weight: 600;">Total</td>
+                                            <td style="padding: 10px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #2C3E50; color: #FFFFFF; font-weight: 600;"><t t-esc="ctx.get('operation_total', '')"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <p style="margin: 0; font-size: 14px; color: #555555;">
+                                Thank You.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background-color: #F4F5F7; padding: 16px 30px; border-top: 1px solid #E0E0E0;">
+                            <p style="margin: 0; font-size: 11px; color: #999999;">
+                                This is an automated notification from the Manufacturing module.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <!-- ================================================================
+             3. Worker Change Email Notification
+             ================================================================ -->
+        <record id="worker_change_email_notification" model="mail.template">
+            <field name="name">Worker Change Email</field>
+            <field name="model_id" ref="baff_manufacturing_modifications.model_mrp_workorder"/>
+            <field name="subject">{{ ctx['subject'] }}</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-collapse: collapse;">
+                    <!-- HEADER BAR -->
+                    <tr>
+                        <td style="background-color: #2C3E50; padding: 20px 30px;">
+                            <span style="font-size: 20px; font-weight: 600; color: #FFFFFF;">
+                                <t t-esc="ctx['heading']"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td style="background-color: #FFFFFF; padding: 30px;">
+                            <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
+                                Dear <t t-esc="ctx['receiver']"/>,
+                            </p>
+                            <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
+                                Worker(s) have been changed in operation
+                                <strong><t t-esc="ctx['operation_name']"/></strong>
+                                (<t t-esc="ctx['work_center']"/>) on Manufacturing Order
+                                <strong><t t-esc="ctx['mo_name']"/></strong>
+                                (<t t-esc="ctx['mo_product']"/>).
+                                Details are listed below.
+                            </p>
+
+                            <!-- REFERENCE INFORMATION -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Manufacturing Order Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Manufacturing Order</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Product</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_product']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Project</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('project', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Job Costing No.</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('job_costing_number', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Analytic Account</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('analytic_account', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Bill of Materials</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('bom', 'N/A')"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- EMPLOYEE CHANGES TABLE -->
+                            <t t-if="ctx.get('employee_details')">
+                                <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                    Employee Changes
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #2C3E50;">#</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: left; border: 1px solid #2C3E50;">Previous Employee</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">Previous Rate</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: left; border: 1px solid #2C3E50;">New Employee</th>
+                                            <th style="background-color: #2C3E50; color: #FFFFFF; padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: right; border: 1px solid #2C3E50;">New Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="ctx['employee_details']" t-as="values">
+                                            <tr>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: center; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="values['serial']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="values['old_employee']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="values['old_employee_rate']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="values['new_employee']"/></td>
+                                                <td style="padding: 8px 12px; font-size: 13px; text-align: right; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="values['new_employee_rate']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <p style="margin: 0; font-size: 14px; color: #555555;">
+                                Thank You.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background-color: #F4F5F7; padding: 16px 30px; border-top: 1px solid #E0E0E0;">
+                            <p style="margin: 0; font-size: 11px; color: #999999;">
+                                This is an automated notification from the Manufacturing module.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <!-- ================================================================
+             4. Production Alerts during Production Process
+             ================================================================ -->
+        <record id="fine_finish_production_alerts_during_production_access_new" model="mail.template">
+            <field name="name">Production Alerts during the Production Access</field>
+            <field name="model_id" ref="baff_manufacturing_modifications.model_mrp_production"/>
+            <field name="subject">{{ ctx['subject'] }}</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-collapse: collapse;">
+                    <!-- HEADER BAR -->
+                    <tr>
+                        <td style="background-color: #C0392B; padding: 20px 30px;">
+                            <span style="font-size: 20px; font-weight: 600; color: #FFFFFF;">
+                                <t t-esc="ctx['heading']"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td style="background-color: #FFFFFF; padding: 30px;">
+                            <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
+                                Hello,
+                            </p>
+                            <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
+                                <t t-esc="ctx['mail_body']"/>
+                            </p>
+
+                            <!-- ACTUAL COST EXCEEDED TABLE -->
+                            <t t-if="ctx.get('data', {}).get('cost_rows')">
+                                <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #C0392B;">
+                                    Cost Exceeded
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">MO</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">Product</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">Project</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">JC No.</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">Analytic</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">BOM</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: right; border: 1px solid #C0392B;">Budget Cost</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: right; border: 1px solid #C0392B;">Actual Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="ctx['data']['cost_rows']" t-as="row">
+                                            <tr>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6; font-weight: 600;"><t t-esc="row['mo_name']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="row['product']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="row['project']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="row['job_costing_number']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="row['analytic_account']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="row['bom']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: right; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="row['budget_cost']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: right; border: 1px solid #DEE2E6; font-weight: 600; color: #C0392B;"><t t-esc="row['actual_cost']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <!-- DURATION EXCEEDED TABLE -->
+                            <t t-if="ctx.get('data', {}).get('duration_rows')">
+                                <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #C0392B;">
+                                    Duration Exceeded
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">MO</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">Product</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">Project</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">JC No.</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">Analytic</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left; border: 1px solid #C0392B;">BOM</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: right; border: 1px solid #C0392B;">Expected</th>
+                                            <th style="background-color: #C0392B; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: right; border: 1px solid #C0392B;">Actual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="ctx['data']['duration_rows']" t-as="row">
+                                            <tr>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6; font-weight: 600;"><t t-esc="row['mo_name']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="row['product']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="row['project']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="row['job_costing_number']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="row['analytic_account']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: left; border: 1px solid #DEE2E6;"><t t-esc="row['bom']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: right; border: 1px solid #DEE2E6; background-color: #F8F9FA;"><t t-esc="row['expected_duration']"/></td>
+                                                <td style="padding: 6px 8px; font-size: 12px; text-align: right; border: 1px solid #DEE2E6; font-weight: 600; color: #C0392B;"><t t-esc="row['actual_duration']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <p style="margin: 0; font-size: 14px; color: #555555;">
+                                Thank You.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background-color: #F4F5F7; padding: 16px 30px; border-top: 1px solid #E0E0E0;">
+                            <p style="margin: 0; font-size: 11px; color: #999999;">
+                                This is an automated notification from the Manufacturing module.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <!-- ================================================================
+             5. Quality Check PASS Notification
+             ================================================================ -->
+        <record id="quality_check_pass_email_notification" model="mail.template">
+            <field name="name">Quality Check Pass Notification</field>
+            <field name="model_id" ref="quality_control.model_quality_check"/>
+            <field name="subject">{{ ctx['subject'] }}</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-collapse: collapse;">
+                    <!-- HEADER BAR -->
+                    <tr>
+                        <td style="background-color: #27AE60; padding: 20px 30px;">
+                            <span style="font-size: 20px; font-weight: 600; color: #FFFFFF;">
+                                <t t-esc="ctx['heading']"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td style="background-color: #FFFFFF; padding: 30px;">
+                            <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
+                                Dear Quality Team Member,
+                            </p>
+                            <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6;">
+                                A quality check has <strong style="color: #27AE60;">PASSED</strong> for manufacturing order <strong><t t-esc="ctx['mo_number']"/></strong>.
+                            </p>
+
+                            <!-- MANUFACTURING ORDER DETAILS -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Manufacturing Order Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">MO Number</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_number']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Product</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_product']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Quantity</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_quantity']"/> <t t-esc="ctx['mo_uom']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Job Costing Ref.</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['job_costing']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Project</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('project', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Analytic Account</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('analytic_account', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Bill of Materials</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('bom', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Finished Lot/Serial</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['finished_lot']"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- QUALITY CHECK DETAILS -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Quality Check Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Check Reference</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['check_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Check Title</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['check_title']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Test Type</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['test_type']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Result</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><strong style="color: #27AE60;"><t t-esc="ctx['result']"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Performed By</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['performed_by']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Control Date</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['control_date']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Quality Team</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['quality_team']"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- OPERATION DETAILS -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Operation Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Operation</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['operation_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Work Center</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['work_center']"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- PRODUCT & LOT INFORMATION -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Product &amp; Lot Information
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Product</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['product_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Lot/Serial Number</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['lot_number']"/></td>
+                                </tr>
+                            </table>
+
+                            <p style="margin: 0; font-size: 14px; color: #555555;">
+                                Thank You.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background-color: #F4F5F7; padding: 16px 30px; border-top: 1px solid #E0E0E0;">
+                            <p style="margin: 0; font-size: 11px; color: #999999;">
+                                This is an automated notification from the Quality Control module.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <!-- ================================================================
+             6. Quality Check FAIL Notification
+             ================================================================ -->
+        <record id="quality_check_fail_email_notification" model="mail.template">
+            <field name="name">Quality Check Fail Notification</field>
+            <field name="model_id" ref="quality_control.model_quality_check"/>
+            <field name="subject">{{ ctx['subject'] }}</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 700px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-collapse: collapse;">
+                    <!-- HEADER BAR -->
+                    <tr>
+                        <td style="background-color: #C0392B; padding: 20px 30px;">
+                            <span style="font-size: 20px; font-weight: 600; color: #FFFFFF;">
+                                <t t-esc="ctx['heading']"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td style="background-color: #FFFFFF; padding: 30px;">
+                            <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6;">
+                                Dear Quality Team Member,
+                            </p>
+                            <p style="margin: 0 0 8px; font-size: 14px; line-height: 1.6;">
+                                A quality check has <strong style="color: #C0392B;">FAILED</strong> for manufacturing order <strong><t t-esc="ctx['mo_number']"/></strong>.
+                            </p>
+                            <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6; color: #C0392B; font-weight: 600;">
+                                Please review and take necessary action.
+                            </p>
+
+                            <!-- MANUFACTURING ORDER DETAILS -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Manufacturing Order Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">MO Number</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_number']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Product</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_product']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Quantity</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['mo_quantity']"/> <t t-esc="ctx['mo_uom']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Job Costing Ref.</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['job_costing']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Project</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('project', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Analytic Account</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('analytic_account', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Bill of Materials</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx.get('bom', 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Finished Lot/Serial</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['finished_lot']"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- QUALITY CHECK DETAILS -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Quality Check Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Check Reference</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['check_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Check Title</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['check_title']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Test Type</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['test_type']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Result</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><strong style="color: #C0392B;"><t t-esc="ctx['result']"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Performed By</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['performed_by']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Control Date</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['control_date']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Quality Team</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['quality_team']"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- OPERATION DETAILS -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Operation Details
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Operation</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['operation_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Work Center</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['work_center']"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- PRODUCT & LOT INFORMATION -->
+                            <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #2C3E50;">
+                                Product &amp; Lot Information
+                            </p>
+                            <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; width: 35%; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Product</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['product_name']"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 12px; font-size: 13px; font-weight: 600; border: 1px solid #DEE2E6; background-color: #F8F9FA;">Lot/Serial Number</td>
+                                    <td style="padding: 8px 12px; font-size: 13px; border: 1px solid #DEE2E6;"><t t-esc="ctx['lot_number']"/></td>
+                                </tr>
+                            </table>
+
+                            <p style="margin: 0; font-size: 14px; color: #555555;">
+                                Thank You.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background-color: #F4F5F7; padding: 16px 30px; border-top: 1px solid #E0E0E0;">
+                            <p style="margin: 0; font-size: 11px; color: #999999;">
+                                This is an automated notification from the Quality Control module.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+    </data>
+</odoo>

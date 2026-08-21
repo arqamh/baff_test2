@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record id="view_account_payment_register_form_inherit_custom" model="ir.ui.view">
+            <field name="name">account.payment.register.form.inherit</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='line_ids']" position="before">
+                    <div class="alert alert-danger text-center" role="status" attrs="{'invisible': [('is_cheque_date_not_today','=', False)]}">
+                        <h5><field name="cheque_date_warning"/> </h5>
+                    </div>
+                </xpath>
+
+                <button name="action_create_payments" position="replace">
+                    <field name="is_available_payment_approval" invisible="1"/>
+                    <button string="Create Payment" name="action_create_payments" type="object"
+                            class="oe_highlight" data-hotkey="q"
+                            attrs="{'invisible':[('is_available_payment_approval', '=', True)]}"
+                    />
+
+                    <button name="action_send_for_approval"
+                            string="Send For Approval"
+                            type="object" class="btn btn-primary"
+                            attrs="{'invisible':[('is_available_payment_approval', '=', False)]}"
+                    />
+                </button>
+
+                 <group name="group3" position="after">
+                    <group>
+                        <field name="approver_id" attrs="{'invisible':[('is_available_payment_approval', '=', False)], 'required':[('is_available_payment_approval', '=', True)]}" />
+                    </group>
+                </group>
+
+                <xpath expr="//field[@name='communication']" position="attributes">
+                    <attribute name="required" >1</attribute>
+                </xpath>
+
+                <field name="communication" position="after">
+                    <field name="is_cheque_date_not_today" invisible="1"/>
+                    <field name="payment_method_name" invisible="1"/>
+                    <field name="payment_type" invisible="1"/>
+
+                    <field name="main_bank_id" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}"/>
+                    <field name="cheque_no" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque'))], 'required': [('payment_method_name', 'in', ('Checks', 'Cheque'))],}"/>
+                    <field name="cheque_date" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque'))]}"/>
+                    <field name="reference_no" attrs="{'invisible': [('payment_method_name', 'not in', ('Direct Deposit'))]}"/>
+                    <field name="deposited_date" attrs="{'invisible': [('payment_method_name', 'not in', ('Direct Deposit'))]}"/>
+                    <field name="is_cheque_ac_payee" attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}"/>
+                    <field name="branch_id"  attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}" />
+                    <field name="partner_bank_account_id"  attrs="{'invisible': [('payment_method_name', 'not in', ('Checks', 'Cheque', 'Direct Deposit'))]}" />
+
+
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

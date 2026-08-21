@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="baff_purchase_order_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="header" style="font-size:14px">
+                        <table width="60%" align="right" style="border: solid 1px white;">
+                            <tr>
+                                <td colspan="2" style="text-align:right;">
+                                    <h1 style="font-size:25px; padding-left:120px;text-transform: uppercase;">
+                                        <b>
+                                            <span t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation</span>
+                                            <span t-if="o.state in ['purchase', 'done']">Purchase Order</span>
+                                            <span t-if="o.state == 'cancel'">Cancelled Purchase Order</span>
+                                        </b>
+                                    </h1>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&#160;</td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" align="right" width="15%" style="padding:5px 5px 5px 10px">
+                                    <span>DATE</span>
+                                </td>
+                                <td class="text-center" width="5%"
+                                    style="padding:5px 10px 0px 5px; vertical-align: middle; border: solid 1px black;">
+                                    <span t-field="o.date_approve" t-options='{"widget": "date"}'/>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-left" align="right" width="15%"
+                                    style="padding:5px 5px 5px 0px; border:solid 1px white; border-right:solid 1px black; vertical-align: middle;">
+                                    <span>PO #</span>
+                                </td>
+                                <td class="text-center" width="5%"
+                                    style="padding:5px 10px 0px 5px; border-top:solid 1px; border-bottom:solid 1px; border-right:solid 1px; vertical-align: middle;">
+                                    <span t-field="o.name"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="40%" align="left" style="border: solid 1px white;">
+                            <tr>
+                                <td class="text-left" style="padding-left:0px;">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                         height="15%" width="100%"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="padding-left:5px;">
+                                    <b>
+                                        <span>
+                                            <span t-field="o.company_id.name"/>
+                                        </span>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="padding-left:5px;">
+                                    <b>
+                                        <span><span t-field="o.company_id.street"/>,<span
+                                                t-field="o.company_id.street2"/>,<span t-field="o.company_id.city"/>,
+                                            <span t-field="o.company_id.country_id.name"/>
+                                        </span>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="padding-left:5px;">
+                                    <b>Phone: <span t-field="o.company_id.phone"/>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="padding-left:5px;">
+                                    <b>Email: <u><span t-field="o.company_id.email"/></u>
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" style="padding-left:5px;">
+                                    <b>Website: <u><span t-field="o.company_id.website"/></u>
+                                    </b>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="page" style="font-size:14px">
+                        <table width="100%" style="border: solid 1px white;">
+                            <tr>
+                                <td width="35%">
+                                    <table width="95%" style="border: solid 1px black;">
+
+                                        <tr>
+                                            <td class="text-left" width="30%"
+                                                style="padding:5px 4px 4px 10px;  border: solid 1px white; background-color: black; color: white;">
+                                                <b>VENDOR</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" width="100%" style="padding:5px 0px 0px 10px;
+                                            border-left: solid 1px white;
+                                            border-right: solid 1px white;
+                                             border-bottom: solid 1px white;">
+                                                <b></b>
+                                                <span t-esc="o.partner_id"
+                                                      t-options='{"widget": "contact", "fields": ["name","address"], "no_marker": True}'/>
+                                                <br/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td width="15%">&#160;</td>
+                                <td width="35%">
+                                    <table width="100%" style="border:solid 1px white;">
+                                        <tr>
+                                            <td class="text-left" width="30%"
+                                                style="padding:5px 4px 4px 10px; border: solid 1px white; background-color: black; color: white;">
+                                                <b>SHIP TO</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" width="100%" style="padding:5px 0px 0px 10px;">
+                                                <b>
+                                                    <span t-field="o.company_id.name"/>
+                                                    <br/>
+                                                    <span t-field="o.company_id.street"/>,
+                                                    <span t-field="o.company_id.street2"/>,
+                                                    <br/>
+                                                    <span t-field="o.company_id.city"/>,
+                                                    <br/>
+                                                    <span t-field="o.company_id.country_id.name"/>
+                                                </b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table width="100%" style="border: 1px solid black;" align="left">
+                            <tr>
+                                <th class="text-center" width="20%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px black; vertical-align: middle; background-color: black; color: white;">
+                                    <b>REQUIRED DATE</b>
+                                    <span/>
+                                </th>
+                                <th class="text-center" width="20%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px black; vertical-align: middle; background-color: black; color: white;">
+                                    <b>SHIPPING VIA</b>
+                                    <span/>
+                                </th>
+                                <th class="text-center" width="20%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px black; vertical-align: middle; background-color: black; color: white;">
+                                    <b>INCOTERM</b>
+                                    <span/>
+                                </th>
+                                <th class="text-center" width="40%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px black; vertical-align: middle; background-color: black; color: white;">
+                                    <b>QUOTATION NO/REF.NO</b>
+                                    <span/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="text-center" width="20%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px; vertical-align: middle;">
+                                    <t t-if="o.date_planned">
+                                        <span t-esc="context_timestamp(o.date_planned).strftime('%Y-%B-%d')" style="padding-left:5px;"/>
+                                    </t>
+                                </td>
+                                <td class="text-center" width="20%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px; vertical-align: middle;">
+                                    <span t-esc="o.incoterm_location" style="padding-left:5px;"/>
+                                </td>
+                                <td class="text-center" width="20%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px; vertical-align: middle;">
+                                    <span t-esc="o.incoterm_id.name" style="padding-left:5px;"/>
+                                </td>
+                                <td class="text-center" width="40%"
+                                    style="padding:5px 0px 0px 5px; border:solid 1px; vertical-align: middle;">
+                                    <span t-esc="o.partner_ref" style="padding-left:5px;"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <table width="100%" style="border: 1px solid black;">
+                            <tr>
+                                <th class="text-center" width="10%"
+                                    style="padding:5px 0px 5px 0px; border:solid 1px; vertical-align: middle;background-color: black; color: white;">
+                                    <b>ITEM#</b>
+                                </th>
+                                <th class="text-center" width="40%"
+                                    style="padding:5px 0px 5px 0px; border:solid 1px; vertical-align: middle;background-color: black; color: white;">
+                                    <b>DESCRIPTION</b>
+                                </th>
+                                <th class="text-center" width="10%"
+                                    style="padding:5px 0px 5px 0px; border:solid 1px; vertical-align: middle;background-color: black; color: white;">
+                                    <b>UNIT</b>
+                                </th>
+                                <th class="text-center" width="10%"
+                                    style="padding:5px 0px 5px 0px; border:solid 1px; vertical-align: middle;background-color: black; color: white;">
+                                    <b>QTY</b>
+                                </th>
+                                <th class="text-center" width="15%"
+                                    style="padding:5px 0px 5px 0px; border:solid 1px; vertical-align: middle;background-color: black; color: white;text-align:right;">
+                                    <b>UNIT PRICE</b>
+                                </th>
+                                <th class="text-center" width="15%"
+                                    style="padding:5px 0px 5px 0px; border:solid 1px; vertical-align: middle;background-color: black; color: white;text-align:right;">
+                                    <b>TOTAL</b>
+                                </th>
+                            </tr>
+
+                            <t t-set="i" t-value="0"/>
+                            <t t-foreach="o.order_line" t-as="line">
+                                <t t-if="line.display_type == 'line_section'">
+                                    <tr style="font-size:12px">
+                                        <td class="text-left" width="10%"
+                                            style="padding:5px 0px 0px 10px; border:solid 1px; vertical-align: middle;"></td>
+                                        <td class="text-left" width="40%"
+                                            style="padding:5px 0px 0px 10px; border:solid 1px; vertical-align: middle;">
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td class="text-left" width="10%"
+                                            style="padding:5px 0px 0px 10px; border:solid 1px; vertical-align: middle;"></td>
+                                        <td class="text-left" width="10%"
+                                            style="padding:5px 0px 0px 10px; border:solid 1px; vertical-align: middle;"></td>
+                                        <td class="text-right" width="15%"
+                                            style="padding:5px 10px 0px 0px; border:solid 1px; vertical-align: middle;"></td>
+                                        <td class="text-right" width="15%"
+                                            style="padding:5px 10px 0px 0px; border:solid 1px; vertical-align: middle;"></td>
+                                    </tr>
+                                </t>
+                                <t t-else="">
+                                    <tr>
+                                        <td class="text-left" width="10%"
+                                            style="padding:5px 0px 0px 10px; border: solid 1px white; vertical-align: middle; color:black;">
+                                            <span t-field="line.product_id.code"/>
+                                        </td>
+                                        <td class="text-left" width="40%"
+                                            style="padding:5px 0px 0px 10px; border: solid 1px white; vertical-align: middle; color:black;">
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td class="text-center" width="10%"
+                                            style="padding:5px 0px 0px 10px; border: solid 1px white; vertical-align: middle; color:black;text-align:center;">
+                                            <span t-field="line.product_uom"/>
+                                        </td>
+                                        <td class="text-center" width="10%"
+                                            style="padding:5px 0px 0px 10px; border: solid 1px white; vertical-align: middle; color:black;text-align:center;">
+                                            <span t-field="line.product_qty"/>
+                                        </td>
+                                        <td class="text-right" width="15%"
+                                            style="padding:5px 0px 0px 10px; border: solid 1px white; vertical-align: middle; color:black;text-align:right;">
+                                            <span t-field="line.price_unit"/>
+                                        </td>
+                                        <td class="text-right" width="15%"
+                                            style="padding:5px 0px 0px 10px; border: solid 1px white; vertical-align: middle; color:black;text-align:right;">
+                                            <span t-field="line.price_subtotal"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </table>
+                        <table width="25.5%" align="right" style="border: 1px solid white;margin-top:20px">
+                            <tr>
+                                <td>
+                                    <table class="table table-sm table-borderless">
+                                        <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                        <t t-call="baff_reports.document_tax_totals"/>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                    </div>
+                    <div style="page-break-inside: avoid;margin-top:20px;">
+                        <table width="60%">
+                            <tr>
+                                <td class="text-left" width="30%"
+                                    style="padding:5px 5px 10px 5px; background-color: #888888;">
+                                    <b>Comments or Special Instructions:</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" width="100%" style="padding:5px;">
+                                    <span t-esc="o.notes"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" width="20%" style="padding:01px 1px 0px 0px;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="baff_purchase_order_report_id" model="ir.actions.report">
+        <field name="name">Baff Purchase Order</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">baff_reports.baff_purchase_order_report</field>
+        <field name="print_report_name">
+                (object.state in ('draft', 'sent') and 'Request for Quotation - %s  - %s' % (object.name, object.partner_id.name) or
+                'Purchase Order - %s - %s' % (object.name, object.partner_id.name))</field>
+        <field name="report_file">baff_reports.baff_purchase_order_report</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="baff_reports.baff_a4_format_purchase_order"/>
+    </record>
+</odoo>

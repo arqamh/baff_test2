@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <!-- ================================================================
+             Purchase Requisition Line - Sent to Procurement Notification
+             ================================================================ -->
+        <record id="purchase_requisition_line_email_notification" model="mail.template">
+            <field name="name">Material Purchase Requisition - Professional Email</field>
+            <field name="model_id" ref="material_purchase_requisitions.model_material_purchase_requisition_line"/>
+            <field name="subject">📦 {{ ctx['subject'] }} - {{ ctx.get('mr_name', 'Material Requisition') }}</field>
+            <field name="email_from">{{ ctx['email_from'] }}</field>
+            <field name="email_to">{{ ctx['email_to'] }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+
+                    <!-- Email Container -->
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+                        <tr>
+                            <td align="center">
+                                <table width="620" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+                                    <!-- Header with Company Logo -->
+                                    <tr>
+                                        <td style="background: linear-gradient(135deg, #00A09D 0%, #008A87 100%); padding: 30px; position: relative;">
+                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">
+                                                            📦 Material Requisition
+                                                        </h1>
+                                                        <p style="margin: 10px 0 0 0; color: #f0f0f0; font-size: 14px;">
+                                                            <t t-esc="ctx.get('heading', 'New Requisition Notification')"/>
+                                                        </p>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="{{object.get_base_url()}}/logo.png?company={{object.env.company.id}}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px; max-height: 50px; border-radius: 4px;"
+                                                             alt="Company Logo"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Alert Banner -->
+                                    <tr>
+                                        <td style="background-color: #e0f7fa; border-left: 4px solid #00A09D; padding: 15px 30px;">
+                                            <p style="margin: 0; color: #00695c; font-size: 14px; font-weight: 600;">
+                                                ⚡ <strong>Action Required:</strong> A new material requisition has been sent to procurement for processing.
+                                            </p>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Main Content -->
+                                    <tr>
+                                        <td style="padding: 30px;">
+
+                                            <!-- Greeting -->
+                                            <p style="margin: 0 0 20px 0; color: #333333; font-size: 15px; line-height: 1.6;">
+                                                Dear <strong><t t-esc="ctx.get('receiver', 'Procurement Team')"/></strong>,
+                                            </p>
+
+                                            <p style="margin: 0 0 25px 0; color: #555555; font-size: 15px; line-height: 1.6;">
+                                                Material Requisition <strong style="color: #00A09D;"><t t-esc="ctx.get('mr_name', '')"/></strong> has been sent to procurement. Please review the details below and take the necessary action.
+                                            </p>
+
+                                            <!-- Requisition Details Card -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-radius: 6px; margin-bottom: 25px;">
+                                                <tr>
+                                                    <td style="padding: 20px;">
+                                                        <h2 style="margin: 0 0 15px 0; color: #00A09D; font-size: 18px; font-weight: 600; border-bottom: 2px solid #00A09D; padding-bottom: 8px;">
+                                                            📋 Requisition Details
+                                                        </h2>
+
+                                                        <table width="100%" cellpadding="8" cellspacing="0">
+                                                            <tr>
+                                                                <td width="40%" style="color: #666666; font-size: 14px;">
+                                                                    <strong>MR Number:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px; font-weight: 600;">
+                                                                    <t t-esc="ctx.get('mr_name', 'N/A')"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Requested By:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="ctx.get('mr_employee', 'N/A')"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Department:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="ctx.get('mr_department', 'N/A')"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #666666; font-size: 14px;">
+                                                                    <strong>Request Date:</strong>
+                                                                </td>
+                                                                <td style="color: #333333; font-size: 14px;">
+                                                                    <t t-esc="ctx.get('mr_date', 'N/A')"/>
+                                                                </td>
+                                                            </tr>
+                                                            <t t-if="ctx.get('mr_deadline')">
+                                                                <tr>
+                                                                    <td style="color: #666666; font-size: 14px;">
+                                                                        <strong>Deadline:</strong>
+                                                                    </td>
+                                                                    <td style="font-size: 14px;">
+                                                                        <span style="background-color: #fff3cd; color: #856404; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                                                            🕐 <t t-esc="ctx['mr_deadline']"/>
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                            <t t-if="ctx.get('mr_project')">
+                                                                <tr>
+                                                                    <td style="color: #666666; font-size: 14px;">
+                                                                        <strong>Project:</strong>
+                                                                    </td>
+                                                                    <td style="color: #333333; font-size: 14px;">
+                                                                        <t t-esc="ctx['mr_project']"/>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                            <t t-if="ctx.get('mr_analytic')">
+                                                                <tr>
+                                                                    <td style="color: #666666; font-size: 14px;">
+                                                                        <strong>Analytic Account:</strong>
+                                                                    </td>
+                                                                    <td style="color: #333333; font-size: 14px;">
+                                                                        <t t-esc="ctx['mr_analytic']"/>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                            <t t-if="ctx.get('mr_mo')">
+                                                                <tr>
+                                                                    <td style="color: #666666; font-size: 14px;">
+                                                                        <strong>Manufacturing Order:</strong>
+                                                                    </td>
+                                                                    <td style="color: #333333; font-size: 14px; font-weight: 600;">
+                                                                        🏭 <t t-esc="ctx['mr_mo']"/>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                            <t t-if="ctx.get('mr_reason')">
+                                                                <tr>
+                                                                    <td colspan="2" style="padding-top: 10px;">
+                                                                        <div style="background-color: #fff; padding: 12px; border-left: 3px solid #00A09D; border-radius: 4px;">
+                                                                            <p style="margin: 0 0 5px 0; color: #666666; font-size: 12px; font-weight: 600;">Reason for Requisition:</p>
+                                                                            <p style="margin: 0; color: #333333; font-size: 13px; line-height: 1.5;">
+                                                                                <t t-esc="ctx['mr_reason']"/>
+                                                                            </p>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Requisition Lines Table -->
+                                            <t t-if="ctx.get('line_details')">
+                                                <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 25px; overflow: hidden;">
+                                                    <tr>
+                                                        <td style="padding: 20px 20px 15px 20px;">
+                                                            <h3 style="margin: 0 0 15px 0; color: #00A09D; font-size: 16px; font-weight: 600;">
+                                                                📦 Requisition Items
+                                                                <span style="color: #999; font-size: 13px; font-weight: normal;">
+                                                                    (<t t-esc="len(ctx['line_details'])"/> items)
+                                                                </span>
+                                                            </h3>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding: 0;">
+                                                            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                                                                <thead>
+                                                                    <tr style="background: linear-gradient(135deg, #00A09D 0%, #008A87 100%);">
+                                                                        <th style="color: #FFFFFF; padding: 12px 10px; font-size: 12px; font-weight: 600; text-align: center; width: 40px;">#</th>
+                                                                        <th style="color: #FFFFFF; padding: 12px 10px; font-size: 12px; font-weight: 600; text-align: left; width: 100px;">Code</th>
+                                                                        <th style="color: #FFFFFF; padding: 12px 10px; font-size: 12px; font-weight: 600; text-align: left;">Product</th>
+                                                                        <th style="color: #FFFFFF; padding: 12px 10px; font-size: 12px; font-weight: 600; text-align: left;">Description</th>
+                                                                        <th style="color: #FFFFFF; padding: 12px 10px; font-size: 12px; font-weight: 600; text-align: right; width: 80px;">Quantity</th>
+                                                                        <th style="color: #FFFFFF; padding: 12px 10px; font-size: 12px; font-weight: 600; text-align: center; width: 70px;">UOM</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <t t-foreach="ctx['line_details']" t-as="line">
+                                                                        <tr t-attf-style="border-bottom: 1px solid #f0f0f0; {{ 'background-color: #f9fafb;' if line_index % 2 == 0 else 'background-color: #ffffff;' }}">
+                                                                            <td style="padding: 10px; font-size: 13px; text-align: center; color: #999;">
+                                                                                <t t-esc="line['serial']"/>
+                                                                            </td>
+                                                                            <td style="padding: 10px; font-size: 12px; text-align: left; color: #666; font-family: 'Courier New', monospace;">
+                                                                                <t t-esc="line.get('code', '-')"/>
+                                                                            </td>
+                                                                            <td style="padding: 10px; font-size: 13px; text-align: left; color: #333; font-weight: 600;">
+                                                                                <t t-esc="line['product']"/>
+                                                                            </td>
+                                                                            <td style="padding: 10px; font-size: 12px; text-align: left; color: #666;">
+                                                                                <t t-esc="line.get('description', '-')"/>
+                                                                            </td>
+                                                                            <td style="padding: 10px; font-size: 14px; text-align: right; color: #00A09D; font-weight: 700;">
+                                                                                <t t-esc="line['qty']"/>
+                                                                            </td>
+                                                                            <td style="padding: 10px; font-size: 12px; text-align: center; color: #666;">
+                                                                                <t t-esc="line['uom']"/>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </t>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </t>
+
+                                            <!-- Action Required Section -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #e7f3ff; border-left: 4px solid #0066cc; border-radius: 6px; margin-bottom: 25px;">
+                                                <tr>
+                                                    <td style="padding: 20px;">
+                                                        <h3 style="margin: 0 0 10px 0; color: #0066cc; font-size: 16px; font-weight: 600;">
+                                                            ⚡ Next Steps
+                                                        </h3>
+                                                        <ol style="margin: 0; padding-left: 20px; color: #333333; font-size: 14px; line-height: 1.8;">
+                                                            <li>Review the requisition details and line items</li>
+                                                            <li>Check stock availability for requested materials</li>
+                                                            <li>Create purchase orders for items that need procurement</li>
+                                                            <li>Create internal transfers for items available in stock</li>
+                                                            <li>Update the requester on expected delivery timeline</li>
+                                                        </ol>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Action Button -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 25px;">
+                                                <tr>
+                                                    <td align="center" style="padding: 10px 0;">
+                                                        <a t-attf-href="{{ ctx['custom_url'] }}" target="_blank"
+                                                           style="display: inline-block; background: linear-gradient(135deg, #00A09D 0%, #008A87 100%); color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 25px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                                            View Requisition in System
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Important Note -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 20px;">
+                                                <tr>
+                                                    <td style="padding: 15px;">
+                                                        <p style="margin: 0; color: #666666; font-size: 13px; line-height: 1.6;">
+                                                            <strong>💡 Note:</strong> Please process this requisition promptly to avoid delays in production and operations. For urgent requirements, coordinate directly with the requesting department.
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Closing -->
+                                            <p style="margin: 0 0 10px 0; color: #555555; font-size: 14px; line-height: 1.6;">
+                                                If you have any questions or need clarification, please contact the requesting employee or department manager.
+                                            </p>
+
+                                            <p style="margin: 0; color: #333333; font-size: 14px; font-weight: 600;">
+                                                Thank you,<br/>
+                                                <t t-esc="object.env.company.name"/>
+                                            </p>
+
+                                        </td>
+                                    </tr>
+
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="background-color: #2c3e50; padding: 20px; text-align: center;">
+                                            <table width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td style="color: #ecf0f1; font-size: 12px; line-height: 1.6; text-align: left;">
+                                                        <strong><t t-esc="object.env.company.name or ''"/></strong><br/>
+                                                        <t t-if="object.env.company.phone">
+                                                            📞 <t t-esc="object.env.company.phone"/><br/>
+                                                        </t>
+                                                    </td>
+                                                    <td style="color: #ecf0f1; font-size: 12px; line-height: 1.6; text-align: right;">
+                                                        <t t-if="object.env.company.email">
+                                                            📧 <a t-attf-href="mailto:{{object.env.company.email}}"
+                                                                  style="text-decoration: none; color: #3498db;">
+                                                                <t t-esc="object.env.company.email"/>
+                                                            </a><br/>
+                                                        </t>
+                                                        <t t-if="object.env.company.website">
+                                                            🌐 <a t-attf-href="{{object.env.company.website}}"
+                                                                  style="text-decoration: none; color: #3498db;">
+                                                                <t t-esc="object.env.company.website"/>
+                                                            </a>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <p style="margin: 15px 0 0 0; color: #95a5a6; font-size: 11px;">
+                                                This is an automated notification from the Material Purchase Requisition module<br/>
+                                                © <t t-esc="datetime.datetime.now().year"/> - All rights reserved
+                                            </p>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

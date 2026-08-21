@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_wip_material_line_tree" model="ir.ui.view">
+        <field name="name">wip.material.line.tree</field>
+        <field name="model">wip.material.line</field>
+        <field name="arch" type="xml">
+            <tree string="WIP Material" create="false" edit="false" delete="false"
+                  decoration-danger="availability_status == 'insufficient'"
+                  decoration-warning="availability_status == 'stock_available'"
+                  decoration-success="availability_status == 'fully_allocated'">
+                <field name="production_name"/>
+                <field name="mo_state"/>
+                <field name="mo_product_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="current_workcenter_id" optional="show"/>
+                <field name="mo_planned_qty" optional="hide"/>
+                <field name="mo_start_date" optional="hide"/>
+                <field name="mo_finish_date" optional="hide"/>
+                <field name="main_location_id" optional="hide"/>
+                <field name="product_id"/>
+                <field name="category_id" optional="hide"/>
+                <field name="product_uom_id" string="UoM"/>
+                <field name="required_qty" sum="Required"/>
+                <field name="consumed_qty" sum="Consumed"/>
+                <field name="remaining_qty" sum="Remaining" optional="show"/>
+                <field name="allocated_qty" sum="Allocated" optional="show"/>
+                <field name="available_main_qty" sum="Available (Main)" optional="show"/>
+                <field name="available_other_qty" sum="Available Elsewhere" optional="show"/>
+                <field name="gap_qty" sum="Gap"/>
+                <field name="unit_cost" optional="hide"/>
+                <field name="consumed_value" optional="show"/>
+                <field name="allocated_value" optional="hide"/>
+                <field name="wip_value" optional="show"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="availability_status" widget="badge"
+                       decoration-danger="availability_status == 'insufficient'"
+                       decoration-warning="availability_status == 'stock_available'"
+                       decoration-success="availability_status == 'fully_allocated'"/>
+                <field name="has_material_request" optional="hide"/>
+                <field name="po_ordered_qty" optional="hide"/>
+                <field name="po_received_qty" optional="hide"/>
+                <field name="pending_receipt_qty" optional="show"/>
+                <field name="procurement_status" widget="badge"
+                       decoration-success="procurement_status == 'fully_received'"
+                       decoration-info="procurement_status in ('partial_received', 'po_created')"
+                       decoration-warning="procurement_status == 'requested'"
+                       decoration-muted="procurement_status == 'none'"
+                       optional="show"/>
+                <field name="is_variant" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <button name="action_view_stock_elsewhere" type="object"
+                        string="Stock Elsewhere" icon="fa-archive"
+                        attrs="{'invisible': [('available_other_qty', '&lt;=', 0)]}"/>
+                <button name="action_view_open_pos" type="object"
+                        string="Open POs" icon="fa-shopping-cart"
+                        attrs="{'invisible': [('po_ordered_qty', '&lt;=', 0)]}"/>
+                <button name="action_view_material_requests" type="object"
+                        string="Requests" icon="fa-file-text-o"
+                        attrs="{'invisible': [('has_material_request', '=', False)]}"/>
+                <button name="action_create_requisition" type="object"
+                        string="Raise Request" icon="fa-plus-circle"
+                        attrs="{'invisible': [('gap_qty', '&lt;=', 0)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_wip_material_line_pivot" model="ir.ui.view">
+        <field name="name">wip.material.line.pivot</field>
+        <field name="model">wip.material.line</field>
+        <field name="arch" type="xml">
+            <pivot string="WIP Material">
+                <field name="production_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="required_qty" type="measure"/>
+                <field name="consumed_qty" type="measure"/>
+                <field name="remaining_qty" type="measure"/>
+                <field name="allocated_qty" type="measure"/>
+                <field name="gap_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_wip_material_line_search" model="ir.ui.view">
+        <field name="name">wip.material.line.search</field>
+        <field name="model">wip.material.line</field>
+        <field name="arch" type="xml">
+            <search string="WIP Material">
+                <field name="production_name" string="MO Reference"/>
+                <field name="product_id"/>
+                <field name="mo_product_id" string="Finished Product"/>
+                <field name="project_id"/>
+                <field name="category_id" string="Product Category"/>
+                <field name="current_workcenter_id"/>
+                <field name="main_location_id"/>
+
+                <separator/>
+                <filter string="Confirmed" name="state_confirmed"
+                        domain="[('mo_state', '=', 'confirmed')]"/>
+                <filter string="In Progress" name="state_progress"
+                        domain="[('mo_state', '=', 'progress')]"/>
+                <filter string="To Close" name="state_to_close"
+                        domain="[('mo_state', '=', 'to_close')]"/>
+
+                <separator/>
+                <filter string="Missing / To Be Requested" name="status_insufficient"
+                        domain="[('availability_status', '=', 'insufficient')]"/>
+                <filter string="Stock Available" name="status_stock_available"
+                        domain="[('availability_status', '=', 'stock_available')]"/>
+                <filter string="Fully Allocated" name="status_fully_allocated"
+                        domain="[('availability_status', '=', 'fully_allocated')]"/>
+
+                <separator/>
+                <filter string="Has Gap" name="has_gap"
+                        domain="[('gap_qty', '>', 0)]"/>
+                <filter string="Stock Elsewhere" name="has_elsewhere"
+                        domain="[('available_other_qty', '>', 0), ('availability_status', '!=', 'fully_allocated')]"/>
+                <filter string="Consumed Lines" name="has_consumed"
+                        domain="[('consumed_qty', '>', 0)]"/>
+                <filter string="Variant Components" name="variant_only"
+                        domain="[('is_variant', '=', True)]"/>
+
+                <separator/>
+                <filter string="Request Raised" name="has_request"
+                        domain="[('has_material_request', '=', True)]"/>
+                <filter string="PO Pending Receipt" name="po_pending"
+                        domain="[('procurement_status', 'in', ('po_created', 'partial_received'))]"/>
+                <filter string="Not Requested" name="not_requested"
+                        domain="[('procurement_status', '=', 'none')]"/>
+
+                <separator/>
+                <filter string="Start Date" name="filter_start" date="mo_start_date"/>
+                <filter string="Expected Finish" name="filter_finish" date="mo_finish_date"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Manufacturing Order" name="group_mo"
+                            context="{'group_by': 'production_id'}"/>
+                    <filter string="Finished Product" name="group_mo_product"
+                            context="{'group_by': 'mo_product_id'}"/>
+                    <filter string="Project" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Current Work Center" name="group_workcenter"
+                            context="{'group_by': 'current_workcenter_id'}"/>
+                    <filter string="Component" name="group_component"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter string="Product Category" name="group_category"
+                            context="{'group_by': 'category_id'}"/>
+                    <filter string="MO State" name="group_state"
+                            context="{'group_by': 'mo_state'}"/>
+                    <filter string="Availability" name="group_availability"
+                            context="{'group_by': 'availability_status'}"/>
+                    <filter string="Procurement Status" name="group_procurement"
+                            context="{'group_by': 'procurement_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Tab 1: Summary Overview (MO-level, grouped, WIP totals) -->
+    <record id="action_wip_mo_summary" model="ir.actions.act_window">
+        <field name="name">Summary Overview</field>
+        <field name="res_model">wip.material.line</field>
+        <field name="view_mode">pivot,tree</field>
+        <field name="search_view_id" ref="view_wip_material_line_search"/>
+        <field name="context">{'search_default_group_mo': 1, 'pivot_measures': ['required_qty', 'consumed_qty', 'gap_qty']}</field>
+    </record>
+
+    <!-- Tab 2: Material Breakdown (all lines) -->
+    <record id="action_wip_material_line" model="ir.actions.act_window">
+        <field name="name">Material Breakdown</field>
+        <field name="res_model">wip.material.line</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="search_view_id" ref="view_wip_material_line_search"/>
+        <field name="context">{'search_default_group_mo': 1}</field>
+    </record>
+
+    <!-- Tab 3: Procurement Status -->
+    <record id="action_wip_procurement_status" model="ir.actions.act_window">
+        <field name="name">Procurement Status</field>
+        <field name="res_model">wip.material.line</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="search_view_id" ref="view_wip_material_line_search"/>
+        <field name="context">{'search_default_group_procurement': 1}</field>
+    </record>
+
+    <!-- Tab 4: Stock Gaps & Suggestions -->
+    <record id="action_wip_stock_gaps" model="ir.actions.act_window">
+        <field name="name">Stock Gaps &amp; Suggestions</field>
+        <field name="res_model">wip.material.line</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="search_view_id" ref="view_wip_material_line_search"/>
+        <field name="domain">[('availability_status', '!=', 'fully_allocated')]</field>
+        <field name="context">{'search_default_status_insufficient': 1, 'search_default_group_mo': 1}</field>
+    </record>
+
+    <!-- Tab 5: BOM-wise Actual Material Issued (consumed > 0) -->
+    <record id="action_wip_actual_issued" model="ir.actions.act_window">
+        <field name="name">Actual Material Issued</field>
+        <field name="res_model">wip.material.line</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="search_view_id" ref="view_wip_material_line_search"/>
+        <field name="domain">[('consumed_qty', '>', 0)]</field>
+        <field name="context">{'search_default_group_mo_product': 1, 'pivot_measures': ['consumed_qty']}</field>
+    </record>
+
+    <!-- Tab 6: Variant Material (product templates with multiple variants) -->
+    <record id="action_wip_variant_material" model="ir.actions.act_window">
+        <field name="name">Variant Material</field>
+        <field name="res_model">wip.material.line</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="search_view_id" ref="view_wip_material_line_search"/>
+        <field name="domain">[('is_variant', '=', True)]</field>
+        <field name="context">{'search_default_group_mo_product': 1}</field>
+    </record>
+
+    <menuitem id="menu_wip_dashboard_root"
+              name="WIP Dashboard"
+              parent="mrp.menu_mrp_reporting"
+              sequence="50"/>
+
+    <menuitem id="menu_wip_summary"
+              name="Summary Overview"
+              parent="menu_wip_dashboard_root"
+              action="action_wip_mo_summary"
+              sequence="10"/>
+
+    <menuitem id="menu_wip_material_breakdown"
+              name="Material Breakdown"
+              parent="menu_wip_dashboard_root"
+              action="action_wip_material_line"
+              sequence="20"/>
+
+    <menuitem id="menu_wip_procurement_status"
+              name="Procurement Status"
+              parent="menu_wip_dashboard_root"
+              action="action_wip_procurement_status"
+              sequence="30"/>
+
+    <menuitem id="menu_wip_stock_gaps"
+              name="Stock Gaps &amp; Suggestions"
+              parent="menu_wip_dashboard_root"
+              action="action_wip_stock_gaps"
+              sequence="40"/>
+
+    <menuitem id="menu_wip_actual_issued"
+              name="Actual Material Issued"
+              parent="menu_wip_dashboard_root"
+              action="action_wip_actual_issued"
+              sequence="50"/>
+
+    <menuitem id="menu_wip_variant_material"
+              name="Variant Material"
+              parent="menu_wip_dashboard_root"
+              action="action_wip_variant_material"
+              sequence="60"/>
+
+</odoo>

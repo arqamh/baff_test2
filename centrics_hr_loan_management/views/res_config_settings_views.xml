@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.centrics.hr.loan.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Loan Management" id="loan_management"
+                     string="Loan Management" data-key="centrics_hr_loan_management" groups="base.group_user">
+                    <h2>Loan Management</h2>
+                    <div class="row mt16 o_settings_container" id="guarantors_setting">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_max_guarantee_loans"/>
+                            </div>
+
+                            <div class="o_setting_right_pane">
+                                <label for="allow_max_guarantee_loans"/>
+                                <div class="text-muted">
+                                    Enable this option to allow loans with a maximum guarantee limit.
+                                </div>
+                                <div class="mt16" attrs="{'invisible': [('allow_max_guarantee_loans', '=', False)]}">
+                                    <label for="max_guarantee_loans" class="o_form_label">
+                                        Maximum Number of Loans that can signed as a guarantor
+                                    </label>
+                                    <div class="text-muted">
+                                        Specify the maximum number of guarantee loans an employee can take.
+                                    </div>
+                                    <field name="max_guarantee_loans" class="text-center"
+                                           attrs="{'required': [('allow_max_guarantee_loans', '=', True)]}"
+                                           style="width: 10%; min-width: 4rem;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="min_guarantors_required"/>
+                            </div>
+
+                            <div class="o_setting_right_pane">
+                                <label for="min_guarantors_required"/>
+                                <div class="text-muted">
+                                    Specify the minimum number of guarantors required for a loan
+                                </div>
+                                <div class="mt16" attrs="{'invisible': [('min_guarantors_required', '=', False)]}">
+                                    <label for="no_of_minimum_guarantors" class="o_form_label">
+                                        Define the number of minimum guarantors required to approve a loan.
+                                    </label>
+                                    <div class="text-muted">
+                                        Define the number of minimum guarantors required to approve a loan.
+                                    </div>
+                                    <field name="no_of_minimum_guarantors" class="text-center"
+                                           attrs="{'required': [('min_guarantors_required', '=', True)]}"
+                                           style="width: 10%; min-width: 4rem;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt16 o_settings_container" id="manual_settlement_settings">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="is_allow_manual_loan_settlement"/>
+                            </div>
+
+                            <div class="o_setting_right_pane">
+                                <label for="is_allow_manual_loan_settlement"/>
+                                <div class="text-muted">
+                                    Enable this option to allow loan manually settlement.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="is_skip_skip_installment_approval"/>
+                            </div>
+
+                            <div class="o_setting_right_pane">
+                                <label for="is_skip_skip_installment_approval"/>
+                                <div class="text-muted">
+                                    Enable this option to skip the installment approval step.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt16 o_settings_container" id="payroll_integration_settings">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="is_enable_payroll_integration"/>
+                            </div>
+
+                            <div class="o_setting_right_pane">
+                                <label for="is_enable_payroll_integration"/>
+                                <div class="text-muted">
+                                    Enable this option to integrate Loan module with Payroll.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="use_basic_salary_as_max_loan"/>
+                            </div>
+
+                            <div class="o_setting_right_pane">
+                                <label for="use_basic_salary_as_max_loan"/>
+                                <div class="text-muted">
+                                    When enabled, if the loan type does not have a maximum loan amount configured,
+                                    the employee's basic salary (contract wage) will be used as the maximum loan limit.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="loan_management_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'centrics_hr_loan_management', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="loan_management_config_settings_menu" name="Settings"
+              parent="centrics_hr_loan_management.loan_management_configurations" sequence="0"
+              action="loan_management_config_settings_action"
+              groups="base.group_user"/>
+</odoo>

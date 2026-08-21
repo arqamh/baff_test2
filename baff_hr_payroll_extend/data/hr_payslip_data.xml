@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!--        Salary Structure TYpe-->
+        <record id="hr_payroll_structure_type_ocean_voyager" model="hr.payroll.structure.type">
+            <field name="name">Ocean Voyager</field>
+            <field name="wage_type">monthly</field>
+            <field name="default_schedule_pay">monthly</field>
+        </record>
+
+
+        <!-- Payroll Structure -->
+        <record id="hr_payroll_structure_ocean_voyager" model="hr.payroll.structure">
+            <field name="name">Ocean Voyager Structure-Staff</field>
+            <field name="type_id" ref="hr_payroll_structure_type_ocean_voyager"/>
+        </record>
+
+        <!-- Rule Categories -->
+        <!--        <record id="rule_category_earnings" model="hr.salary.rule.category">-->
+        <!--            <field name="name">Earnings(Fixed)</field>-->
+        <!--            <field name="code">EARNING_FIX</field>-->
+        <!--        </record>-->
+
+        <!--        <record id="rule_category_earnings_variables" model="hr.salary.rule.category">-->
+        <!--            <field name="name">Earnings(Variables)</field>-->
+        <!--            <field name="code">EARNING_VAR</field>-->
+        <!--        </record>-->
+
+        <!--        <record id="rule_category_epf_etf" model="hr.salary.rule.category">-->
+        <!--            <field name="name">EPF / ETF</field>-->
+        <!--            <field name="code">EPF</field>-->
+        <!--        </record>-->
+
+        <!--        <record id="rule_category_other" model="hr.salary.rule.category">-->
+        <!--            <field name="name">Other</field>-->
+        <!--            <field name="code">OTHER</field>-->
+        <!--        </record>-->
+
+        <!-- Input Types -->
+        <record id="input_attendance" model="hr.payslip.input.type">
+            <field name="name">Attendance Days</field>
+            <field name="code">ATT</field>
+        </record>
+
+        <record id="input_normal_ot" model="hr.payslip.input.type">
+            <field name="name">Normal OT Hours</field>
+            <field name="code">NOH</field>
+        </record>
+
+        <record id="input_double_ot" model="hr.payslip.input.type">
+            <field name="name">Double OT Hours</field>
+            <field name="code">DOH</field>
+        </record>
+
+        <record id="input_triple_ot" model="hr.payslip.input.type">
+            <field name="name">Triple OT Hours</field>
+            <field name="code">TOH</field>
+        </record>
+
+        <record id="input_relocation_allowance" model="hr.payslip.input.type">
+            <field name="name">Relocation Allowance</field>
+            <field name="code">RLA</field>
+        </record>
+
+        <record id="input_leave_allowance" model="hr.payslip.input.type">
+            <field name="name">Leave Allowance</field>
+            <field name="code">LALW</field>
+        </record>
+
+        <record id="input_holiday_allowance" model="hr.payslip.input.type">
+            <field name="name">Holiday Allowance</field>
+            <field name="code">HALW</field>
+        </record>
+
+        <record id="input_no_pay_days" model="hr.payslip.input.type">
+            <field name="name">No-Pay Days</field>
+            <field name="code">NPD</field>
+        </record>
+
+        <record id="input_no_of_experience" model="hr.payslip.input.type">
+            <field name="name">No Of Experience</field>
+            <field name="code">NOE</field>
+        </record>
+
+        <!-- Basic Salary -->
+        <record id="rule_basic_salary" model="hr.salary.rule">
+            <field name="name">Basic Salary - Ocean Voyager</field>
+            <field name="code">BAS</field>
+            <field name="sequence">2</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+        <!-- Budgetary Allowance -->
+        <record id="rule_budgetary_allowance" model="hr.salary.rule">
+            <field name="name">Budgetary Allowance - Ocean Voyager</field>
+            <field name="code">BA</field>
+            <field name="sequence">3</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+fixed_allowance_ids = contract.fixed_allowance_ids
+if fixed_allowance_ids:
+    lines = fixed_allowance_ids.filtered(lambda x: x.type_id.name == 'BUDGETARY_ALLOWANCE')
+if lines:
+    result = sum(lines.mapped('amount'))
+            </field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+        <!-- Relocation Allowance -->
+        <record id="rule_relocation_allowance" model="hr.salary.rule">
+            <field name="name">Relocation Allowance - Ocean Voyager</field>
+            <field name="code">REALW</field>
+            <field name="sequence">4</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+rla_input = inputs['RLA']
+amount = float(rla_input.amount) if rla_input and rla_input.amount else 0.0
+if amount &gt; 15:
+    result = 2500
+elif 10 &lt; amount &lt; 14:
+    result = 1250
+else:
+    result = 0
+            </field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+        <!-- Attendance Allowance-->
+        <record id="rule_attendance_allowance" model="hr.salary.rule">
+            <field name="name">Attendance Allowance - Ocean Voyager</field>
+            <field name="code">ATTA</field>
+            <field name="sequence">5</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if inputs['NOE'].amount &gt; 0:
+    amount = inputs['NOE'].amount
+    if amount &gt; 2:
+        result = 4000
+    elif 1 &lt; amount &gt; 2:
+        result = 3000
+    else :
+        result = 2000
+else :
+    result = 0
+            </field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+        <!-- Leave Allowance  -->
+        <record id="rule_leave_allowance" model="hr.salary.rule">
+            <field name="name">Leave Allowance - Ocean Voyager</field>
+            <field name="code">LALW</field>
+            <field name="sequence">6</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if inputs['LALW'].amount &gt; 0:
+    if employee.employee_type == 'staff':
+        result = inputs['LALW'].amount * ((BAS + BA) / 30 * 1.5)
+    elif employee.employee_type == 'shop_floor':
+        result = inputs['LALW'].amount * ((BAS + BA) / 26 * 1.5)
+    else :
+        result = 0
+else :
+    result = 0
+            </field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+
+        <!-- Holiday Allowance  -->
+        <record id="rule_holiday_allowance" model="hr.salary.rule">
+            <field name="name">Holiday Allowance - Ocean Voyager</field>
+            <field name="code">HAALW</field>
+            <field name="sequence">7</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if inputs['HALW'].amount > 0:
+    if employee.employee_type == 'staff':
+        result = inputs['HALW'].amount * ((BAS + BA / 30) * 1.5)
+    elif employee.employee_type == 'shop_floor':
+        result = inputs['HALW'].amount * ((BAS + BA / 26) * 1.5)
+    else:
+        result = 0
+else:
+    result = 0
+
+            </field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+
+        <!--  Overtime Payment -->
+        <record id="rule_overtime_payment" model="hr.salary.rule">
+            <field name="name">Overtime - Ocean Voyager</field>
+            <field name="code">OTALW</field>
+            <field name="sequence">9</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+normal_ot = 0
+double_ot = 0
+triple_ot = 0
+if employee.employee_type == 'staff':
+    normal_ot = inputs['NOH'].amount * ((BAS + BA) / 240 * 1.5)
+    double_ot = inputs['DOH'].amount * ((BAS + BA) / 240 * 2)
+    triple_ot = inputs['TOH'].amount * ((BAS + BA) / 240 * 3)
+elif employee.employee_type == 'shop_floor':
+    normal_ot = inputs['NOH'].amount * ((BAS + BA) / 200 * 1.5)
+    double_ot = inputs['DOH'].amount * ((BAS + BA) / 200 * 2)
+    triple_ot = inputs['TOH'].amount * ((BAS + BA) / 200 * 3)
+result = normal_ot + double_ot + triple_ot
+            </field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+
+        <!-- Gross Salary -->
+        <record id="rule_gross_salary_ocean_voyager" model="hr.salary.rule">
+            <field name="name">Gross Salary - Ocean Voyager</field>
+            <field name="code">GROSS</field>
+            <field name="sequence">40</field>
+            <field name="category_id" ref="hr_payroll.GROSS"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+            <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+        </record>
+
+
+        <!-- No-Pay Deductions -->
+        <record id="rule_no_pay_deductions" model="hr.salary.rule">
+            <field name="name">No-Pay Deductions - Ocean Voyager</field>
+            <field name="code">NOPAY</field>
+            <field name="sequence">42</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+if inputs['NPD'].amount &gt; 0:
+    if employee.employee_type == 'staff':
+        result  = inputs['NPD'].amount * (BAS + BA)/30
+    elif employee.employee_type == 'shop_floor':
+        result  = inputs['NPD'].amount * (BAS + BA)/26
+    else :
+        result = 0
+else :
+    result = 0
+
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+    </record>
+
+
+        <!-- EPF Contribution -->
+    <record id="rule_epf_contribution_employee" model="hr.salary.rule">
+        <field name="name">EPF Contribution - Employee</field>
+        <field name="code">EPFEMP</field>
+        <field name="sequence">44</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if categories.GROSS &gt; 0:
+    result = ((BAS + BA)) * 0.08
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+    </record>
+
+
+        <!-- Net Salary -->
+    <record id="rule_net_salary_ocean_voyager" model="hr.salary.rule">
+        <field name="name">Net Salary - Ocean Voyager</field>
+        <field name="code">NET</field>
+        <field name="sequence">100</field>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.GROSS - categories.DED
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+    </record>
+
+
+        <!-- EPF Contribution - Company -->
+    <record id="rule_epf_contribution_company" model="hr.salary.rule">
+        <field name="name">EPF Contribution - Company</field>
+        <field name="code">EPFCOMP</field>
+        <field name="sequence">60</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if categories.GROSS > 0:
+    result = ((BAS + BA)) * 0.12
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+    </record>
+
+
+<!--         ETF Contribution - Company -->
+    <record id="rule_etf_contribution_company" model="hr.salary.rule">
+        <field name="name">ETF Contribution - Company</field>
+        <field name="code">ETFCOMP</field>
+        <field name="sequence">61</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if categories.GROSS > 0:
+    result = ((BAS + BA)) * 0.03
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_ocean_voyager"/>
+    </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ============================================================
+             Submit for Approval template
+             ============================================================ -->
+        <record id="mail_template_grn_submit" model="mail.template">
+            <field name="name">GRN: Submitted for Approval</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="email_from">{{ (object.create_uid.email_formatted or user.email_formatted) }}</field>
+            <field name="subject">GRN {{ object.name }} - Awaiting your approval</field>
+            <field name="description">Sent to configured approvers when a GRN is submitted for approval.</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color:#f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4; padding:20px 0;">
+        <tr><td align="center">
+            <table width="640" cellpadding="0" cellspacing="0" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                <tr><td style="background:linear-gradient(135deg,#4A90E2,#357ABD); padding:24px 30px;">
+                    <h1 style="margin:0; color:#fff; font-size:22px;">Approval Required - GRN <t t-out="object.name or ''"/></h1>
+                    <p style="margin:6px 0 0; color:#eaf2fb; font-size:13px;">A Goods Receipt Note is waiting for your decision.</p>
+                </td></tr>
+                <tr><td style="padding:24px 30px; color:#333;">
+                    <p style="margin:0 0 16px;">Hello,</p>
+                    <p style="margin:0 0 20px;">
+                        The following GRN has been submitted for your approval. Please review and take action.
+                    </p>
+                    <table width="100%" cellpadding="6" cellspacing="0" style="background:#f8f9fa; border-radius:6px;">
+                        <tr><td width="40%"><strong>GRN No</strong></td><td><t t-out="object.name or ''"/></td></tr>
+                        <tr><td><strong>Operation Type</strong></td><td><t t-out="object.picking_type_id.name or ''"/></td></tr>
+                        <tr><td><strong>PO No</strong></td><td><t t-out="(object.purchase_id and object.purchase_id.name) or (object.origin or 'N/A')"/></td></tr>
+                        <tr><td><strong>Vendor</strong></td><td><t t-out="object.partner_id.name or 'N/A'"/></td></tr>
+                        <tr><td><strong>Submitted By</strong></td><td><t t-out="(object.submitted_by and object.submitted_by.name) or (object.create_uid and object.create_uid.name) or ''"/></td></tr>
+                        <tr><td><strong>Submitted On</strong></td><td><t t-out="object.submitted_date and object.submitted_date.strftime('%Y-%m-%d %H:%M') or ''"/></td></tr>
+                        <tr><td><strong>Status</strong></td><td><span style="background:#fff3cd; color:#856404; padding:3px 10px; border-radius:10px; font-weight:600;">Waiting Approval</span></td></tr>
+                        <tr><td><strong>Company</strong></td><td><t t-out="object.company_id.name or ''"/></td></tr>
+                    </table>
+                    <div style="text-align:center; margin:28px 0 8px;">
+                        <a t-att-href="('%s/web#id=%d&amp;model=stock.picking&amp;view_type=form' % (object.env['ir.config_parameter'].sudo().get_param('web.base.url'), object.id))"
+                           style="display:inline-block; background:linear-gradient(135deg,#4A90E2,#357ABD); color:#fff; text-decoration:none; padding:12px 30px; border-radius:24px; font-weight:600;">
+                            Review GRN
+                        </a>
+                    </div>
+                </td></tr>
+                <tr><td style="background:#2c3e50; color:#bdc3c7; padding:14px 30px; font-size:12px;">
+                    Automated notification from <t t-out="object.company_id.name or 'Odoo'"/>
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+</div>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Approved template
+             ============================================================ -->
+        <record id="mail_template_grn_approve" model="mail.template">
+            <field name="name">GRN: Approved</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="email_from">{{ (object.approved_by.email_formatted or user.email_formatted) }}</field>
+            <field name="subject">GRN {{ object.name }} - Approved</field>
+            <field name="description">Sent to the GRN creator and configured recipients when a GRN is approved.</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html" type="html">
+<div style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4; padding:20px 0;">
+        <tr><td align="center">
+            <table width="640" cellpadding="0" cellspacing="0" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                <tr><td style="background:linear-gradient(135deg,#11998e,#38ef7d); padding:24px 30px;">
+                    <h1 style="margin:0; color:#fff; font-size:22px;">GRN Approved - <t t-out="object.name or ''"/></h1>
+                    <p style="margin:6px 0 0; color:#e7fbf3; font-size:13px;">The Goods Receipt Note has been approved.</p>
+                </td></tr>
+                <tr><td style="padding:24px 30px; color:#333;">
+                    <p style="margin:0 0 16px;">Hello <strong><t t-out="(object.create_uid and object.create_uid.name) or ''"/></strong>,</p>
+                    <p style="margin:0 0 20px;">
+                        Your GRN has been approved and can now be validated to update stock.
+                    </p>
+                    <table width="100%" cellpadding="6" cellspacing="0" style="background:#f8f9fa; border-radius:6px;">
+                        <tr><td width="40%"><strong>GRN No</strong></td><td><t t-out="object.name or ''"/></td></tr>
+                        <tr><td><strong>PO No</strong></td><td><t t-out="(object.purchase_id and object.purchase_id.name) or (object.origin or 'N/A')"/></td></tr>
+                        <tr><td><strong>Vendor</strong></td><td><t t-out="object.partner_id.name or 'N/A'"/></td></tr>
+                        <tr><td><strong>Approved By</strong></td><td><t t-out="(object.approved_by and object.approved_by.name) or ''"/></td></tr>
+                        <tr><td><strong>Approved On</strong></td><td><t t-out="object.approval_date and object.approval_date.strftime('%Y-%m-%d %H:%M') or ''"/></td></tr>
+                        <tr><td><strong>Status</strong></td><td><span style="background:#d4edda; color:#155724; padding:3px 10px; border-radius:10px; font-weight:600;">Approved</span></td></tr>
+                    </table>
+                    <div style="text-align:center; margin:28px 0 8px;">
+                        <a t-att-href="('%s/web#id=%d&amp;model=stock.picking&amp;view_type=form' % (object.env['ir.config_parameter'].sudo().get_param('web.base.url'), object.id))"
+                           style="display:inline-block; background:linear-gradient(135deg,#11998e,#38ef7d); color:#fff; text-decoration:none; padding:12px 30px; border-radius:24px; font-weight:600;">
+                            Open GRN
+                        </a>
+                    </div>
+                </td></tr>
+                <tr><td style="background:#2c3e50; color:#bdc3c7; padding:14px 30px; font-size:12px;">
+                    Automated notification from <t t-out="object.company_id.name or 'Odoo'"/>
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+</div>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Rejected template
+             ============================================================ -->
+        <record id="mail_template_grn_reject" model="mail.template">
+            <field name="name">GRN: Rejected</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="email_from">{{ (object.rejected_by.email_formatted or user.email_formatted) }}</field>
+            <field name="subject">GRN {{ object.name }} - Rejected</field>
+            <field name="description">Sent to the GRN creator and configured recipients when a GRN is rejected.</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html" type="html">
+<div style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4; padding:20px 0;">
+        <tr><td align="center">
+            <table width="640" cellpadding="0" cellspacing="0" style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                <tr><td style="background:linear-gradient(135deg,#ee0979,#ff6a00); padding:24px 30px;">
+                    <h1 style="margin:0; color:#fff; font-size:22px;">GRN Rejected - <t t-out="object.name or ''"/></h1>
+                    <p style="margin:6px 0 0; color:#fde6dd; font-size:13px;">The Goods Receipt Note has been rejected.</p>
+                </td></tr>
+                <tr><td style="padding:24px 30px; color:#333;">
+                    <p style="margin:0 0 16px;">Hello <strong><t t-out="(object.create_uid and object.create_uid.name) or ''"/></strong>,</p>
+                    <p style="margin:0 0 20px;">
+                        Your GRN has been rejected. Please review the reason below and resubmit after corrections.
+                    </p>
+                    <table width="100%" cellpadding="6" cellspacing="0" style="background:#f8f9fa; border-radius:6px;">
+                        <tr><td width="40%"><strong>GRN No</strong></td><td><t t-out="object.name or ''"/></td></tr>
+                        <tr><td><strong>PO No</strong></td><td><t t-out="(object.purchase_id and object.purchase_id.name) or (object.origin or 'N/A')"/></td></tr>
+                        <tr><td><strong>Vendor</strong></td><td><t t-out="object.partner_id.name or 'N/A'"/></td></tr>
+                        <tr><td><strong>Rejected By</strong></td><td><t t-out="(object.rejected_by and object.rejected_by.name) or ''"/></td></tr>
+                        <tr><td><strong>Rejected On</strong></td><td><t t-out="object.rejection_date and object.rejection_date.strftime('%Y-%m-%d %H:%M') or ''"/></td></tr>
+                        <tr><td><strong>Status</strong></td><td><span style="background:#f8d7da; color:#721c24; padding:3px 10px; border-radius:10px; font-weight:600;">Rejected</span></td></tr>
+                    </table>
+                    <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:14px 16px; margin:18px 0 8px;">
+                        <strong style="color:#856404;">Rejection Reason</strong>
+                        <p style="margin:6px 0 0; color:#333; white-space:pre-line;"><t t-out="object.rejection_reason or ''"/></p>
+                        <t t-if="object.approval_remarks">
+                            <p style="margin:8px 0 0; color:#555;">
+                                <em>Remarks:</em> <t t-out="object.approval_remarks or ''"/>
+                            </p>
+                        </t>
+                    </div>
+                    <div style="text-align:center; margin:24px 0 8px;">
+                        <a t-att-href="('%s/web#id=%d&amp;model=stock.picking&amp;view_type=form' % (object.env['ir.config_parameter'].sudo().get_param('web.base.url'), object.id))"
+                           style="display:inline-block; background:linear-gradient(135deg,#ee0979,#ff6a00); color:#fff; text-decoration:none; padding:12px 30px; border-radius:24px; font-weight:600;">
+                            Open GRN
+                        </a>
+                    </div>
+                </td></tr>
+                <tr><td style="background:#2c3e50; color:#bdc3c7; padding:14px 30px; font-size:12px;">
+                    Automated notification from <t t-out="object.company_id.name or 'Odoo'"/>
+                </td></tr>
+            </table>
+        </td></tr>
+    </table>
+</div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

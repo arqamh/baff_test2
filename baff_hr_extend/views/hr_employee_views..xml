@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- HR Employee Form View Extend -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.baff.hr.extend</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_number']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_provident_fund_eligible']" position="attributes">
+                <attribute name="context">{'default_is_provident_fund_eligible': 1}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']" position="after">
+                <page name="internal_notes" string="Internal Notes">
+                    <field name="internal_note"/>
+                </page>
+            </xpath>
+            
+            <xpath expr="//field[@name='employee_type']" position="after">
+                <field name="ocean_voyager_emp_category" attrs="{'required': [('employee_type', '=', 'employee')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

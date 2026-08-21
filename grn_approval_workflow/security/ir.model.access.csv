@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_grn_approval_config_admin,grn.approval.config admin,model_grn_approval_config,grn_approval_workflow_group_admin,1,1,1,1
+access_grn_approval_config_user,grn.approval.config read,model_grn_approval_config,base.group_user,1,0,0,0
+access_grn_approval_log_user,grn.approval.log user,model_grn_approval_log,base.group_user,1,0,0,0
+access_grn_approval_log_approver,grn.approval.log approver,model_grn_approval_log,grn_approval_workflow_group_approver,1,1,1,0
+access_grn_reject_wizard_user,grn.reject.wizard user,model_grn_reject_wizard,grn_approval_workflow_group_approver,1,1,1,1
+access_grn_submit_wizard_user,grn.submit.wizard user,model_grn_submit_wizard,base.group_user,1,1,1,1

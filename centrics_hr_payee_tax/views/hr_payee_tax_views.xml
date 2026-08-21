@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="hr_payee_tax_view_tree" model="ir.ui.view">
+        <field name="name">hr.payee.tax.view.tree</field>
+        <field name="model">hr.payee.tax</field>
+        <field name="arch" type="xml">
+            <tree string="PAYEE Tax Brackets" default_order="sequence asc" editable="bottom">
+                <field name="sequence" widget="handle" width="200"/>
+                <field name="condition_type" width="200"/>
+                <field name="amount_from" width="200"/>
+                <field name="amount_to" width="200"/>
+                <field name="percentage" width="200"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="hr_payee_tax_action" model="ir.actions.act_window">
+        <field name="name">PAYEE Tax Brackets</field>
+        <field name="res_model">hr.payee.tax</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p>Define your PAYEE tax brackets. Avoid overlapping ranges.</p>
+        </field>
+    </record>
+
+    <!-- Menu: Payroll / Configuration / PAYEE Tax Brackets -->
+    <menuitem id="menu_hr_payroll_payee_tax"
+              name="PAYEE Tax Brackets"
+              parent="hr_payroll.menu_hr_salary_configuration"
+              action="hr_payee_tax_action"
+              sequence="60"/>
+</odoo>

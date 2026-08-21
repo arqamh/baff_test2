@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="google_import_stats_list">
+            <field name="name">Google Import Stats List</field>
+            <field name="model">google.import.stats</field>
+            <field name="arch" type="xml">
+                <tree string="Import History" edit="false" create="false">
+                    <field name="create_date" string="Sync Time"/>
+                    <field name="new_contact" string="New Contacts"/>
+                    <field name="new_calendar" string="New Events"/>
+                    <field name="new_task" string="New Tasks"/>
+                    <field name="new_email" string="New Emails"/>
+                    <field name="upd_contact" string="Updated Contacts"/>
+                    <field name="upd_calendar" string="New Events"/>
+                    <field name="upd_task" string="New Tasks"/>
+                    <field name="upd_email" string="New Emails"/>
+                    <field name="connector" widget="many2one"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="google_import_stats_action_window">
+            <field name="name">Google Import History</field>
+            <field name="res_model">google.import.stats</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+    </data>
+</odoo>

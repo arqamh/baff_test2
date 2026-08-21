@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="attendance_template">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="width:100%;">
+
+                        <!-- 4-column layout using a table -->
+                        <table style="width:100%; table-layout:fixed; border-collapse:collapse;">
+                            <t t-foreach="range(0, len(attendance_records), 4)" t-as="i">
+                                <tr>
+                                    <td style="width:25%; vertical-align:top; padding:5px; border:1px dashed lightgray;">
+                                        <t t-set="employee_attendance" t-value="attendance_records[i]"/>
+                                        <t t-call="baff_hr_attendance_extend.attendance_block"/>
+                                    </td>
+                                    <td style="width:25%; vertical-align:top; padding:5px; border:1px dashed lightgray;">
+                                        <t t-if="i+1 &lt; len(attendance_records)">
+                                            <t t-set="employee_attendance" t-value="attendance_records[i+1]"/>
+                                            <t t-call="baff_hr_attendance_extend.attendance_block"/>
+                                        </t>
+                                    </td>
+                                    <td style="width:25%; vertical-align:top; padding:5px; border:1px dashed lightgray;">
+                                        <t t-if="i+2 &lt; len(attendance_records)">
+                                            <t t-set="employee_attendance" t-value="attendance_records[i+2]"/>
+                                            <t t-call="baff_hr_attendance_extend.attendance_block"/>
+                                        </t>
+                                    </td>
+                                    <td style="width:25%; vertical-align:top; padding:5px; border:1px dashed lightgray;">
+                                        <t t-if="i+3 &lt; len(attendance_records)">
+                                            <t t-set="employee_attendance" t-value="attendance_records[i+3]"/>
+                                            <t t-call="baff_hr_attendance_extend.attendance_block"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <!-- Sub-template for a single employee block -->
+        <template id="attendance_block">
+            <div style="text-align: left;">
+                <span style="border-bottom: 1px solid black">
+                    <t t-esc="env.company.name"/>
+                </span>
+                <br/>
+                <br/>
+            </div>
+            <div style="text-align: left;">
+                <span>Attendance from
+                    <t t-esc="form['date_from']"/>
+                </span>
+                <span> To
+                    <t t-esc="form['date_to']"/>
+                </span>
+            </div>
+
+            <div style="margin-top:20px; page-break-inside: avoid;">
+                <span style="font-weight: bold; display: inline-block; width:40%">C-No:
+                <t t-esc="employee_attendance['employee_epf']"/></span>
+
+                <span style="font-weight: bold; display: inline-block; width:50%">Depa:
+                    <t t-esc="employee_attendance['department_id']"/>
+                </span>
+            </div>
+            <div style="margin-top:20px;">
+                <strong>
+                    <t t-esc="employee_attendance['employee_id']"/>
+                </strong>
+            </div>
+
+            <table class="table table-bordered">
+                <thead style="border: none;">
+                    <tr style="border: none;">
+                        <th style="border: none;"> </th>
+                        <th style="border: none;">N.OT</th>
+                        <th style="border: none;">D.OT</th>
+                        <th style="border: none;">T.OT</th>
+                        <th style="border: none;">H.OT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="border: 1px solid black;">Tot O/T</td>
+                        <td style="text-align:center; border: 1px solid black;">
+                            <t t-esc="employee_attendance['total_normal'] if employee_attendance['total_normal'] not in (False, '0:00') else ''"/>
+                        </td>
+                        <td style="text-align:center; border: 1px solid black;">
+                            <t t-esc="employee_attendance['total_double'] if employee_attendance['total_double'] not in (False, '0:00') else ''"/>
+                        </td>
+                        <td style="text-align:center; border: 1px solid black;">
+                            <t t-esc="employee_attendance['total_triple'] if employee_attendance['total_triple'] not in (False, '0:00') else ''"/>
+                        </td>
+                        <td style="text-align:center; border: 1px solid black;">
+                            <t t-esc="employee_attendance['total_holiday'] if employee_attendance['total_holiday'] not in (False, '0:00') else ''"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-sm table-borderless" style="margin-bottom:15px;">
+                <thead>
+                    <tr>
+                        <th colspan="2">Duty In</th>
+                        <th colspan="2">Duty Out</th>
+                        <th colspan="5">Over Time</th>
+                    </tr>
+                    <tr>
+                        <th style="border-bottom: 1px dashed black !important;">Date</th>
+                        <th style="border-bottom: 1px dashed black !important;">Time</th>
+                        <th style="border-bottom: 1px dashed black !important;">Date</th>
+                        <th style="border-bottom: 1px dashed black !important;">Time</th>
+                        <th style="border-bottom: 1px dashed black !important;">01</th>
+                        <th style="border-bottom: 1px dashed black !important;">02</th>
+                        <th style="border-bottom: 1px dashed black !important;">03</th>
+                        <th style="border-bottom: 1px dashed black !important;">04</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="employee_attendance['attendance_details']" t-as="line">
+                        <tr>
+                            <td class="text-center">
+                                <t t-esc="line['check_in_day']"/>
+                            </td>
+                            <t t-if="line['check_in_time'] and not line['check_out_day']">
+                                <!-- Special case: print message once across 3 columns -->
+                                <td colspan="6" class="text-left">
+                                    <t t-esc="line['check_in_time']"/>
+                                </td>
+                            </t>
+
+                            <t t-else="">
+                                <!-- Normal case: check in/out values -->
+                                <td class="text-center" style="border-right: 2px solid black !important;">
+                                    <t t-esc="line['check_in_time']"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="line['check_out_day']"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line['check_out_time']"/>
+                                </td>
+
+                                <td class="text-center">
+                                    <t t-esc="line['normal_overtime'] if line['normal_overtime'] not in (False, '0:00') else ''"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="line['double_overtime'] if line['double_overtime'] not in (False, '0:00') else ''"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="line['triple_overtime'] if line['triple_overtime'] not in (False, '0:00') else ''"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-esc="line['holiday_hours'] if line['holiday_hours'] not in (False, '0:00') else ''"/>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </template>
+
+        <record id="action_report_attendance" model="ir.actions.report">
+            <field name="name">Employee Overtime</field>
+            <field name="model">attendance.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">baff_hr_attendance_extend.attendance_template</field>
+            <field name="report_file">baff_hr_attendance_extend.attendance_template</field>
+            <field name="binding_model_id" ref="baff_hr_attendance_extend.model_attendance_report_wizard"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="baff_hr_attendance_extend.baff_a4_format_time_card"/>
+        </record>
+    </data>
+</odoo>

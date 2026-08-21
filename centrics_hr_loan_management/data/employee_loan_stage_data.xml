@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="loan_stage_draft" model="employee.loan.stage">
+            <field name="name">Draft</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="loan_stage_submitted" model="employee.loan.stage">
+            <field name="name">Submitted</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="loan_stage_approved" model="employee.loan.stage">
+            <field name="name">Approved</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="loan_stage_paid" model="employee.loan.stage">
+            <field name="name">Paid</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="loan_stage_in_recovery" model="employee.loan.stage">
+            <field name="name">In Recovery</field>
+            <field name="sequence">5</field>
+        </record>
+        <record id="loan_stage_recovered" model="employee.loan.stage">
+            <field name="name">Recovered</field>
+            <field name="sequence">6</field>
+        </record>
+        <record id="loan_stage_rejected" model="employee.loan.stage">
+            <field name="name">Rejected</field>
+            <field name="sequence">7</field>
+        </record>
+    </data>
+</odoo>

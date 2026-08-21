@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_procurement_plan_list_tracking" model="ir.ui.view">
+        <field name="name">procurement.plan.tree.tracking</field>
+        <field name="model">procurement.plan</field>
+        <field name="inherit_id" ref="procurement_plan.view_procurement_plan_list"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="product_code" readonly="1" force_save="1"
+                       optional="show" string="Material Code"/>
+            </xpath>
+
+            <xpath expr="//field[@name='requisition_id']" position="after">
+                <field name="project_id" readonly="1" force_save="1"
+                       optional="show" string="Project"/>
+                <field name="job_costing_id" readonly="1" force_save="1"
+                       optional="hide" string="Job Costing"/>
+                <field name="analytic_id" readonly="1" force_save="1"
+                       optional="hide" string="Analytic Account"/>
+            </xpath>
+
+            <xpath expr="//field[@name='received_qty']" position="after">
+                <field name="po_created_qty" readonly="1" force_save="1"
+                       optional="show" sum="PO Created"/>
+                <field name="grn_done_qty" readonly="1" force_save="1"
+                       optional="show" sum="GRN Done"/>
+                <field name="balance_qty" readonly="1" force_save="1"
+                       optional="show" sum="Balance"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_procurement_plan_form_tracking" model="ir.ui.view">
+        <field name="name">procurement.plan.form.tracking</field>
+        <field name="model">procurement.plan</field>
+        <field name="inherit_id" ref="procurement_plan.view_procurement_plan_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="product_code" string="Material Code"/>
+                <field name="project_id"/>
+                <field name="job_costing_id"/>
+                <field name="analytic_id"/>
+            </xpath>
+            <xpath expr="//field[@name='required_qty']" position="after">
+                <field name="po_created_qty"/>
+                <field name="grn_done_qty"/>
+                <field name="balance_qty"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_procurement_plan_search_tracking" model="ir.ui.view">
+        <field name="name">procurement.plan.search.tracking</field>
+        <field name="model">procurement.plan</field>
+        <field name="inherit_id" ref="procurement_plan.view_procurement_plan_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="project_id"/>
+                <field name="job_costing_id"/>
+                <field name="analytic_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='state_completed']" position="after">
+                <separator/>
+                <filter string="Has Balance" name="has_balance"
+                        domain="[('balance_qty', '>', 0)]"/>
+                <filter string="No PO Yet" name="no_po"
+                        domain="[('po_created_qty', '=', 0)]"/>
+                <filter string="Fully Received" name="fully_received"
+                        domain="[('balance_qty', '=', 0), ('grn_done_qty', '>', 0)]"/>
+                <group expand="0" string="Group By (Job)">
+                    <filter string="Project" name="group_by_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Job Costing" name="group_by_job_costing"
+                            context="{'group_by': 'job_costing_id'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

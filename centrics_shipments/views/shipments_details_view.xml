@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="shipments_details_form_view" model="ir.ui.view">
+        <field name="name">shipments.details.form</field>
+        <field name="model">shipments.details</field>
+        <field name="arch" type="xml">
+            <form string="Shipments Details">
+                <header>
+                    <button name="pending_approve" type="object" string="Approve"
+                            attrs="{'invisible': [('state', 'in', ['arrived', 'completed', 'cancelled'])]}"
+                            class="btn btn-primary"/>
+                    <button name="confirm_shipment" type="object" string="Confirm"
+                            attrs="{'invisible': [('state', 'in', ['draft', 'completed', 'cancelled'])]}"
+                            class="btn btn-primary"/>
+                    <button name="cancel_shipment" type="object" string="Cancel"
+                            attrs="{'invisible': [('state', 'in', ['completed', 'cancelled'])]}"
+                            class="btn btn-danger"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="number" class="oe_edit_only"/>
+                        <h1>
+                            <field name="number" readonly="1" force_save="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project"/>
+                            <field name="shipment_number"/>
+                            <field name="tt_number"/>
+                            <field name="shipper_supplier"/>
+                            <field name="country"/>
+                            <field name="description"/>
+                            <field name="payment_date"/>
+                            <field name="boi_approval"/>
+                            <field name="mode_of_transport"/>
+                            <field name="etd" invisible="1"/>
+                            <field name="etd_date"/>
+                            <field name="revised_etd" invisible="1"/>
+                            <field name="revised_etd_date"/>
+                            <field name="eta" invisible="1"/>
+                            <field name="eta_date"/>
+                            <field name="pick_up_local_agent"/>
+                        </group>
+                        <group>
+                            <field name="incoterm"/>
+                            <field name="freight_cost"/>
+                            <field name="finalized_date"/>
+                            <field name="port_airport"/>
+                            <field name="vessel_flight"/>
+                            <field name="clearance_agent"/>
+                            <field name="date"/>
+                            <field name="cus_dec_no"/>
+                            <field name="koggala_delivery_date"/>
+                            <field name="type_of_vehicle"/>
+                            <field name="package_size"/>
+                            <field name="remarks_notes"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Purchase Order">
+                            <field name="shipments_lines">
+                                <tree editable="bottom">
+                                    <field name="po_number"/>
+                                    <field name="date"/>
+                                    <field name="proforma_invoice_no"/>
+                                    <field name="proforma_invoice_date"/>
+                                    <field name="currency"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="payment_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="shipments_details_tree_view" model="ir.ui.view">
+        <field name="name">shipments.details.tree</field>
+        <field name="model">shipments.details</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'open'">
+                <field name="number"/>
+                <field name="shipment_number"/>
+                <field name="finalized_date"/>
+                <field name="shipper_supplier" optional="show"/>
+                <field name="description" optional="show"/>
+                <field name="country" optional="show"/>
+                <field name="amount" optional="show"/>
+                <field name="tt_number" optional="show"/>
+                <field name="mode_of_transport" optional="show"/>
+                <field name="incoterm" optional="show"/>
+                <field name="etd_date"/>
+                <field name="revised_etd_date"/>
+                <field name="eta_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="shipments_details_purchase_action" model="ir.actions.act_window">
+        <field name="name">Shipments Details</field>
+        <field name="res_model">shipments.details</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Shipment
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="menu_shipments_details_purchase"
+            name="Shipments"
+            action="shipments_details_purchase_action"
+            parent="purchase.menu_purchase_root"
+            sequence="50"
+            groups="centrics_shipments.group_shipments_details"/>
+</odoo>

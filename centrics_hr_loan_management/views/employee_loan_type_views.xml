@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View for Employee Loan Type -->
+    <record id="employee_loan_type_view_tree" model="ir.ui.view">
+        <field name="name">employee.loan.type.view_tree</field>
+        <field name="model">employee.loan.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="loan_sequence_prefix"/>
+                <field name="is_interest"/>
+                <field name="loan_interest"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for Employee Loan Type -->
+    <record id="employee_loan_type_view_form" model="ir.ui.view">
+        <field name="name">employee.loan.type.view.form</field>
+        <field name="model">employee.loan.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Loan Type"
+                                   required="True" style="font-size: min(4vw, 2.6rem);"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="loan_sequence_prefix" required="1"/>
+                            <field name="is_interest"/>
+                            <field name="loan_interest"
+                                   attrs="{'required': [('is_interest', '=', True)], 'invisible': [('is_interest', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="standard_number_of_installments"/>
+                        </group>
+                    </group>
+                    <group string="Standard Minimum and Maximum Amount">
+                        <group>
+                            <field name="is_minimum_loan_amount"/>
+                            <field name="is_maximum_loan_amount"/>
+                        </group>
+                        <group>
+                            <field name="minimal_loan_amount"
+                                   attrs="{'required': [('is_minimum_loan_amount', '=', True)], 'invisible': [('is_minimum_loan_amount', '=', False)]}"/>
+                            <field name="maximal_loan_amount"
+                                   attrs="{'required': [('is_maximum_loan_amount', '=', True)], 'invisible': [('is_maximum_loan_amount', '=', False)]}"/>
+                        </group>
+
+                    </group>
+                    <group string="Configuration Information">
+                        <group>
+                            <field name="company_id" readonly="1" force_save="1"/>
+                            <field name="loan_sequence_id" readonly="1" force_save="1"/>
+                            <button name="action_generate_loan_sequence" type="object"
+                                    class="btn-primary o_enable btn"
+                                    icon="fa-plus-circle"
+                                    title="Generate Loan Sequence"
+                                    attrs="{'invisible': [('loan_sequence_id', '!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+
+                    </group>
+                    <group string="Accounting Configuration">
+                        <group>
+                            <field name="default_pay_journal_id"/>
+                            <field name="default_bank_cash_account_id"/>
+                            <field name="default_receivable_account_id"/>
+                        </group>
+                        <group>
+                            <field name="default_payable_account_id"/>
+                            <field name="default_interest_account_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="is_enable_payroll_integration" invisible="1"/>
+                    </group>
+
+                    <group string="Payroll Configurations" attrs="{'invisible':[('is_enable_payroll_integration', '!=', True)]}">
+                        <group>
+
+                            <field name="hr_payslip_input_type_id" readonly="1"/>
+                            <button name="action_create_payslip_input_type" type="object"
+                                    title="Create Payslip Input Type"
+                                    class="btn-primary o_enable btn"
+                                    icon="fa-plus"/>
+                        </group>
+                        <group>
+                            <field name="hr_salary_rule_id" readonly="1"/>
+                            <button name="action_create_salary_rule" type="object"
+                                    title="Create Payslip Input Type"
+                                    class="btn-primary o_enable btn"
+                                    icon="fa-plus"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Employee Loan Type -->
+    <record id="employee_loan_type_action" model="ir.actions.act_window">
+        <field name="name">Loan Types</field>
+        <field name="res_model">employee.loan.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Item for Employee Loan Type -->
+    <menuitem id="employee_loan_type_menu_item"
+              name="Loan Types"
+              parent="loan_management_configurations"
+              action="employee_loan_type_action"
+              sequence="1"
+    />
+</odoo>

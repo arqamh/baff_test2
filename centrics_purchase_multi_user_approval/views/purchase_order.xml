@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="centrics_purchase_multi_user_approval_purchase_order_form" model="ir.ui.view">
+        <field name="name">centrics.purchase.multi.user.approval.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='bid_confirm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="states">draft,sent,purchase</attribute>
+            </xpath>
+            <xpath expr="//button[@id='draft_confirm']" position="after">
+                <button name="send_for_approval" type="object" string="Send for Approval" states="draft,sent"/>
+                <button name="update_approvers" type="object" string="Update Approvers" states="to approve" groups="centrics_purchase_multi_user_approval.group_purchase_approve_manager"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <field name="hide_approve_reject_button" invisible="1"/>
+                <button name="button_approve" type="object" string="Approve Order" class="oe_highlight" attrs="{'invisible': ['|', ('hide_approve_reject_button', '=', True), ('state', '!=', 'to approve')]}"/>
+                <button name="button_reject" type="object" string="Reject" attrs="{'invisible': ['|', ('hide_approve_reject_button', '=', True), ('state', '!=', 'to approve')]}"/>
+            </xpath>
+
+             <xpath expr="//field[@name='picking_type_id']" position="after">
+                <field name="requested_user"/>
+            </xpath>
+
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Approval Status">
+                    <field name="purchase_order_approval_line_ids">
+                        <tree create="0" delete="0" editable="top">
+                            <field name="sequence" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="approval_request_datetime" readonly="1"/>
+                            <field name="status_updated_datetime" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extends the purchase order kpis tree view by adding a new field. -->
+    <record id="centrics_purchase_multi_user_approval_purchase_order_tree" model="ir.ui.view">
+        <field name="name">centrics.purchase.multi.user.approval.purchase.order.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_planned']" position="after">
+                <field name="requested_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extends the purchase order tree view by adding a new field. -->
+    <record id="centrics_purchase_multi_user_approval_purchase_order_view_tree" model="ir.ui.view">
+        <field name="name">centrics.purchase.multi.user.approval.purchase.order.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_planned']" position="after">
+                <field name="requested_user"/>
+            </xpath>
+        </field>
+    </record>
+
+<!--RFQ search view customizations-->
+    <record id="view_purchase_order_filter_search" model="ir.ui.view">
+        <field name="name">request.quotation.select.search</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="my_approvals" string="My Approvals" domain="[('requested_user', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--Purchase search view customizations-->
+    <record id="purchase_order_view_search" model="ir.ui.view">
+        <field name="name">purchase.order.view.search.inherit.centrics_purchase_multi_user_approval</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="my_approvals_po" string="My Approvals" domain="[('requested_user', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+
+<!--    &lt;!&ndash;Set the default filter PO as my_approvals&ndash;&gt;-->
+<!--    <record id="purchase.purchase_form_action" model="ir.actions.act_window">-->
+<!--        <field name="context">{'search_default_my_approvals_po':1}</field>-->
+<!--    </record>-->
+
+        <!--Set the default filter RFQ as my_approvals-->
+    <record id="purchase.purchase_rfq" model="ir.actions.act_window">
+        <field name="context">{'search_default_my_approvals':1}</field>
+    </record>
+
+</odoo>

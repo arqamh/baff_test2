@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- User Group: Loan User -->
+        <record id="group_loan_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="centrics_hr_loan_management.ir_module_category_employee_loan"/>
+        </record>
+
+        <!-- User Group: Loan Manager -->
+        <record id="group_loan_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="centrics_hr_loan_management.ir_module_category_employee_loan"/>
+            <field name="implied_ids" eval="[(4, ref('centrics_hr_loan_management.group_loan_user'))]"/>
+
+        </record>
+
+        <!-- User Group: Loan Manager -->
+        <record id="group_loan_administrator" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="centrics_hr_loan_management.ir_module_category_employee_loan"/>
+            <field name="implied_ids" eval="[(4, ref('centrics_hr_loan_management.group_loan_manager'))]"/>
+
+        </record>
+
+
+
+    </data>
+</odoo>

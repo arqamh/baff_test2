@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+            <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+				<field name="name">sale.order.form.inherited.stock_picking_cancel_cs</field>
+				<field name="model">sale.order</field>
+				<field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+				<field name="priority" eval="20"/>
+				<field name="arch" type="xml">
+					<xpath expr="//form/sheet" position="before">
+						<field name="cancel_done_picking" invisible="1"/>
+					</xpath>
+					<xpath expr="//header" position="inside">
+ 						<button name="cancel_picking" type="object"
+						string="Cancel Delivery" attrs="{'invisible': [('cancel_done_picking', '=', False)]}" class="oe_highlight" help="Click here to cancel delivery"/>
+					</xpath>
+				</field>
+			</record>
+	</data>
+</odoo>

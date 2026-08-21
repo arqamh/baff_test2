@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List view -->
+    <record id="restrict_create_and_edit_view_list" model="ir.ui.view">
+        <field name="name">restrict.create.and.edit.view.list</field>
+        <field name="model">restrict.create.and.edit</field>
+        <field name="arch" type="xml">
+            <tree string="Restrict Create and Edit">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="field_ids" widget="many2many_tags" optional="show"/>
+                <field name="restrict_enabled" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="restrict_create_and_edit_view_form" model="ir.ui.view">
+        <field name="name">restrict.create.and.edit.view.form</field>
+        <field name="model">restrict.create.and.edit</field>
+        <field name="arch" type="xml">
+            <form string="Restrict Create and Edit">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group>
+                            <field name="name"
+                                   placeholder="e.g. Lock customer dropdown on Sales Order"/>
+                            <field name="model_id"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="model_name" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="restrict_enabled" widget="boolean_toggle"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Restricted Many2one Fields" name="fields">
+                            <field name="field_ids"
+                                   nolabel="1"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   context="{'default_model_id': model_id}">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="field_description"/>
+                                    <field name="ttype"/>
+                                    <field name="relation"/>
+                                </tree>
+                            </field>
+                            <p class="text-muted">
+                                Only <b>Many2one</b> fields of the selected model are listed.
+                                When the rule is enabled, those fields will hide the
+                                <i>Create</i> and <i>Create and Edit</i> options
+                                in the web client dropdown. Users can still select
+                                existing records.
+                            </p>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_restrict_create_and_edit_view_search" model="ir.ui.view">
+        <field name="name">restrict.create.and.edit.view.search</field>
+        <field name="model">restrict.create.and.edit</field>
+        <field name="arch" type="xml">
+            <search string="Restrict Create and Edit">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="field_ids"/>
+                <filter string="Enabled" name="enabled"
+                        domain="[('restrict_enabled', '=', True)]"/>
+                <filter string="Disabled" name="disabled"
+                        domain="[('restrict_enabled', '=', False)]"/>
+                <filter string="Archived" name="archived"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Model" name="group_model"
+                            context="{'group_by': 'model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="restrict_create_and_edit_action" model="ir.actions.act_window">
+        <field name="name">Restrict Create and Edit</field>
+        <field name="res_model">restrict.create.and.edit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_restrict_create_and_edit_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a restriction rule
+            </p>
+            <p>
+                Pick a model, pick one or more of its Many2one fields, and the
+                web client will hide the <i>Create</i> and <i>Create and Edit</i>
+                options from those fields' dropdowns.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu under Settings > Technical -->
+    <menuitem id="restrict_create_and_edit_menu_action"
+              name="Restrict Create and Edit"
+              parent="base.menu_custom"
+              action="restrict_create_and_edit_action"
+              sequence="100"/>
+
+</odoo>

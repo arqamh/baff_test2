@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="attendance_manual_uploader_view_form" model="ir.ui.view">
+        <field name="name">attendance.manual.uploader.view.form</field>
+        <field name="model">attendance.manual.uploader</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                            name="action_import_attendance"
+                            type="object"
+                            string="Import Attendance"
+                            confirm="Once you proceed, unable to upload again for the same records.Do you need to proceed ?"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"
+
+                    />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Attendance Manual Uploader"
+                                   style="font-size: min(4vw, 2.6rem);" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="file_upload" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="import_configuration_id" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                        </group>
+                        <group>
+                            <field name="company_id"/>
+                        </group>
+                        <!-- Add more fields as required -->
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="attendance_manual_uploader_view_tree" model="ir.ui.view">
+        <field name="name">attendance.manual.uploader.view.tree</field>
+        <field name="model">attendance.manual.uploader</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="file_upload"/>
+                <field name="import_configuration_id"/>
+                <!-- Add more fields if necessary -->
+            </tree>
+        </field>
+    </record>
+
+    <record id="attendance_manual_uploader_action" model="ir.actions.act_window">
+        <field name="name">Manual Attendance Uploader</field>
+        <field name="res_model">attendance.manual.uploader</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload and manage manual attendance records here.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="attendance_manual_uploader_menu"
+              name="Manual Uploader"
+              parent="centrics_hr_attendance.attendance_manual_import_menu_root"
+              action="attendance_manual_uploader_action"
+              sequence="3"/>
+</odoo>

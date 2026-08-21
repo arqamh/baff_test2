@@ -1,0 +1,56 @@
+<odoo>
+    <record id="view_form_approval_config" model="ir.ui.view">
+        <field name="name">approval.config.form</field>
+        <field name="model">approval.config</field>
+        <field name="arch" type="xml">
+            <form string="Approval Configuration">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="model_id"/>
+                        <field name="approval_level"/>
+                    </group>
+                    <group string="Approval Levels">
+                        <field name="user_ids_level1" widget="many2many_tags"
+                               attrs="{'invisible': [('approval_level', '=', '0')]}"/>
+
+                        <field name="user_ids_level2" widget="many2many_tags"
+                               attrs="{'invisible': [('approval_level', 'in', ['0', '1'])]}"/>
+                        <field name="user_ids_level3" widget="many2many_tags"
+                               attrs="{'invisible': [('approval_level', 'in', ['0', '1', '2'])]}"/>
+                    </group>
+                </sheet>
+                
+
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_approval_config" model="ir.ui.view">
+        <field name="name">approval.config.tree</field>
+        <field name="model">approval.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="approval_level"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_approval_config" model="ir.actions.act_window">
+        <field name="name">Approval Configurations</field>
+        <field name="res_model">approval.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_approval_root" name="Approval Config" sequence="100"
+              web_icon="centrics_approval_configurator,static/description/app_icon.png"/>
+    <menuitem id="menu_approval_config" name="Configurations" parent="menu_approval_root"
+              action="action_approval_config"/>
+</odoo>

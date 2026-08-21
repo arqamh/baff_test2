@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="field_required_rule__menu"
+              name="Field Required Rules"
+              parent="base.menu_security"
+              action="field_required_rule__action"
+              sequence="51"/>
+
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="baff_sales_modifications_view_order_form" model="ir.ui.view">
+        <field name="name">baff.sales.modifications.view.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_draft']" position="before">
+                <button name="action_create_so" type="object" string="Create Sales Order" attrs="{'invisible': ['|', ('so_created', '=', True), ('state', '!=', 'quotation_done')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="attributes">
+                <attribute name="string">Set to Draft</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <button name="action_view_so" string="Sales Orders" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('sale_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ['draft', 'sent', 'sale', 'quotation_done']), ('id', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='customer_signature']" position="after">
+                <page string="Quotation Status">
+                    <group>
+                        <group>
+                            <field name="quotation_required" widget="radio"/>
+                            <field name="customer_po_available"/>
+                            <field name="cash_project_confirmation"/>
+                        </group>
+                        <group>
+                            <field name="confirmed_email_text"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="doc_type" invisible="1"/>
+                <field name="so_created" invisible="1"/>
+                <field name="sale_id" invisible="1"/>
+<!--                <field name="quotation_id" readonly="1" attrs="{'invisible': [('doc_type', '=', 'quotation')]}"/>-->
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="state_quotation" widget="statusbar" statusbar_visible="draft,sent,quotation_done" attrs="{'invisible': [('doc_type', '=', 'sale')]}"/>
+                <field name="state_sale" widget="statusbar" statusbar_visible="draft,sent,sale" attrs="{'invisible': [('doc_type', '=', 'quotation')]}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+        <field name="domain">[('doc_type', '=', 'quotation')]</field>
+    </record>
+
+    <record id="sale.action_orders" model="ir.actions.act_window">
+        <field name="domain">[('doc_type', '=', 'sale')]</field>
+    </record>
+</odoo>

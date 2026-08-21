@@ -1,0 +1,28 @@
+{
+    'name': 'Baff_reports',
+    'sequence': 1,
+    'summary': "This module contains all the common customization related to their business nature",
+    'version': '16.0.0.1',
+    'license': 'LGPL-3',
+    'author': 'Centrics Business Solutions PVT Ltd',
+    'company': 'Centrics Business Solutions PVT Ltd',
+    'website': 'http://www.centrics.cloud/',
+    'depends': ['base', 'sale', 'product', 'purchase', 'stock', 'account'],
+    'data': [
+        'security/ir.model.access.csv',
+        'wizard/fixed_asset_report.xml',
+        'data/paperformat.xml',
+        'views/purchase_report_view.xml',
+        'reports/purchase_order.xml',
+        'reports/offer_order.xml',
+        'reports/invoice.xml',
+        'views/menuitem.xml',
+        'views/res_company.xml',
+        'views/account_move_views.xml',
+
+    ],
+    'demo': [],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+}

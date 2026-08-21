@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="employee_loan_view_kanban" model="ir.ui.view">
+        <field name="name">employee.loan.kanban.view</field>
+        <field name="model">employee.loan</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="loan_stage_id" class="o_kanban_color">
+                <field name="loan_stage_id" readonly="1"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details"
+                                 style="padding: 10px; border-radius: 8px; background-color: #f8f9fa; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                                <strong style="font-size: 1.2rem; color: #007bff;">
+                                    <field name="name"/>
+                                </strong>
+                                <p style="margin: 5px 0; color: #343a40;">
+                                    <span style="font-weight: bold;">Employee:</span>
+                                    <field name="employee_id"/>
+                                </p>
+                                <p style="margin: 5px 0; color: #343a40;">
+                                    <span style="font-weight: bold;">Loan Amount:</span>
+                                    <field name="loan_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                </p>
+                                <p style="margin: 5px 0; color: #343a40;">
+                                    <span style="font-weight: bold;">Processed Amount:</span>
+                                    <field name="processed_amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                </p>
+                                <p style="margin: 5px 0; color: #343a40;">
+                                    <field name="loan_progress" widget="progressbar" options="{'max_value': 100}"
+                                           readonly="1"/>
+                                </p>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="employee_loan_view_form" model="ir.ui.view">
+        <field name="name">employee.loan.form.view</field>
+        <field name="model">employee.loan</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_print_loan" type="object" string="Print" class="btn-primary"
+                            attrs="{'invisible': [('is_allow_print', '=', False)]}"/>
+                    <button name="action_submit_loan" type="object" string="Submit" class="btn-primary"
+                            attrs="{'invisible': [('loan_status', '!=', 'draft')]}"/>
+                    <button name="action_approve_loan" type="object" string="Approve" class="btn-success"
+                            attrs="{'invisible': [('loan_status', '!=', 'submitted')]}"/>
+                    <button name="action_reject_loan" type="object" string="Reject" class="btn-danger"
+                            attrs="{'invisible': [('loan_status', '!=', 'submitted')]}"/>
+                    <button name="action_pay_loan" type="object" string="Pay" class="btn-secondary"
+                            attrs="{'invisible': [('loan_status', '!=', 'approved')]}"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="btn-warning"
+                            attrs="{'invisible': [('loan_status', 'in', ['draft', 'paid', 'in_recovery'])]}"
+                            groups="centrics_hr_loan_management.group_loan_manager"/>t
+                    <button name="action_generate_loan_installment_lines" type="object"
+                            string="Generate Installments" class="btn-info"
+                            attrs="{'invisible': [('loan_status', 'not in', ['draft', 'submitted'])]}"/>
+
+
+                    <field name="loan_stage_id" widget="statusbar" readonly="1"/>
+                    <field name="loan_status" invisible="1"/>
+                    <field name="is_allow_print" invisible="1"/>
+
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Submitted" bg_color="bg-danger"
+                            attrs="{'invisible':[('loan_status', '!=','submitted')]}"/>
+                    <widget name="web_ribbon" title="Approved" bg_color="bg-success"
+                            attrs="{'invisible':[('loan_status', '!=','approved')]}"/>
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-primary"
+                            attrs="{'invisible':[('loan_status', '!=','paid')]}"/>
+                    <widget name="web_ribbon" title="In Recovery" bg_color="bg-warning"
+                            attrs="{'invisible':[('loan_status', '!=','in_recovery')]}"/>
+                    <widget name="web_ribbon" title="Recovered" bg_color="bg-info"
+                            attrs="{'invisible':[('loan_status', '!=','recovered')]}"/>
+                    <widget name="web_ribbon" title="Rejected" bg_color="bg-secondary"
+                            attrs="{'invisible':[('loan_status', '!=','rejected')]}"/>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Loan Number"
+                                   style="font-size: min(4vw, 2.6rem);" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group string="For the Employee">
+                        <group>
+                            <field name="employee_id" attrs="{'readonly': [('loan_status', '!=', 'draft')]}"/>
+                            <field name="loan_type" attrs="{'readonly': [('loan_status', '!=', 'draft')]}"/>
+                            <field name="interest_rate" readonly="1"/>
+                            <field name="is_minimum_loan_amount" invisible="1"/>
+                            <field name="is_maximum_loan_amount" invisible="1"/>
+                            <field name="minimal_loan_amount"
+                                   attrs="{'invisible': [('is_minimum_loan_amount', '=', False)]}"/>
+                            <field name="maximal_loan_amount"
+                                   attrs="{'invisible': [('is_maximum_loan_amount', '=', False)]}"/>
+                            <field name="loan_amount" attrs="{'readonly': [('loan_status', '!=', 'draft')]}"/>
+
+                        </group>
+                        <group>
+                            <field name="number_of_installments"
+                                   attrs="{'readonly': [('loan_status', '!=', 'draft')]}"/>
+                            <field name="deduct_from_payroll" attrs="{'readonly': [('loan_status', '!=', 'draft')]}"/>
+                            <field name="calculation_type" attrs="{'readonly': [('loan_status', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="purpose" string="Purpose for the Loan"/>
+                    </group>
+                    <group>
+                        <field name="loan_progress" widget="progressbar" options="{'max_value': 100}" readonly="1"/>
+                    </group>
+                    <group string="Office Use" attrs="{'invisible': [('loan_status', '=', 'draft')]}"
+                           groups="centrics_hr_loan_management.group_loan_manager">
+                        <field name="payroll_effective_month"
+                               attrs="{'readonly': [('loan_status', '!=', 'submitted')]}"/>
+                        <field name="processed_amount" attrs="{'readonly': [('loan_status', '!=', 'submitted')]}"
+                               force_save="1"/>
+                        <field name="is_skip_guarantor_validation"
+                               attrs="{'readonly': [('loan_status', '!=', 'submitted')]}"/>
+                        <field name="is_skip_default_journal"
+                               attrs="{'invisible': [('loan_status', 'not in', ['approved', 'paid', 'in_recovery', 'recovered'])],
+                               'readonly': [('loan_status', '!=', 'approved')]}"/>
+                        <field name="loan_payment_journal_id" attrs="{'invisible': [('is_skip_default_journal', '=', False)]}"/>
+                        <field name="staff_notes" placeholder="Staff Notes"
+                               attrs="{'readonly': [('loan_status', '!=', 'submitted')]}"/>
+                        <field name="rejections_reason" placeholder="Reason for the Rejection"
+                               attrs="{'invisible': [('loan_status', '!=','approved')], 'readonly': [('loan_status', '=', 'rejected')]}"/>
+                    </group>
+                    <group string="Generated Info">
+                        <group>
+                            <field name="loan_requested_date" readonly="1"
+                                   attrs="{'invisible': [('loan_status', '=', 'draft')]}"/>
+                            <field name="loan_approved_date" readonly="1"
+                                   attrs="{'invisible': [('loan_status', 'in', ['draft', 'submitted'])]}"/>
+                        </group>
+                        <group>
+                            <field name="loan_rejected_date" readonly="1"
+                                   attrs="{'invisible': [('loan_status', '!=', 'rejected')]}"/>
+                            <field name="loan_paid_date" readonly="1"
+                                   attrs="{'invisible': [('loan_status', '!=', 'paid')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="company_id" readonly="1"/>
+                        <field name="company_currency_id" invisible="1"/>
+                    </group>
+                    <notebook>
+                        <page id="installment_lines" string="Installment Lines">
+                            <field name="employee_loan_installment_line_ids" readonly="1">
+                                <tree>
+                                    <field name="installment_ref_number"/>
+                                    <field name="year"/>
+                                    <field name="month"/>
+                                    <field name="capital_amount"/>
+                                    <field name="interest_amount"/>
+                                    <field name="installment_amount"/>
+                                    <field name="running_balance"/>
+                                    <field name="status"/>
+                                    <field name="paid_capital_amount" optional="hide"/>
+                                    <field name="paid_interest_amount" optional="hide"/>
+                                    <field name="payment_method" optional="hide"/>
+                                </tree>
+                            </field>
+
+                            <group col="12">
+                                <group colspan="8">
+                                </group>
+                                <group colspan="4">
+
+                                    <group class="oe_subtotal_footer oe_right">
+                                        <field name="total_loan_amount" readonly="1"/>
+                                        <field name="paid_amount" readonly="1"/>
+                                        <field name="paid_interest_amount" readonly="1"/>
+                                        <field name="paid_capital_amount" readonly="1"/>
+                                        <field name="total_due_amount" readonly="1" class="oe_subtotal_footer_separator"/>
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                        <page id="loan_guarantors" string="Guarantors">
+                            <field name="loan_guarantor_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="job_id"/>
+                                    <field name="department_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page id="accounting_information" string="Accounting"
+                              attrs="{'invisible':[('loan_status','not in',['paid','in_recovery','recovered'])]}">
+                            <group>
+                                <group>
+                                    <field name="paid_entry_id"/>
+                                    <field name="issued_user_id"/>
+                                </group>
+                                <group></group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_loan_view_tree" model="ir.ui.view">
+        <field name="name">employee.loan.tree.view</field>
+        <field name="model">employee.loan</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="loan_amount"/>
+                <field name="loan_type"/>
+                <field name="loan_status"/>
+                <field name="loan_requested_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="employee_loan_view_search" model="ir.ui.view">
+        <field name="name">employee.loan.view.search</field>
+        <field name="model">employee.loan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    
+    <record id="employee_loan_action" model="ir.actions.act_window">
+        <field name="name">Employee Loans</field>
+        <field name="res_model">employee.loan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'group_by': ['loan_stage_id', 'employee_id']}</field>
+    </record>
+
+
+    <menuitem id="menu_employee_loan"
+              name="Loans"
+              parent="loan_management_menu"
+              action="employee_loan_action"
+              sequence="1"
+    />
+</odoo>

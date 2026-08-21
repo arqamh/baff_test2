@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="odoo_job_costing_management_view_order_form" model="ir.ui.view">
+        <field name="name">odoo.job.costing.management.view.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_draft']" position="before">
+                <field name="hide_job_cost_create" invisible="1"/>
+                <button name="create_job_costing_sheet" type="object" string="Create Job Costing Sheet"
+                        attrs="{'invisible': ['|', ('hide_job_cost_create', '=', True), ('job_costing_required', '=', False)]}"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_preview_sale_order']" position="before">
+                <button name="action_open_job_costing" type="object" string="Job Costing" class="oe_stat_button" icon="fa-tasks icon"/>
+                <button name="action_open_revised_job_costing" type="object" string="Revised Job Costing" class="oe_stat_button" icon="fa-tasks icon"/>
+            </xpath>
+            <xpath expr="//field[@name='validity_date']" position="before">
+                <field name="job_costing_required" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

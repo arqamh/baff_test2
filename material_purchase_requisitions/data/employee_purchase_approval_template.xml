@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- ================================================================
+             Department Approval Notification - To Employee
+             ================================================================ -->
+        <record id="email_purchase_requisition_iruser_custom" model="mail.template">
+            <field name="name">Department Approval Purchase Requisition - Send by Email</field>
+            <field name="email_from">{{object.approve_manager_id.work_email}}</field>
+            <field name="subject">Material Requisition Approved - {{object.name}}</field>
+            <field name="email_to">{{object.employee_id.work_email}}</field>
+            <field name="model_id" ref="material_purchase_requisitions.model_material_purchase_requisition"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                       style="background-color: #F4F4F5; margin: 0; padding: 0;">
+                    <tr>
+                        <td align="center" style="padding: 24px 16px;">
+                            <!-- CARD -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                   style="width: 100%; max-width: 620px; background-color: #FFFFFF; border-collapse: collapse;">
+                                <!-- ACCENT BAR -->
+                                <tr>
+                                    <td style="height: 4px; background-color: #21B799; font-size: 0; line-height: 0;">&amp;nbsp;</td>
+                                </tr>
+                                <!-- LOGO + BADGE -->
+                                <tr>
+                                    <td style="padding: 24px 32px 16px;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
+                                            <tr>
+                                                <td valign="middle">
+                                                    <img t-attf-src="{{object.get_base_url()}}/logo.png?company={{object.company_id.id}}"
+                                                         style="height: auto; max-width: 180px; max-height: 40px; display: block;"
+                                                         alt="Company Logo"/>
+                                                </td>
+                                                <td align="right" valign="middle">
+                                                    <span style="display: inline-block; padding: 4px 12px; font-size: 11px; font-weight: 700; color: #065F46; background-color: #D1FAE5; border-radius: 12px; letter-spacing: 0.5px; font-family: Verdana, Arial, sans-serif;">
+                                                        APPROVED
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- DIVIDER -->
+                                <tr>
+                                    <td style="padding: 0 32px;">
+                                        <div style="height: 1px; background-color: #E5E7EB; font-size: 0; line-height: 0;">&amp;nbsp;</div>
+                                    </td>
+                                </tr>
+                                <!-- BODY -->
+                                <tr>
+                                    <td style="padding: 28px 32px 32px; font-family: Verdana, Arial, sans-serif;">
+                                        <!-- TITLE -->
+                                        <p style="margin: 0 0 6px; font-size: 20px; font-weight: 700; color: #333333; line-height: 1.3;">
+                                            Your Material Requisition Has Been Approved
+                                        </p>
+                                        <!-- MR REF -->
+                                        <p style="margin: 0 0 20px; font-size: 13px; color: #6C757D;">
+                                            Ref: <strong style="color: #333333;"><t t-esc="object.name"/></strong>
+                                        </p>
+                                        <!-- GREETING -->
+                                        <p style="margin: 0 0 12px; font-size: 14px; color: #333333; line-height: 1.6;">
+                                            Dear <t t-esc="object.employee_id.name"/>,
+                                        </p>
+                                        <!-- MESSAGE -->
+                                        <p style="margin: 0 0 24px; font-size: 14px; color: #555555; line-height: 1.6;">
+                                            Your material purchase requisition
+                                            <strong style="color: #333333;"><t t-esc="object.name"/></strong>
+                                            has been
+                                            <strong style="color: #21B799;">approved</strong>
+                                            by the department manager.
+                                        </p>
+
+                                        <!-- SECTION HEADER -->
+                                        <p style="margin: 0 0 12px; font-size: 13px; font-weight: 700; color: #21B799; text-transform: uppercase; letter-spacing: 0.5px;">
+                                            Approval Details
+                                        </p>
+                                        <!-- DETAILS TABLE -->
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                               style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border: 1px solid #E5E7EB;">
+                                            <tr>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;">MR Number</td>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #333333; font-weight: 600; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;"><t t-esc="object.name"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%; border-bottom: 1px solid #F0F1F3;">Approved By</td>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #333333; border-bottom: 1px solid #F0F1F3;"><t t-esc="object.approve_manager_id.name or 'N/A'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;">Approval Date</td>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #333333; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;"><t t-esc="object.managerapp_date"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%; border-bottom: 1px solid #F0F1F3;">Department</td>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #333333; border-bottom: 1px solid #F0F1F3;"><t t-esc="object.department_id.name or 'N/A'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;">Request Date</td>
+                                                <td style="padding: 10px 16px; font-size: 13px; color: #333333; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;"><t t-esc="object.request_date"/></td>
+                                            </tr>
+                                            <t t-if="object.mp_project_id">
+                                                <tr>
+                                                    <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%; border-bottom: 1px solid #F0F1F3;">Project</td>
+                                                    <td style="padding: 10px 16px; font-size: 13px; color: #333333; border-bottom: 1px solid #F0F1F3;"><t t-esc="object.mp_project_id.name"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="object.analytic_account_id">
+                                                <tr>
+                                                    <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;">Analytic Account</td>
+                                                    <td style="padding: 10px 16px; font-size: 13px; color: #333333; border-bottom: 1px solid #F0F1F3; background-color: #F9FAFB;"><t t-esc="object.analytic_account_id.name"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="object.mrp_id">
+                                                <tr>
+                                                    <td style="padding: 10px 16px; font-size: 13px; color: #6C757D; width: 38%;">Manufacturing Order</td>
+                                                    <td style="padding: 10px 16px; font-size: 13px; color: #333333;"><t t-esc="object.mrp_id.name"/></td>
+                                                </tr>
+                                            </t>
+                                        </table>
+
+                                        <!-- REQUISITION LINES -->
+                                        <t t-if="object.requisition_line_ids">
+                                            <p style="margin: 0 0 12px; font-size: 13px; font-weight: 700; color: #21B799; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                Approved Materials
+                                            </p>
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                                   style="width: 100%; border-collapse: collapse; margin-bottom: 24px; border: 1px solid #E5E7EB;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #21B799; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: center; width: 32px;">#</th>
+                                                        <th style="background-color: #21B799; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left;">Code</th>
+                                                        <th style="background-color: #21B799; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left;">Product</th>
+                                                        <th style="background-color: #21B799; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: left;">Description</th>
+                                                        <th style="background-color: #21B799; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: right; width: 60px;">Qty</th>
+                                                        <th style="background-color: #21B799; color: #FFFFFF; padding: 10px 8px; font-size: 11px; font-weight: 600; text-align: center; width: 65px;">UOM</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="object.requisition_line_ids" t-as="line">
+                                                        <tr>
+                                                            <td t-attf-style="padding: 8px; font-size: 12px; text-align: center; border-bottom: 1px solid #F0F1F3; color: #6C757D; {{ 'background-color: #F9FAFB;' if line_index % 2 == 0 else '' }}"><t t-esc="line_index + 1"/></td>
+                                                            <td t-attf-style="padding: 8px; font-size: 12px; text-align: left; border-bottom: 1px solid #F0F1F3; color: #6C757D; {{ 'background-color: #F9FAFB;' if line_index % 2 == 0 else '' }}"><t t-esc="line.product_code or '-'"/></td>
+                                                            <td t-attf-style="padding: 8px; font-size: 12px; text-align: left; border-bottom: 1px solid #F0F1F3; color: #333333; {{ 'background-color: #F9FAFB;' if line_index % 2 == 0 else '' }}"><t t-esc="line.product_id.name"/></td>
+                                                            <td t-attf-style="padding: 8px; font-size: 12px; text-align: left; border-bottom: 1px solid #F0F1F3; color: #6C757D; {{ 'background-color: #F9FAFB;' if line_index % 2 == 0 else '' }}"><t t-esc="line.description or '-'"/></td>
+                                                            <td t-attf-style="padding: 8px; font-size: 12px; text-align: right; border-bottom: 1px solid #F0F1F3; color: #333333; font-weight: 600; {{ 'background-color: #F9FAFB;' if line_index % 2 == 0 else '' }}"><t t-esc="'%.2f' % line.qty"/></td>
+                                                            <td t-attf-style="padding: 8px; font-size: 12px; text-align: center; border-bottom: 1px solid #F0F1F3; color: #6C757D; {{ 'background-color: #F9FAFB;' if line_index % 2 == 0 else '' }}"><t t-esc="line.uom.name if line.uom else '-'"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </t>
+
+                                        <!-- CTA BUTTON -->
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 24px;">
+                                            <tr>
+                                                <td style="border-radius: 4px; background-color: #21B799;">
+                                                    <a t-attf-href="{{object.get_base_url()}}/web#id={{object.id}}&amp;model=material.purchase.requisition&amp;view_type=form"
+                                                       target="_blank"
+                                                       style="display: inline-block; padding: 12px 28px; font-size: 13px; font-weight: 600; color: #FFFFFF; text-decoration: none; font-family: Verdana, Arial, sans-serif;">
+                                                        View Requisition
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <p style="margin: 0; font-size: 14px; color: #555555; line-height: 1.6;">
+                                            Thank You.
+                                        </p>
+                                    </td>
+                                </tr>
+                                <!-- FOOTER -->
+                                <tr>
+                                    <td style="background-color: #F9FAFB; padding: 20px 32px; border-top: 1px solid #E5E7EB;">
+                                        <p style="margin: 0; font-size: 12px; color: #9CA3AF; font-family: Verdana, Arial, sans-serif;">
+                                            This is an automated notification from the Purchase Requisition module.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+    </data>
+</odoo>

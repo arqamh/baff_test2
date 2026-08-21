@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fine_finish_planning_modifications_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.custom.modifications.res.config.settings.view.form.inherit.mrp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='process_operations_setting_container']" position="after">
+                <h2>Overtime Rates</h2>
+                <div class="row mt16 o_settings_container" name="overtime_rates_setting_container">
+                    <div class="col-lg-6 col-12 o_setting_box" id="overtime_rates_holiday_ot">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="holiday_ot"/>
+                            <div class="text-muted">
+                                Set the OT Rate when employee working on Sunday, Poya and Mercantile day
+                            </div>
+                            <div class="content-group">
+                                <field name="holiday_ot"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 o_setting_box" id="overtime_rates_saturday_ot">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="saturday_ot"/>
+                            <div class="text-muted">
+                                Set the OT Rate when employee working overtime on Saturday
+                            </div>
+                            <div class="content-group">
+                                <field name="saturday_ot"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 o_setting_box" id="overtime_rates_working_days_ot">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="working_days_ot"/>
+                            <div class="text-muted">
+                                Set the OT Rate when employee working overtime on Working days
+                            </div>
+                            <div class="content-group">
+                                <field name="working_days_ot"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

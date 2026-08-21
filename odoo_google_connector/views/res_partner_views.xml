@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+
+        <record id="contact_view_extend" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='image_1920']" position="after">
+                    <field name="drive_sync" widget="boolean_toggle" class="oe_right" style="margin-top:0.3%;margin-right: 4.5%;"/>
+                    <label for="drive_sync" string="GDrive Sync" class="oe_right" style="margin-top: 2%;padding-right: 0.5%;"/>
+                </xpath>
+
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="source"/>
+                    <field name="gc_id" readonly="1"/>
+                </xpath>
+
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page string="GDrive">
+                        <group string="GDrive Account">
+                            <field name="google_attachment_ids" widget = "many2many_binary"/>
+                            <button name="google_drive_upload_btn" type="object" string="Export" class="oe_highlight" />
+                            <button name="google_drive_download_btn" type="object" string="Import" class="oe_highlight"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="gc_force_update_cs_action" model="ir.actions.server">
+             <field name="name">Force Update to Google</field>
+             <field name="type">ir.actions.server</field>
+             <field name="model_id" ref="odoo_google_connector.model_res_partner"/>
+             <field name="binding_model_id" ref="odoo_google_connector.model_res_partner" />
+             <field name="state">code</field>
+            <field name="code">
+                action = records.force_update()
+            </field>
+        </record>
+
+    </data>
+</odoo>

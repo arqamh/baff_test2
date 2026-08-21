@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--  Petty cash Summeryin Search view      -->
+        <record id="view_petty_cash_drawer_summery_in_filter" model="ir.ui.view">
+            <field name="name">petty.cash.line.search</field>
+            <field name="model">petty.cash.line</field>
+            <field name="arch" type="xml">
+                <search string="Petty Cash">
+                    <field name="name" string="Name" filter_domain="['|',('name', 'ilike', self),('petty_cash_id', 'ilike', self)]"/>
+                    <field name="amount" string="Amount" filter_domain="[('amount', 'ilike', self)]"/>
+                    <field name="amount"/>
+                    <field name="from_acc"/>
+                    <field name="to_acc"/>
+                    <field name="petty_cash_id"/>
+                    <filter string="Summery report has Generated" name="report_generated" domain="[('summary_report_id', '!=', False)]" />
+                    <filter string="Summery report Not Generated" name="report_not_generated" domain="[('summary_report_id', '=', False), ('is_completed', '=', True)]" />
+                    <separator/>
+                    <filter string="Top UP(s)" name="topup" domain="[('petty_cash_in', '!=', False)]" />
+                    <filter string="Reimbursement(s)" name="reimbursement" domain="[('cash_reimbursement_id', '!=', False)]" />
+                    <filter string="IOU(s)" name="iou" domain="[('cash_release_id', '!=', False)]" />
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Petty cash" name="group_by_petty_cash_drawer" domain="[]" context="{'group_by': 'petty_cash_id'}"/>
+                        <filter string="Account To" name="Destination" domain="[]" context="{'group_by': 'to_acc'}"/>
+                        <filter string="Transfer Type" name="type" domain="[]" context="{'group_by': 'transfer_type'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+
+        <record id="view_cash_drawer_summery_tree" model="ir.ui.view">
+            <field name="name">petty.cash.in.tree</field>
+            <field name="model">petty.cash.line</field>
+            <field name="arch" type="xml">
+                <tree string="Petty cash" delete="0">
+                    <field name="name" />
+                    <field name="petty_cash_id" />
+                    <field name="from_acc" />
+                    <field name="to_acc" />
+                    <field name="reason" optional="hide"/>
+                    <field name="amount" />
+                    <field name="transfer_type" />
+                    <field name="status" />
+                    <field name="is_completed" invisible="1" />
+                    <field name="employee_id" optional="hide"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="approved_by" optional="hide"/>
+                    <field name="petty_cash_in"  invisible="1"/>
+                    <field name="cash_release_id"  invisible="1"/>
+                    <field name="cash_reimbursement_id"  invisible="1"/>
+                    <field name="company_id"  invisible="1"/>
+                    <field name="summary_report_id"  optional="hide"/>
+                    <button name="button_view_line_details" type="object" string="View" class="btn btn-info" attrs="{'invisible': [('transfer_type','=', 'cash drawer')]}"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--   action petty cash Drawer Summery     -->
+        <record id="action_cash_drawer_summery" model="ir.actions.act_window">
+            <field name="name">Cash Drawer Summery</field>
+            <field name="res_model">petty.cash.line</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'create': False, 'edit': False, 'search_default_group_by_petty_cash_drawer':1}</field>
+            <field name="search_view_id" ref="view_petty_cash_drawer_summery_in_filter"/>
+
+        </record>
+    </data>
+</odoo>

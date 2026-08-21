@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="centrics_hr_allowance_deduction_group_template_user" model="res.groups">
+            <field name="name">Allowance and Deductions - User</field>
+            <field name="category_id" ref="centrics_hr.hr_customization_category"/>
+        </record>
+    </data>
+</odoo>

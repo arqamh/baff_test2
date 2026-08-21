@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="baff_offer_order_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <style>
+                        .first-page-header {
+                        display: block;
+                        text-align: left;
+                        font-size: 14px;
+                        font-weight: bold;
+                        position: relative;
+                        }
+
+                        /* Ensure the header only appears on the first page */
+                        .only-first-page {
+                        display: block;
+                        }
+
+                        @media print {
+                        /* Hide header on every page except the first */
+                        .only-first-page {
+                        display: block;
+                        }
+
+                        .not-first-page {
+                        display: none;
+                        }
+                        }
+                    </style>
+                    <div class="page">
+                        <!-- Custom Header (Visible Only on First Page) -->
+
+                        <div class="first-page-header only-first-page">
+
+                            <table width="60%" align="left" style="border: solid 1px white;">
+                                <tr>
+                                    <td class="text-left" style="padding-left:0px;">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                             style="width: 70%; height:15%;"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="40%" style="border:solid 1px black;" align="right"
+                                   height="75px">
+                                <tr>
+                                    <td class="text-left" width="100%" style="padding:5px 0px 0px 10px;">
+                                        <b style="font-size:22px;">
+                                            <span t-field="o.partner_id.name"/>
+                                        </b>
+                                        <span style="padding:5px 0px 0px 10px;"/>
+                                        <br/>
+                                        <b>
+                                            <span align="right" t-field="o.partner_id.country_id.name"/>
+                                        </b>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <table width="40%" align="right" class="table table-sm table-borderless">
+                                <tr>
+                                    <th class="text-left" width="60%"
+                                        style="padding:5px 0px 0px 10px;border:solid 1px white; vertical-align: middle;text-align:left;">
+                                        <img t-if="o.company_id.second_logo_for_invoice"
+                                             t-att-src="image_data_uri(o.company_id.second_logo_for_invoice)"
+                                             height="80px" width="30%"/>
+                                    </th>
+                                    <th width="20%"
+                                        style="padding:5px;border:solid 1px white; border-top:solid 1px black; vertical-align: middle;">
+                                        <span style="text-align:right">Attention to :</span>
+                                        <br/>
+                                        <span style="text-align:right">on the :</span>
+                                    </th>
+                                    <th class="text-left" width="20%"
+                                        style="padding:5px; border:solid 1px white; border-top:solid 1px black; vertical-align: middle;">
+                                        <span style="text-align:left" t-field="o.partner_id.name"/>
+                                        <br/>
+                                        <span style="text-align:left" t-esc="o.date_order.strftime('%Y/%m/%d')"/>
+                                    </th>
+
+                                </tr>
+                            </table>
+                        </div>
+
+
+                        <table width="100%" style="border:solid 1px white;">
+                            <tr>
+                                <td>
+                                    <h1 align="center" style="font-size:20px;">
+                                        <b>
+                                            <span t-if="o.state == 'sale'">OFFER #
+                                                <span t-field="o.name"/>
+                                            </span>
+                                            <span t-else="">QUOTATION</span>
+                                        </b>
+                                    </h1>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" style="border:solid 1px white;">
+                            <tr>
+                                <td class="text-left" width="60%" style="font-size:20px; padding:5px 5px 10px 5px;">
+                                    <b>
+                                        <span t-field="o.offer_print_header"/>
+                                        :
+                                    </b>
+                                </td>
+                                <td class="text-center" width="40%" style="font-size:20px; padding:5px 5px 10px 5px;">
+                                    <b>
+                                        <span t-field="o.boat_type_id.name"/>
+                                    </b>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="70%" style="border:solid 1px white;">
+                            <tr>
+                                <td class="text-left" width="70%" style="padding:5px 5px 10px 5px;">
+                                    <span t-field="o.offer_print_text"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table width="100%" style="border:solid 1px white;">
+                            <tr>
+                                <td align="left" width="30%" style="padding:5px 0px 0px 5px;">
+                                    <span>Length Overall</span>
+                                </td>
+                                <td align="left" width="40%" style="padding:5px 0px 0px 5px;">
+                                    <span>
+                                        ...............................................................................................................................................
+                                    </span>
+                                </td>
+                                <td align="right" width="10%" style="padding:5px 0px 0px 5px;">
+                                    <span t-field="o.boat_type_id.length_overall"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="30%" style="padding:5px 0px 0px 5px;">
+                                    <span>Maximum Beam</span>
+                                </td>
+                                <td align="left" width="40%" style="padding:5px 0px 0px 5px;">
+                                    <span>
+                                        ...............................................................................................................................................
+                                    </span>
+                                </td>
+                                <td align="right" width="10%" style="padding:5px 0px 0px 5px;">
+                                    <span t-field="o.boat_type_id.maximum_beam"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="30%" style="padding:5px 0px 0px 5px;">
+                                    <span>Draft</span>
+                                </td>
+                                <td align="left" width="40%" style="padding:5px 0px 0px 5px;">
+                                    <span>
+                                        ...............................................................................................................................................
+                                    </span>
+                                </td>
+                                <td align="right" width="10%" style="padding:5px 0px 0px 5px;">
+                                    <span t-field="o.boat_type_id.draft"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="30%" style="padding:5px 0px 0px 5px;">
+                                    <span>Standard Engine</span>
+                                </td>
+                                <td align="left" width="40%" style="padding:5px 0px 0px 5px;">
+                                    <span>
+                                        ...............................................................................................................................................
+                                    </span>
+                                </td>
+                                <td align="right" width="10%" style="padding:5px 0px 0px 5px;">
+                                    <span t-field="o.boat_type_id.standard_engine"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="30%" style="padding:5px 0px 0px 5px;">
+                                    <span>Seated Capacity</span>
+                                </td>
+                                <td align="left" width="40%" style="padding:5px 0px 0px 5px;">
+                                    <span>
+                                        ...............................................................................................................................................
+                                    </span>
+                                </td>
+                                <td align="right" width="10%" style="padding:5px 0px 0px 5px;">
+                                    <span t-field="o.boat_type_id.selected_capacity"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="30%" style="padding:5px 0px 0px 5px;">
+                                    <span>Maximum Allowed Capacity</span>
+                                </td>
+                                <td align="left" width="40%" style="padding:5px 0px 0px 5px;">
+                                    <span>
+                                        ...............................................................................................................................................
+                                    </span>
+                                </td>
+                                <td align="right" width="10%" style="padding:5px 0px 0px 5px;">
+                                    <span t-field="o.boat_type_id.maximum_capacity"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" width="30%" style="padding:5px 0px 0px 5px;">
+                                    <span>Colour</span>
+                                </td>
+                                <td align="left" width="40%" style="padding:5px 0px 0px 5px;">
+                                    <span>
+                                        ...............................................................................................................................................
+                                    </span>
+                                </td>
+                                <td align="right" width="10%" style="padding:5px 0px 0px 5px;">
+                                    <span t-field="o.boat_type_id.color"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Table for Invoiceable Lines -->
+                        <table class="table table-bordered" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-left" width="48%"
+                                        style="padding:5px 0px 0px 10px; background-color: #888888; vertical-align: middle;text-align:left;">
+                                        <b>DEFINITION</b>
+                                    </th>
+                                    <th class="text-center" width="12%"
+                                        style="padding:5px 0px 0px 10px; background-color: #888888; vertical-align: middle;">
+                                        <b>PRICE per Unit</b>
+                                    </th>
+                                    <th class="text-center" width="8%"
+                                        style="padding:5px 0px 0px 10px; background-color: #888888; vertical-align: middle;">
+                                        <b>QTY</b>
+                                    </th>
+                                    <th class="text-left" width="12%"
+                                        style="padding:5px 0px 0px 10px; background-color: #888888; vertical-align: middle;">
+                                        <b>TOTAL PRICE</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="i" t-value="0"/>
+                                <t t-if="o.doc_type == 'quotation'">
+                                    <t t-set="lines" t-value="o.invoiceable_line"/>
+                                </t>
+                                <t t-if="o.doc_type == 'sale'">
+                                    <t t-set="lines" t-value="o.so_invoiceable_line"/>
+                                </t>
+                                <t t-foreach="lines" t-as="line">
+                                    <t t-if="line.display_type == 'line_section'">
+                                        <tr>
+                                            <td class="text-left" width="48%"
+                                                style="padding:5px 0px 0px 10px; border:solid 0px #c9c9c9; vertical-align: middle; background-color: #c9c9c9;">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td class="text-left" width="12%"
+                                                style="padding:5px 0px 0px 10px; border:solid 0px #c9c9c9; vertical-align: middle; background-color: #c9c9c9;"></td>
+                                            <td class="text-right" width="8%"
+                                                style="padding:5px 0px 0px 10px; border:solid 0px #c9c9c9; vertical-align: middle; background-color: #c9c9c9;"></td>
+                                            <td class="text-right" width="12%"
+                                                style="padding:5px 0px 0px 10px; border:solid 0px #c9c9c9; vertical-align: middle; background-color: #c9c9c9;"></td>
+                                        </tr>
+                                    </t>
+                                    <t t-else="">
+                                        <tr>
+                                            <td class="text-left" width="48%"
+                                                style="padding:5px 0px 0px 10px; border:solid 1px white; vertical-align: middle;">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td align="right" width="12%"
+                                                style="padding:5px 0px 0px 10px; border:solid 1px white; vertical-align: middle; padding-right:5px;">
+                                                <span t-field="line.price_unit"/>
+                                            </td>
+                                            <td align="right" width="8%"
+                                                style="padding:5px 0px 0px 10px; border:solid 1px white; vertical-align: middle; padding-right:5px;">
+                                                <span t-field="line.product_uom_qty"/>
+                                            </td>
+                                            <td align="right" width="12%"
+                                                style="padding:5px 0px 0px 10px; border:solid 1px white; vertical-align: middle; padding-right:5px;">
+                                                <span t-esc="'{:,.2f}'.format(line.price_subtotal)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <table width="100%" align="right">
+                            <tr>
+                                <td align="left" width="79%"
+                                    style="font-size:20px; padding:5px 0px 0px 50px; border:solid 2px black; border-right: solid 1px white; vertical-align: middle;">
+                                    <b>Total Price ex VAT :</b>
+                                </td>
+                                <td align="right" width="21%"
+                                    style="padding:5px 10px 0px 0px; border:solid 2px black; border-left: solid 1px white; vertical-align: middle;">
+                                    <b>
+                                        <span t-esc=" '{:,.2f}'.format(o.amount_untaxed)"/>
+                                        <span t-field="o.currency_id.symbol"/>
+                                    </b>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <table style="margin-top:50px;" class="table table-sm table-borderless">
+                            <tr>
+                                <td width="50%">
+                                    <table width="100%" align="left" style="border:solid 1px white;">
+                                        <span t-field="o.note"/>
+                                    </table>
+                                    <td width="5%">&#160;</td>
+                                    <td width="45%">
+                                        <table width="100%">
+                                            <tr>
+                                                <td class="text-left" width="35%"
+                                                    style="padding:5px 0px 30px 10px; border:solid 1px; border-right: solid 1px white;">
+                                                    <b>Date :</b>
+                                                </td>
+                                                <td class="text-left" width="65%"
+                                                    style="padding:5px 0px 0px 10px; border:solid 1px; ">
+                                                    <br/>
+                                                    <br/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" width="60%"
+                                                    style="padding:5px 0px 60px 10px; border:solid 1px; border-right: solid 1px white;">
+                                                    <b>Signature for acceptance :</b>
+                                                </td>
+                                                <td class="text-left" width="40%"
+                                                    style="padding:5px 0px 0px 10px; border:solid 1px; ">
+                                                    <br/>
+                                                    <br/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="footer" style="margin-bottom:0px;padding-bottom:0px">
+                            <table style="text-align:center" width="100%" class="table table-sm table-borderless">
+                                <tr>
+                                    <td>
+                                        <span style="color:#283850;">Ocean</span>
+                                        <span style="color:#fca41c;">Voyeger</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>OCEAN VOYAGER/BAFF POLYMECH – 01, Export Processing Zone, Koggala, Habaraduwa,
+                                        SRI LANKA
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>contact@ocean-voyager.fr / www.ocean-voyager.fr</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <record id="baff_offer_order_report_id" model="ir.actions.report">
+        <field name="name">Baff Offer Order</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">baff_reports.baff_offer_order_report</field>
+        <field name="report_file">baff_reports.baff_offer_order_report</field>
+        <field name="print_report_name">'Quotation_' + object.name</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="baff_reports.baff_a4_format_offer_order"/>
+    </record>
+</odoo>

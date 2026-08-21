@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Email Template: Notification to Employee for Loan Request Submission -->
+        <record id="hr_loan_management_mail_template_employee_request_submission" model="mail.template">
+            <field name="name">HR Loan Management Employee Submission Template</field>
+            <field name="model_id" ref="centrics_hr_loan_management.model_employee_loan"/>
+            <field name="subject">Loan Request Submission - Reference: {{ object.name }}</field>
+            <field name="email_from"/>
+            <field name="email_to">{{ object.employee_id.work_email }}</field>
+            <field name="body_html" type="html">
+
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 20px; font-weight: bold;">
+                                                            <t t-out="object.name"/>
+                                                        </span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                             t-att-alt="user.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear <t t-out="object.employee_id.name"/>,
+                                                            <br/>
+                                                            <br/>
+                                                            Loan requested has been submitted to management on
+                                                            <t t-out="object.loan_requested_date"/>
+                                                            with the reference code <t t-out="object.name"/>.
+                                                            Here are the details of the loan employee requested.
+                                                            <br/>
+                                                            <br/>
+                                                            Loan Amount:
+                                                            <t t-out="object.loan_amount"/>
+                                                            <br/>
+                                                            Interest Rate:
+                                                            <t t-out="object.interest_rate"/>
+                                                            <br/>
+                                                            Number of Installments:
+                                                            <t t-out="object.number_of_installments"/>
+                                                            <br/>
+                                                            Deduction Start Date:
+                                                            <t t-esc="dict(object.fields_get(allfields=['deduct_from_payroll'])['deduct_from_payroll']['selection'])[object.deduct_from_payroll]"/>
+                                                            <br/>
+                                                            Calculation Type:
+                                                            <t t-esc="dict(object.fields_get(allfields=['calculation_type'])['calculation_type']['selection'])[object.calculation_type]"/>
+                                                            <br/>
+                                                            <br/>
+                                                            Your request is currently under review. We will notify you
+                                                            once it has been processed or if any further information is
+                                                            required.
+                                                            <br/>
+
+                                                            <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                                                                <a t-att-href="'/web#id=%s&amp;cids=1&amp;menu_id=393&amp;action=527&amp;model=employee.loan&amp;view_type=form' % object.id"
+                                                                   style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                                                                    <strong>View Your Loan</strong>
+                                                                </a>
+                                                            </div><br/>
+                                                            <t t-if="user.signature">
+                                                                <br/>
+                                                                <t t-out="user.name"/>
+                                                            </t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        <t t-out="object.company_id.phone">+1 650-123-4567</t>
+
+                                                        <t t-if="object.company_id.email">
+                                                            |
+                                                            <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.email">
+                                                                info@yourcompany.com
+                                                            </a>
+                                                        </t>
+                                                        <t t-if="object.company_id.website">
+                                                            |
+                                                            <a t-att-href="'%s' % object.company_id.website"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.website">
+                                                                http://www.example.com
+                                                            </a>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <!-- Email Template: Notification to Managers for Loan Approval Request -->
+        <record id="hr_loan_management_mail_template_manager_approval" model="mail.template">
+            <field name="name">HR Loan Management Manager Template</field>
+            <field name="model_id" ref="centrics_hr_loan_management.model_employee_loan"/>
+            <field name="subject">Approval Required for loan - Reference: {{ object.name }}</field>
+            <field name="email_from"/>
+            <field name="email_to">{{ object.employee_id.work_email }}</field>
+            <field name="body_html" type="html">
+
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 20px; font-weight: bold;">
+                                                            <t t-out="object.name"/>
+                                                        </span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                             t-att-alt="user.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear <t t-out="object.env.context.get('manager_name', 'Manager')"/>,
+                                                            <br/>
+                                                            <br/>
+                                                            A new employee loan request has been submitted and is pending your review and approval on
+                                                            <t t-out="object.loan_requested_date"/>
+                                                            with the reference code <t t-out="object.name"/>.
+                                                            Here are the details of the loan you requested.
+                                                            <br/>
+                                                            <br/>
+                                                            Employee Name:
+                                                            <t t-out="object.employee_id.name"/>
+                                                            <br/>
+                                                            Loan Amount:
+                                                            <t t-out="object.loan_amount"/>
+                                                            <br/>
+                                                            Interest Rate:
+                                                            <t t-out="object.interest_rate"/>
+                                                            <br/>
+                                                            Number of Installments:
+                                                            <t t-out="object.number_of_installments"/>
+                                                            <br/>
+                                                            Deduction Start Date:
+                                                            <t t-esc="dict(object.fields_get(allfields=['deduct_from_payroll'])['deduct_from_payroll']['selection'])[object.deduct_from_payroll]"/>
+                                                            <br/>
+                                                            Calculation Type:
+                                                            <t t-esc="dict(object.fields_get(allfields=['calculation_type'])['calculation_type']['selection'])[object.calculation_type]"/>
+                                                            <br/>
+                                                            <br/>
+                                                            The request is currently under review and requires your approval to proceed. Kindly review the details and confirm whether to approve or not.
+                                                            <br/>
+
+                                                            <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                                                                <a t-att-href="'/web#id=%s&amp;cids=1&amp;menu_id=393&amp;action=527&amp;model=employee.loan&amp;view_type=form' % object.id"
+                                                                   style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                                                                    <strong>View Your Loan</strong>
+                                                                </a>
+                                                            </div><br/>
+                                                            Thank you for your submission,
+                                                            <t t-if="user.signature">
+                                                                <br/>
+                                                                <t t-out="user.name"/>
+                                                            </t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        <t t-out="object.company_id.phone">+1 650-123-4567</t>
+
+                                                        <t t-if="object.company_id.email">
+                                                            |
+                                                            <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.email">
+                                                                info@yourcompany.com
+                                                            </a>
+                                                        </t>
+                                                        <t t-if="object.company_id.website">
+                                                            |
+                                                            <a t-att-href="'%s' % object.company_id.website"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.website">
+                                                                http://www.example.com
+                                                            </a>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <!-- Email Template: Notification to Employee – Loan Request Approved -->
+        <record id="hr_loan_management_mail_template_approved_loan_employee" model="mail.template">
+            <field name="name">HR Loan Management Approved Loan Template</field>
+            <field name="model_id" ref="centrics_hr_loan_management.model_employee_loan"/>
+            <field name="subject">Confirmation of Loan Approval - Reference: {{ object.name }}</field>
+            <field name="email_from"/>
+            <field name="email_to">{{ object.employee_id.work_email }}</field>
+            <field name="body_html" type="html">
+
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 20px; font-weight: bold;">
+                                                            <t t-out="object.name"/>
+                                                        </span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                             t-att-alt="user.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear <t t-out="object.employee_id.name"/>,
+                                                            <br/>
+                                                            <br/>
+                                                            Your requested loan has been approved by management on
+                                                            <t t-out="object.loan_approved_date"/>
+                                                            with the reference code <t t-out="object.name"/>.
+                                                            Here are the details of your approved loan.
+                                                            <br/>
+                                                            <br/>
+                                                            Loan Amount:
+                                                            <t t-out="object.processed_amount"/>
+                                                            <br/>
+                                                            Interest Rate:
+                                                            <t t-out="object.interest_rate"/>
+                                                            <br/>
+                                                            Number of Installments:
+                                                            <t t-out="object.number_of_installments"/>
+                                                            <br/>
+                                                            Deduction Start Date:
+                                                            <t t-esc="dict(object.fields_get(allfields=['deduct_from_payroll'])['deduct_from_payroll']['selection'])[object.deduct_from_payroll]"/>
+                                                            <br/>
+                                                            Calculation Type:
+                                                            <t t-esc="dict(object.fields_get(allfields=['calculation_type'])['calculation_type']['selection'])[object.calculation_type]"/>
+                                                            <br/>
+                                                            <br/>
+
+                                                            <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                                                                <a t-att-href="'/web#id=%s&amp;cids=1&amp;menu_id=393&amp;action=527&amp;model=employee.loan&amp;view_type=form' % object.id"
+                                                                   style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                                                                    <strong>View Your Loan</strong>
+                                                                </a>
+                                                            </div><br/>
+                                                            Thank you,
+                                                            <t t-if="user.signature">
+                                                                <br/>
+                                                                <t t-out="user.name"/>
+                                                            </t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        <t t-out="object.company_id.phone">+1 650-123-4567</t>
+
+                                                        <t t-if="object.company_id.email">
+                                                            |
+                                                            <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.email">
+                                                                info@yourcompany.com
+                                                            </a>
+                                                        </t>
+                                                        <t t-if="object.company_id.website">
+                                                            |
+                                                            <a t-att-href="'%s' % object.company_id.website"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.website">
+                                                                http://www.example.com
+                                                            </a>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="report_template" ref="action_report_employee_loan"/>
+            <field name="report_name">{{ (object.name) }}</field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <!-- Email Template: Notification to Employee – Loan Request Rejected -->
+        <record id="hr_loan_management_mail_template_rejected_loan_employee" model="mail.template">
+            <field name="name">HR Loan Management Rejected Loan Template</field>
+            <field name="model_id" ref="centrics_hr_loan_management.model_employee_loan"/>
+            <field name="subject">Rejected Loan Request - Reference: {{ object.name }}</field>
+            <field name="email_from"/>
+            <field name="email_to">{{ object.employee_id.work_email }}</field>
+            <field name="body_html" type="html">
+
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 20px; font-weight: bold;">
+                                                            <t t-out="object.name"/>
+                                                        </span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                             t-att-alt="user.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear <t t-out="object.employee_id.name"/>,
+                                                            <br/>
+                                                            <br/>
+                                                            Your requested loan has been rejected by management on
+                                                            <t t-out="object.loan_rejected_date"/>
+                                                            with the reference code <t t-out="object.name"/>.
+                                                            Here are the details of your rejected loan.
+                                                            <br/>
+                                                            <br/>
+                                                            Rejection Reasons:
+                                                            <t t-out="object.rejections_reason"/>
+                                                            <br/>
+                                                            Loan Amount:
+                                                            <t t-out="object.processed_amount"/>
+                                                            <br/>
+                                                            Interest Rate:
+                                                            <t t-out="object.interest_rate"/>
+                                                            <br/>
+                                                            Number of Installments:
+                                                            <t t-out="object.number_of_installments"/>
+                                                            <br/>
+                                                            Deduction Start Date:
+                                                            <t t-esc="dict(object.fields_get(allfields=['deduct_from_payroll'])['deduct_from_payroll']['selection'])[object.deduct_from_payroll]"/>
+                                                            <br/>
+                                                            Calculation Type:
+                                                            <t t-esc="dict(object.fields_get(allfields=['calculation_type'])['calculation_type']['selection'])[object.calculation_type]"/>
+                                                            <br/>
+                                                            <br/>
+
+                                                            <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                                                                <a t-att-href="'/web#id=%s&amp;cids=1&amp;menu_id=393&amp;action=527&amp;model=employee.loan&amp;view_type=form' % object.id"
+                                                                   style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                                                                    <strong>View Your Loan</strong>
+                                                                </a>
+                                                            </div><br/>
+                                                            Thank you,
+                                                            <t t-if="user.signature">
+                                                                <br/>
+                                                                <t t-out="user.name"/>
+                                                            </t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        <t t-out="object.company_id.phone">+1 650-123-4567</t>
+
+                                                        <t t-if="object.company_id.email">
+                                                            |
+                                                            <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.email">
+                                                                info@yourcompany.com
+                                                            </a>
+                                                        </t>
+                                                        <t t-if="object.company_id.website">
+                                                            |
+                                                            <a t-att-href="'%s' % object.company_id.website"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.website">
+                                                                http://www.example.com
+                                                            </a>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <!-- Email Template: Notification to Employee – Loan Amount Credited Successfully -->
+        <record id="hr_loan_management_mail_template_loan_granted_employee" model="mail.template">
+            <field name="name">HR Loan Management Loan Granted Template</field>
+            <field name="model_id" ref="centrics_hr_loan_management.model_employee_loan"/>
+            <field name="subject">Loan Amount Credit Successfully - Reference {{ object.name }}</field>
+            <field name="email_from"/>
+            <field name="email_to">{{ object.employee_id.work_email }}</field>
+            <field name="body_html" type="html">
+
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 20px; font-weight: bold;">
+                                                            <t t-out="object.name"/>
+                                                        </span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                             t-att-alt="user.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear <t t-out="object.employee_id.name"/>,
+                                                            <br/>
+                                                            <br/>
+                                                            We are pleased to inform you that your loan request has been successfully approved by the management on
+                                                            <t t-out="object.loan_approved_date"/>
+                                                            with the reference code <t t-out="object.name"/>.
+                                                            Here are the details of your approved loan.
+                                                            <br/>
+                                                            <br/>
+                                                            Loan Amount:
+                                                            <t t-out="object.processed_amount"/>
+                                                            <br/>
+                                                            Interest Rate:
+                                                            <t t-out="object.interest_rate"/>
+                                                            <br/>
+                                                            Number of Installments:
+                                                            <t t-out="object.number_of_installments"/>
+                                                            <br/>
+                                                            Deduction Start Date:
+                                                            <t t-esc="dict(object.fields_get(allfields=['deduct_from_payroll'])['deduct_from_payroll']['selection'])[object.deduct_from_payroll]"/>
+                                                            <br/>
+                                                            Calculation Type:
+                                                            <t t-esc="dict(object.fields_get(allfields=['calculation_type'])['calculation_type']['selection'])[object.calculation_type]"/>
+                                                            <br/>
+                                                            <br/>
+
+                                                            <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                                                                <a t-att-href="'/web#id=%s&amp;cids=1&amp;menu_id=393&amp;action=527&amp;model=employee.loan&amp;view_type=form' % object.id"
+                                                                   style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;">
+                                                                    <strong>View Your Loan</strong>
+                                                                </a>
+                                                            </div><br/>
+                                                            Thank you,
+                                                            <t t-if="user.signature">
+                                                                <br/>
+                                                                <t t-out="user.name"/>
+                                                            </t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        <t t-out="object.company_id.phone">+1 650-123-4567</t>
+
+                                                        <t t-if="object.company_id.email">
+                                                            |
+                                                            <a t-att-href="'mailto:%s' % object.company_id.email"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.email">
+                                                                info@yourcompany.com
+                                                            </a>
+                                                        </t>
+                                                        <t t-if="object.company_id.website">
+                                                            |
+                                                            <a t-att-href="'%s' % object.company_id.website"
+                                                               style="text-decoration:none; color: #454748;"
+                                                               t-out="object.company_id.website">
+                                                                http://www.example.com
+                                                            </a>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>
+
+
+
+
+
+
+

@@ -1,0 +1,60 @@
+<odoo>
+
+<!--    Cheque Paper format-->
+    <record id="petty_cash_paperformat_seylan" model="report.paperformat">
+        <field name="name">Seylan Cheque</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">74</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">61</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="petty_cash_paperformat_commercial" model="report.paperformat">
+        <field name="name">Petty  cash - Commercial Cheque</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">66</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">61</field>
+        <field name="dpi">90</field>
+    </record>
+
+
+    <record id="petty_cash_paperformat_ndb" model="report.paperformat">
+        <field name="name">Petty  cash - NDB Cheque </field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">68</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">4</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">61</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="petty_cash_paperformat_amana" model="report.paperformat">
+        <field name="name">Petty  cash - Amana Cheque </field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+         <field name="margin_top">67</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">4</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">61</field>
+        <field name="dpi">90</field>
+    </record>
+</odoo>

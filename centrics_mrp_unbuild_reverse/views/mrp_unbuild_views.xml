@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit the unbuild form view to add reverse button and fields -->
+    <record id="mrp_unbuild_form_view" model="ir.ui.view">
+        <field name="name">mrp.unbuild.form.inherit.reverse</field>
+        <field name="model">mrp.unbuild</field>
+        <field name="inherit_id" ref="mrp.mrp_unbuild_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Add Reverse button after Unbuild button in header -->
+            <xpath expr="//button[@name='action_validate']" position="after">
+                <button name="action_reverse"
+                        string="Reverse"
+                        type="object"
+                        class="btn-danger"
+                        attrs="{'invisible': [('state', '!=', 'done')]}"
+                        confirm="Are you sure you want to reverse this unbuild order? This will create reverse stock moves to undo all inventory changes."/>
+            </xpath>
+
+            <!-- Add View Reverse Moves as a smart button in button_box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_reverse_moves"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-undo"
+                        attrs="{'invisible': [('state', '!=', 'reversed')]}">
+                    <span class="o_stat_text">Reverse Moves</span>
+                </button>
+            </xpath>
+
+            <!-- Update state field to show reversed state with proper styling -->
+            <xpath expr="//field[@name='state'][@widget='statusbar']" position="attributes">
+                <attribute name="statusbar_visible">draft,done,reversed</attribute>
+            </xpath>
+
+            <!-- Add is_reversed field (invisible, for attrs) -->
+            <xpath expr="//field[@name='company_id'][1]" position="after">
+                <field name="is_reversed" invisible="1"/>
+                <field name="reversed_date" invisible="1"/>
+                <field name="reversed_by" invisible="1"/>
+            </xpath>
+
+            <!-- Add reversal information after the main groups -->
+            <xpath expr="//group[last()]" position="after">
+                <group string="Reversal Information" attrs="{'invisible': [('state', '!=', 'reversed')]}">
+                    <group>
+                        <field name="reversed_date" readonly="1"/>
+                        <field name="reversed_by" readonly="1"/>
+                    </group>
+                </group>
+                <notebook attrs="{'invisible': [('state', '!=', 'reversed')]}">
+                    <page string="Reverse Stock Moves" name="reverse_moves">
+                        <field name="reverse_move_ids" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="product_id"/>
+                                <field name="product_uom_qty"/>
+                                <field name="quantity_done"/>
+                                <field name="product_uom" groups="uom.group_uom"/>
+                                <field name="location_id"/>
+                                <field name="location_dest_id"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+
+            <!-- Update Product Moves button to also show in reversed state -->
+            <xpath expr="//div[@name='button_box']/button[@type='action']" position="attributes">
+                <attribute name="states">done,reversed</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit tree view to show reversed state -->
+    <record id="mrp_unbuild_tree_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.unbuild.tree.inherit.reverse</field>
+        <field name="model">mrp.unbuild</field>
+        <field name="inherit_id" ref="mrp.mrp_unbuild_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="decoration-danger">state == 'reversed'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add search filter for reversed state -->
+    <record id="mrp_unbuild_search_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.unbuild.search.inherit.reverse</field>
+        <field name="model">mrp.unbuild</field>
+        <field name="inherit_id" ref="mrp.mrp_unbuild_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='done']" position="after">
+                <filter string="Reversed" name="reversed" domain="[('state', '=', 'reversed')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit kanban view to show reversed state properly -->
+    <record id="mrp_unbuild_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.unbuild.kanban.inherit.reverse</field>
+        <field name="model">mrp.unbuild</field>
+        <field name="inherit_id" ref="mrp.mrp_unbuild_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state'][@widget='label_selection']" position="attributes">
+                <attribute name="options">{'classes': {'draft': 'default', 'done': 'success', 'reversed': 'danger'}}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

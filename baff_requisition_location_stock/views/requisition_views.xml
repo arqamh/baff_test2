@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_material_purchase_requisition_form_location_required" model="ir.ui.view">
+        <field name="name">material.purchase.requisition.form.location.required</field>
+        <field name="model">material.purchase.requisition</field>
+        <field name="inherit_id" ref="material_purchase_requisitions.material_purchase_requisition_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='header_location_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='qty_available_location']" position="after">
+                <field name="from_location_id" optional="show" string="From Location"
+                       readonly="1" force_save="1"/>
+                <field name="on_hand_at_location" optional="show" string="On-Hand (Loc)"
+                       readonly="1" force_save="1"/>
+                <field name="forecasted_at_location" optional="show" string="Forecasted (Loc)"
+                       readonly="1" force_save="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fixed Asset menu-->
+      <menuitem id="account_baff_reports_menu" name="Baff Asset Reports" parent="account.menu_finance_reports" sequence="3">
+          <menuitem id="menu_action_fixed_asset_register" name="Fixed Asset Report" action="fixed_asset_report_wizard"/>
+      </menuitem>
+</odoo>

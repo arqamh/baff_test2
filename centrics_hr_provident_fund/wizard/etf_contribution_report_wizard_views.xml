@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--
+        ETF Contribution Report Wizard
+
+        This wizard generates an Excel file containing ETF (Employees' Trust Fund)
+        contribution details for selected payroll batches.
+
+        Features:
+        - Filters only EPF-eligible employees (is_provident_fund_eligible = True)
+        - Extracts ETF contribution from salary rules with etf_3 configuration
+        - Generates Excel file with employee details and contribution amounts
+
+        Output columns:
+        - Member Number (EPF Number)
+        - Members Initials
+        - Members Surname
+        - NIC Number
+        - Contribution (ETF 3%)
+    -->
+
+    <!-- ETF Contribution Report Wizard Form View -->
+    <record id="etf_contribution_report_wizard_form" model="ir.ui.view">
+        <field name="name">etf.contribution.report.wizard.form</field>
+        <field name="model">etf.contribution.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="ETF Contribution File">
+                <group>
+                    <field name="payslip_batch_ids" widget="many2many_tags" placeholder="Select Payroll Batches"/>
+                </group>
+                <footer>
+                    <button name="action_generate_excel" string="Generate Excel" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ETF Contribution Report Wizard Action -->
+    <record id="action_etf_contribution_report_wizard" model="ir.actions.act_window">
+        <field name="name">ETF Contribution File</field>
+        <field name="res_model">etf.contribution.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip_run"/>
+    </record>
+
+    <!-- ETF Contribution File Menu -->
+    <menuitem id="menu_etf_contribution_file"
+              name="ETF Contribution File"
+              parent="centrics_hr_provident_fund.menu_epf_etf_reports"
+              action="action_etf_contribution_report_wizard"
+              sequence="20"/>
+
+</odoo>

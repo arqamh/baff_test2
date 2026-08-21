@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--inherit planning form view-->
+        <record id="fine_finish_erp_planning_form_view" model="ir.ui.view">
+            <field name="name">fine.finish.erp.planning.form.view</field>
+            <field name="model">planning.slot</field>
+            <field name="inherit_id" ref="planning.planning_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="mrp_id" invisible="1"/>
+                    <field name="operation_id" required="1"/>
+                    <field name="work_center_id"/>
+                    <field name="loss_id" required="1"/>
+                    <field name="prioritize"/>
+                    <field name="locked" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='prioritize']" position="after">
+                    <field name="sales_rep_id" domain="[('is_sales_rep', '=', True)]"/>
+                    <field name="color" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--inherit planning gantt view-->
+        <record id="fine_finish_erp_planning_gantt_view" model="ir.ui.view">
+            <field name="name">fine.finish.erp.planning.gantt.view</field>
+            <field name="model">planning.slot</field>
+            <field name="inherit_id" ref="planning.planning_view_form_in_gantt"/>
+            <field name="arch" type="xml">
+                <xpath expr="//footer//button[@name='action_send']" position="before">
+                    <button name="split_planning_slot"  class="btn btn-primary" string="Split" type="object"/>
+                    <button name="lock_planning_slot"  class="btn btn-primary" string="Lock" type="object" groups="fine_finish_planning_modifications.group_lock_planning_tasks" attrs="{'invisible': [('locked', '=', True)]}"/>
+                    <button name="unlock_planning_slot"  class="btn btn-primary" string="Unlock" type="object" groups="fine_finish_planning_modifications.group_unlock_planning_tasks" attrs="{'invisible': [('locked', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--inherit planning slot form view-->
+<!--        <record id="fine_finish_erp_planning_slot_form_view" model="ir.ui.view">-->
+<!--            <field name="name">fine.finish.erp.planning.slot.form.view</field>-->
+<!--            <field name="model">planning.slot</field>-->
+<!--            <field name="inherit_id" ref="project_forecast.planning_slot_view_form"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//field[@name='project_id'][1]" position="attributes">-->
+<!--                    <attribute name="required">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//field[@name='project_id'][2]" position="attributes">-->
+<!--                    <attribute name="required">1</attribute>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+    </data>
+</odoo>

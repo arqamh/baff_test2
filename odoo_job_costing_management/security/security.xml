@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_category_construction">
+            <field name="name">Job Costing Access</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="group_job_costing_all_costs" model="res.groups">
+            <field name="name">Show All Costs (Hide From Production)</field>
+            <field name="category_id" ref="module_category_construction"/>
+        </record>
+
+        <record id="group_job_costing_production" model="res.groups">
+            <field name="name">Production Team</field>
+            <field name="category_id" ref="module_category_construction"/>
+        </record>
+
+        <record id="group_job_costing_head_of_department" model="res.groups">
+            <field name="name">Head of Department</field>
+            <field name="category_id" ref="odoo_job_costing_management.module_category_construction"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+        </record>
+
+        <record id="group_job_costing_head_of_sales" model="res.groups">
+            <field name="name">Head of Sales</field>
+            <field name="category_id" ref="odoo_job_costing_management.module_category_construction"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+        </record>
+
+        <record id="group_job_costing_sales_director" model="res.groups">
+            <field name="name">Sales Director</field>
+            <field name="category_id" ref="odoo_job_costing_management.module_category_construction"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+        </record>
+
+        <record id="group_job_costing_director" model="res.groups">
+            <field name="name">Director</field>
+            <field name="category_id" ref="odoo_job_costing_management.module_category_construction"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+        </record>
+
+        <record id="group_jobcosting_approve_manager" model="res.groups">
+            <field name="name">Permission to Update Approvers</field>
+            <field name="category_id" ref="odoo_job_costing_management.module_category_construction"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+        </record>
+
+        <!-- Manage the renaming of revised job costing sheets. -->
+        <record id="group_revise_job_costing_manager" model="res.groups">
+            <field name="name">Permission to Revise the Job Costing Sheet</field>
+            <field name="category_id" ref="odoo_job_costing_management.module_category_construction"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="group_jobcosting_delete_manager" model="res.groups">
+            <field name="name">Permission to Delete Approvers</field>
+            <field name="category_id" ref="odoo_job_costing_management.module_category_construction"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]" />
+        </record>
+
+    </data>
+</odoo>

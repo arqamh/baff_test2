@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="baff_invoice_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="header">
+                        <table width="50%" align="left" style="border: solid 1px white;">
+                            <tr>
+                                <td class="text-left" style="padding-left:0px;">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                         height="25%" width="100%"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="50%" align="right" style="border: solid 1px white;padding:2px;text-align:right;font-size:14px;">
+                            <tr>
+                                <td style="padding:2px;text-align:right;">
+                                    <span t-field="o.company_id.name" style="font-size:14px;"/>
+                                    <br/>
+                                    <span t-field="o.company_id.street"/>
+                                    <span t-field="o.company_id.street2"/>
+                                    <br/>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.country_id.name"/>
+                                    <br/>
+                                    <span t-field="o.company_id.phone"/>
+                                    <br/>
+                                    <span t-field="o.company_id.email"/>
+                                    <br/>
+                                    <span t-field="o.company_id.website"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" style="border: solid 1px transparent;margin-bottom:5px;">
+                            <tr>
+                                <td width="50%" style="padding:2px;background-color:#283850;"></td>
+                                <td width="50%" style="padding:2px;background-color:#fca41c;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="page">
+                        <table width="100%" style="border: 1px solid white;" align="center">
+                            <tr>
+                                <th>
+                                    <h1 class="text-center" width="100%"
+                                        style="font-size:20px; padding:5px 0px 0px 5px;vertical-align: middle;">
+                                       <b>  <span t-if="o.state == 'posted'">COMMERCIAL INVOICE</span>
+                                        <span t-else="" >PROFORMA INVOICE</span>
+                                         </b>
+                                    </h1>
+                                </th>
+                            </tr>
+                        </table>
+                        <u>
+                            <p style="text-decoration: underline;">Bank Details</p>
+                        </u>
+                        <table width="45%" align="left" style="border: solid 1px white;font-size:14px;" >
+                            <tr style="border: solid 1px white;">
+                                <td width="90%" style="padding-bottom:10px;">
+                                    <span t-field="o.bank_1_details"/>
+                                </td>
+                            </tr>
+                            <tr style="border: solid 1px white;padding-top:5px;">
+                                <td width="90%" style="padding-top:10px;">
+                                    <span t-field="o.bank_2_details"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table style="border: solid 1px white;">
+                            <tr>
+                                <td width="50%" style="padding-left:50px;">
+                                    <table width="100%" class="table table-sm table-borderless">
+                                        <tr>
+                                            <td>
+                                                <strong>Invoice for:</strong>
+                                            </td>
+                                            <td>
+                                                <address class="mb-0" t-field="o.partner_id"
+                                                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                                <div t-if="o.partner_id.vat"
+                                                     id="partner_vat_address_not_same_as_shipping">
+                                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                                                       t-esc="o.company_id.account_fiscal_country_id.vat_label"
+                                                       id="inv_tax_id_label"/>
+                                                    <t t-else="">Tax ID</t>:
+                                                    <span t-field="o.partner_id.vat"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br/>
+
+                    <table width="100%" style="margin-top:40px; border: solid 1px transparent;">
+                        <tr>
+                            <td width="10%" style="padding:5px 0px 5px 0px;">
+                                <h4>Invoice</h4>
+                            </td>
+                            <td style="padding:5px 0px 0px 5px;">
+                                <h4>
+                                    <span t-field="o.name"/>
+                                </h4>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table width="50%" style="margin-top:10px;border: solid 1px transparent;">
+                        <tr>
+                            <th style="padding:2px;text-align:left;">Invoice Date:</th>
+                            <th style="padding:2px;text-align:left;">Due Date:</th>
+                            <th style="padding:2px;">Source : <span t-esc="o.po_reference"/></th>
+                        </tr>
+                        <tr>
+                            <td style="padding:2px;text-align:left; ">
+                                <span t-field="o.invoice_date"/>
+                            </td>
+                            <td style="padding:2px;text-align:left;">
+                                <span t-field="o.invoice_date_due"/>
+                            </td>
+                            <td style="padding:2px;text-align:center;">
+                                <span t-field="o.source_id.name"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <table width="100%">
+                        <tr>
+                            <th width="40%" style="text-align:center;">Description</th>
+                            <th width="10%">HS Code</th>
+                            <th width="10%">Quantity</th>
+                            <th width="15%">Unit Price</th>
+                            <th width="20%">Subtotal</th>
+                        </tr>
+
+                        <t t-set="gross_total" t-value="0"/>
+                        <t t-set="total_tax" t-value="0"/>
+                        <t t-set="net_total" t-value="0"/>
+                        <t t-foreach="o.invoiceable_line_ids" t-as="line">
+                            <tr>
+                                <td class="text-center"
+                                    style="padding:5px 0px; vertical-align: middle;text-align:right;">
+                                    <t t-esc="line.product_id.name"/>
+                                </td>
+                                <td class="text-center"
+                                    style="padding:5px 0px; vertical-align: middle;text-align:right;">
+                                    <t t-esc="line.hs_code"/>
+                                </td>
+                                <td class="text-right"
+                                    style="padding:5px 10px; vertical-align: middle;text-align:right;">
+                                    <t t-esc="'{:,.2f}'.format(line.product_uom_qty)"/>
+                                </td>
+                                <td class="text-left"
+                                    style="padding:5px 0px; vertical-align: middle;text-align:right;">
+                                    <t t-esc="'{:,.2f}'.format(line.price_unit)"/>
+                                </td>
+                                <td class="text-right"
+                                    style="padding:5px 0px; vertical-align: middle; text-align:right;">
+                                    <t t-esc="'{:,.2f}'.format(line.price_subtotal)"/>
+                                </td>
+                                <t t-set="tax" t-value="((line.product_uom_qty * line.price_unit) - line.price_subtotal)"/>
+                                <t t-set="total_tax" t-value="total_tax + tax"/>
+                                <t t-set="net_total" t-value="net_total + line.price_subtotal"/>
+                                <t t-set="gross_total" t-value="net_total + total_tax"/>
+                            </tr>
+                        </t>
+                    </table>
+<!--                    <td class="text-right"-->
+<!--                                    style="padding:5px 10px; vertical-align: middle;text-align:right;">-->
+<!--                                    <t t-esc="'{:,.2f}'.format((line.product_uom_qty * line.price_unit) - line.price_subtotal)"/>-->
+<!--                                </td>-->
+                     <div  t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                         <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
+                             <tr>
+                                <td style="border-top: 1px solid black; text-align: center; width: 50%">Total Tax Amount</td>
+                                <td style="border-top: 1px solid black; text-align: right;"><t t-esc="'{:,.2f}'.format(total_tax)"/></td><br/>
+                             </tr>
+                             <tr>
+                                <td style="text-align: center; width: 50%">Net Total</td>
+                                <td style="text-align: right;"><t t-esc="'{:,.2f}'.format(net_total)"/></td><br/>
+                             </tr>
+                             <tr>
+                                <td style="border-top: 1px solid black; text-align: center; width: 50%">Gross Total</td>
+                                <td style="border-top: 1px solid black; text-align: right;"> <t t-esc="o.currency_id.name"/> <t t-esc="'{:,.2f}'.format(gross_total)"/></td><br/>
+                             </tr>
+                         </table>
+                     </div>
+
+<!--                    <div class="clearfix mb-4">-->
+<!--                        <div id="total" class="row" style="text-transform: uppercase;">-->
+<!--                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">-->
+<!--                                <table class="table table-sm table-borderless" style="page-break-inside: avoid;">-->
+<!--                                    <t t-set="tax_totals" t-value="o.tax_totals"/>-->
+<!--                                    <t t-call="account.document_tax_totals"/>-->
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div>
+                        <td width="60%">
+                            <table width="100%" class="table table-sm table-borderless">
+                                <tr>
+                                    <td align="left" width="50%" style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>Term : </span><span t-field="o.terms_conditions"/></strong>
+                                    </td>
+                                    <td align="left" width="50%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>Gross weight : </span><span t-field="o.gross_weight"/></strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="50%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>Shipment by : </span><span t-field="o.shipment_by"/></strong>
+                                    </td>
+                                     <td align="left" width="50%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong>Total CBM : <span t-field="o.total_cmb"/></strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="50%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>Net weight : </span><span t-field="o.net_weight"/></strong>
+                                    </td>
+                                    <td align="left" width="50%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>No of Packages : </span><span t-field="o.no_of_packages"/></strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="55%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>Payment term : </span><span t-field="o.invoice_payment_term_id"/></strong>
+                                    </td>
+                                    <td align="left" width="55%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>Tracking Number : </span><span t-field="o.tracking_no"/></strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="55%"
+                                        style="font-size:14px; padding:0px 0px 0px 2px;  color: black; border:solid 1px white">
+                                        <strong><span>Incoterm : </span><span t-field="o.invoice_incoterm_id.name"/></strong>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <table width="50%" height="100px;">
+                                <tr>
+                                    <td style="padding:2px;">
+                                        <b>Note :</b><span t-field="o.narration"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                            <br/>
+                            <table width="100%" style="border: 1px solid white;" align="center">
+                                <tr>
+                                    <td align="center" width="65%"
+                                        style="padding:5px 0px 0px 5px; border-right:solid 1px white; color: black; text-align:center;">
+                                        <b><span>THANK YOU FOR THE BUSINESS!</span></b>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <table width="100%" style="border: 1px solid white;margin-top:50px;" align="left" class="table table-sm table-borderless">
+                                <tr>
+                                    <td align="left" width="40%" style="padding:5px 0px 0px 5px; color: black;border-top:1px solid black;font-weight:bold;">
+                                        <span>Authorized signature</span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" width="40%" style="padding:5px 0px 0px 5px; color: black;font-weight:bold;">
+                                        <span t-field="o.company_id.name"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <table width="100%" class="table table-sm table-borderless">
+                                <tr>
+                                    <td><span t-field="o.footer_note"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="baff_invoice_report_id" model="ir.actions.report">
+        <field name="name">Baff Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">baff_reports.baff_invoice_report</field>
+        <field name="report_file">baff_reports.baff_invoice_report</field>
+        <field name="print_report_name">'Baff Invoice'</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="baff_reports.baff_a4_format_invoice"/>
+    </record>
+
+</odoo>

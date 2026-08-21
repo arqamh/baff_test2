@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="increase_petty_cash_float_wizard_form" model="ir.ui.view">
+        <field name="name">petty.cash.increase.cashfloat.wizard.form</field>
+        <field name="model">petty.cash.increase.cashfloat.wizard</field>
+        <field name="arch" type="xml">
+            <form >
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="current_cash_float" readonly="1" force_save="1"/>
+                            <field name="new_cash_float"/>
+                        </group>
+                        <group>
+
+                            <field name="petty_cash_id" readonly="1" force_save="1"/>
+                            <field name="user_id" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string='Confirm' name="confirm_submission" type="object" class="btn-primary"/>
+                    <button string='Cancel' class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="increase_petty_cash_float_wizard_action" model="ir.actions.act_window">
+        <field name="name">Increase Cash Float</field>
+        <field name="res_model">petty.cash.increase.cashfloat.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="increase_petty_cash_float_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

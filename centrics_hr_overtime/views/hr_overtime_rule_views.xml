@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_overtime_rule_view_form" model="ir.ui.view">
+        <field name="name">hr.overtime.rule.view.form</field>
+        <field name="model">hr.overtime.rule</field>
+        <field name="arch" type="xml">
+            <form string="Overtime Rules">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Overtime Calculation Rule" required="1"
+                                  style="font-size: min(4vw, 2.6rem);"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" readonly="1"/>
+                            <field name="rule_type"/>
+                            <field name="apply_on"/>
+                            <field name="condition"/>
+                        </group>
+                        <group>
+                            <field name="threshold_hours" attrs="{'required': [('condition', '=', 'after_hours')]}"/>
+                            <field name="template_id"/>
+                            <field name="deduction_ids" widget="many2many_tags"/>
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_overtime_rule_view_tree" model="ir.ui.view">
+        <field name="name">hr.overtime.rule.view.tree</field>
+        <field name="model">hr.overtime.rule</field>
+        <field name="arch" type="xml">
+            <tree string="Overtime Rules">
+                <field name="name"/>
+                <field name="rule_type"/>
+                <field name="rule_type"/>
+                <field name="apply_on"/>
+                <field name="threshold_hours"/>
+                <field name="deduction_ids" widget="many2many_tags"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+     <!--View Action for the Fixed Allowance or Deduction-->
+    <record id="hr_overtime_rule_action" model="ir.actions.act_window">
+        <field name="name">Overtime Rules</field>
+        <field name="res_model">hr.overtime.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr_overtime_rule_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Overtime Logical Rule
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

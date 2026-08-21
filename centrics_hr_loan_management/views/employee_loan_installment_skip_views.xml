@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="employee_loan_installment_skip_view_tree" model="ir.ui.view">
+        <field name="name">employee.loan.installment.skip.view.tree</field>
+        <field name="model">employee.loan.installment.skip</field>
+        <field name="arch" type="xml">
+            <tree string="Loan Installment Skips">
+                <field name="employee_id"/>
+                <field name="employee_loan_id"/>
+                <field name="installment_id"/>
+                <field name="skip_date"/>
+                <field name="skip_type"/>
+                <field name="skip_reason"/>
+                <field name="status"/>
+                <field name="created_by"/>
+                <field name="approved_by"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="employee_loan_installment_skip_view_form" model="ir.ui.view">
+        <field name="name">employee.loan.installment.skip.view.form</field>
+        <field name="model">employee.loan.installment.skip</field>
+        <field name="arch" type="xml">
+            <form string="Loan Installment Skip">
+                <header>
+
+                    <button name="action_submit_for_approval" type="object" string="Submit for Approval"
+                            class="btn-primary" attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                    <field name="status" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold_status'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" style="font-size: min(4vw, 2.6rem);" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="employee_loan_id" domain="[('loan_status', 'in', ['paid', 'in_recovery', 'recovered']), ('employee_id', '=', employee_id)]"/>
+                            <field name="installment_id" domain="[('status', '=', 'draft'), ('employee_loan_id', '=', employee_loan_id)]"/>
+                        </group>
+                        <group>
+                            <field name="skip_type" widget="radio"/>
+                            <field name="skip_date"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <field name="skip_reason"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="created_by" readonly="1"/>
+                            <field name="approved_by" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="employee_loan_installment_skip_view_search" model="ir.ui.view">
+        <field name="name">employee.loan.installment.skip.view.search</field>
+        <field name="model">employee.loan.installment.skip</field>
+        <field name="arch" type="xml">
+            <search string="Loan Installment Skips">
+                <field name="employee_id"/>
+                <field name="employee_loan_id"/>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="employee_loan_installment_skip_action" model="ir.actions.act_window">
+        <field name="name">Loan Installment Skips</field>
+        <field name="res_model">employee.loan.installment.skip</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'group_by': ['status', 'employee_id']}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create your first loan installment skip record
+            </p>
+        </field>
+    </record>
+
+
+
+
+    <!-- Menu Item -->
+    <menuitem id="employee_loan_installment_skip_menu"
+              name="Installment Skips"
+              parent="loan_management_menu"
+              action="employee_loan_installment_skip_action"
+              sequence="4"/>
+
+
+</odoo>

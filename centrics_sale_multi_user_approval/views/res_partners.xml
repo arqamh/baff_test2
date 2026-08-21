@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_category_property_form" model="ir.ui.view">
+        <field name="name">partner.over.credit.limit.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='misc']" position="after">
+                <group string="Credit Information" groups="centrics_sale_multi_user_approval.group_show_credit_limit_and_payment_terms_sale_multi_user">
+                    <field name="have_credit_limit"/>
+                    <field name="credit_limit" widget='monetary' attrs="{'invisible': [('have_credit_limit', '=', False)]}"/>
+                    <field name="remaining_credit_limit" attrs="{'invisible': [('have_credit_limit', '=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

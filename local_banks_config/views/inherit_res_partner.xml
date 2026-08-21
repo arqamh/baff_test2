@@ -1,0 +1,13 @@
+<odoo>
+    <record id="inherit_view_partner_form" model="ir.ui.view">
+        <field name="name">inherit.view.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="payment_method" attrs="{'invisible': [('supplier_type', '!=', 'tea')], 'required': [('supplier_type', '=', 'tea')]}"/>
+                <field name="bank_account_id" domain="[('partner_id', '=', id)]" context="{'default_partner_id': id}" attrs="{'invisible': ['|',('supplier_type', '!=', 'tea'),('payment_method', '!=', 'bank')], 'required': [('supplier_type', '=', 'tea'), ('payment_method', '=', 'bank')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

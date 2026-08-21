@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="employee_loan_manually_settlement_view_tree" model="ir.ui.view">
+        <field name="name">employee.loan.manually.settlement.view.tree</field>
+        <field name="model">employee.loan.manually.settlement</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="loan_id"/>
+                <field name="due_amount"/>
+                <field name="settlement_type"/>
+                <field name="number_of_installments"/>
+                <field name="settlement_amount"/>
+                <field name="free_partial_amount"/>
+                <field name="settle_installments_from"/>
+                <field name="settlement_journal_id"/>
+                <field name="settlement_entry"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="employee_loan_manually_settlement_view_form" model="ir.ui.view">
+        <field name="name">employee.loan.manually.settlement.view.form</field>
+        <field name="model">employee.loan.manually.settlement</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_settled" type="object" string="Mark as Settled" class="btn-primary"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" style="font-size: min(4vw, 2.6rem);" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="loan_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="due_amount" readonly="1"/>
+                            <field name="settlement_type"/>
+                        </group>
+                        <group>
+                            <field name="number_of_installments" attrs="{'invisible': [('settlement_type', '!=', 'partial')]}"/>
+                            <field name="settlement_amount" attrs="{'invisible': [('settlement_type', '!=', 'partial')]}"/>
+                            <field name="settle_installments_from" attrs="{'invisible': [('settlement_type', '!=', 'partial')]}"/>
+                            <field name="free_partial_amount" attrs="{'invisible': [('settlement_type', '!=', 'free_partial')]}"/>
+                            <field name="interest_amount" readonly="1"/>
+                            <field name="total_settlement_amount" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="settlement_journal_id"/>
+                            <field name="settlement_entry" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="employee_loan_manually_settlement_action" model="ir.actions.act_window">
+        <field name="name">Loan Manual Settlements</field>
+        <field name="res_model">employee.loan.manually.settlement</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menuitem -->
+    <menuitem id="menu_employee_loan_manually_settlement"
+              name="Loan Manual Settlements"
+              parent="loan_management_menu"
+              action="employee_loan_manually_settlement_action"
+              sequence="3"
+    />
+</odoo>

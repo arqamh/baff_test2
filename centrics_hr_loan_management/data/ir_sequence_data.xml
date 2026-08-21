@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence definition for Accounts Map -->
+<!--    <record id="seq_accounts_map" model="ir.sequence">-->
+<!--        <field name="name">Accounts Map Sequence</field>-->
+<!--        <field name="code">accounts.map</field>-->
+<!--        <field name="prefix">AM/</field>-->
+<!--        <field name="padding">4</field>-->
+<!--        <field name="number_increment">1</field>-->
+<!--        <field name="implementation">standard</field>-->
+<!--    </record>-->
+
+
+    <!--     Sequence definition for Employee Loan Manual Settlement -->
+    <record id="seq_employee_loan_manual_settlement" model="ir.sequence">
+        <field name="name">Employee Loan Manual Settlement Sequence</field>
+        <field name="code">employee.loan.manually.settlement</field>
+        <field name="prefix">ELMS/</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+        <field name="implementation">standard</field>
+    </record>
+
+
+</odoo>

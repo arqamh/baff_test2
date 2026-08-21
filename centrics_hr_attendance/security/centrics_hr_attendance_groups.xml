@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Authorized user to create manual attendance import  -->
+        <record id="hr_attendance_import_user" model="res.groups">
+            <field name="name">Attendance - Manual Import</field>
+            <field name="category_id" ref="centrics_hr_attendance.special_hr_attendance_category"/>
+        </record>
+    </data>
+</odoo>

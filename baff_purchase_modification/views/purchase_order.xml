@@ -1,0 +1,87 @@
+<odoo>
+    <record id="baff_purchase_order_form_view" model="ir.ui.view">
+        <field name="name">purchase.order.baff.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Shipping Details">
+                    <field name="shipment_details_ids">
+                        <tree string="Procurement Plan">
+                            <field name="purchase_id" invisible="1"/>
+                            <field name="date"/>
+                            <field name="project" optional="hide"/>
+                            <field name="partner_id" optional="hide"/>
+                            <field name="proforma_invoice_no" optional="hide"/>
+                            <field name="proforma_invoice_date" optional="hide"/>
+                            <field name="description" optional="hide"/>
+                            <field name="amount" optional="hide"/>
+                            <field name="tt_number" optional="hide"/>
+                            <field name="payment_date" optional="hide"/>
+                            <field name="boi_approval" optional="hide"/>
+                            <field name="mode_of_transport" optional="hide"/>
+                            <field name="incoterm" optional="hide"/>
+                            <field name="etd" optional="hide"/>
+                            <field name="revised_etd" optional="hide"/>
+                            <field name="eta" optional="hide"/>
+                            <field name="local_agent" optional="hide"/>
+                            <field name="freight_cost" optional="hide"/>
+                            <field name="finalized_date" optional="hide"/>
+                            <field name="airport" optional="hide"/>
+                            <field name="flight" optional="hide"/>
+                            <field name="clearance_agent" optional="hide"/>
+                            <field name="cus_dec_no" optional="hide"/>
+                            <field name="koggala_delivery_date" optional="hide"/>
+                            <field name="type_of_vehicle" optional="hide"/>
+                            <field name="package_size" optional="hide"/>
+                            <field name="remarks" optional="hide"/>
+                            <field name="clearance_invoice_no" optional="hide"/>
+
+                        </tree>
+
+                        <form string="Register Payment" edit="false">
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="purchase_id" invisible="1"/>
+                                        <field name="date"/>
+                                        <field name="project" optional="hide"/>
+                                        <field name="partner_id" optional="hide"/>
+                                        <field name="proforma_invoice_no" optional="hide"/>
+                                        <field name="proforma_invoice_date" optional="hide"/>
+                                        <field name="description" optional="hide"/>
+                                        <field name="amount" optional="hide"/>
+                                        <field name="tt_number" optional="hide"/>
+                                        <field name="payment_date" optional="hide"/>
+                                        <field name="boi_approval" optional="hide"/>
+                                        <field name="mode_of_transport" optional="hide"/>
+                                        <field name="incoterm" optional="hide"/>
+                                        <field name="etd" optional="hide"/>
+
+                                    </group>
+                                    <group>
+                                        <field name="revised_etd" optional="hide"/>
+                                        <field name="eta" optional="hide"/>
+                                        <field name="local_agent" optional="hide"/>
+                                        <field name="freight_cost" optional="hide"/>
+                                        <field name="finalized_date" optional="hide"/>
+                                        <field name="airport" optional="hide"/>
+                                        <field name="flight" optional="hide"/>
+                                        <field name="clearance_agent" optional="hide"/>
+                                        <field name="cus_dec_no" optional="hide"/>
+                                        <field name="koggala_delivery_date" optional="hide"/>
+                                        <field name="type_of_vehicle" optional="hide"/>
+                                        <field name="package_size" optional="hide"/>
+                                        <field name="remarks" optional="hide"/>
+                                        <field name="clearance_invoice_no" optional="hide"/>
+                                    </group>
+                                </group>
+
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

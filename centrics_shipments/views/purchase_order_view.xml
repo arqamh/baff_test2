@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="inherit_purchase_order_form" model="ir.ui.view">
+        <field name="name">inherit.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="proforma_invoice_no"/>
+                <field name="proforma_invoice_date"/>
+            </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Shipment Details" name="shipment_details">
+                    <group>
+                         <group>
+                            <field name="shipments_details_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="shipments_details_id" options="{'no_create': True}" domain="[('id', 'in', shipments_details_ids)]"/>
+                            <field name="project" widget="many2many_tags"/>
+                            <field name="tt_number"/>
+                            <field name="shipper_supplier"/>
+                            <field name="country"/>
+                            <field name="description"/>
+                            <field name="payment_date"/>
+                            <field name="boi_approval"/>
+                            <field name="mode_of_transport"/>
+                            <field name="etd"/>
+                            <field name="revised_etd"/>
+                            <field name="eta"/>
+                            <field name="pick_up_local_agent"/>
+                            <field name="incoterm"/>
+                        </group>
+                        <group>
+                            <field name="freight_cost"/>
+                            <field name="finalized_date"/>
+                            <field name="port_airport"/>
+                            <field name="vessel_flight"/>
+                            <field name="clearance_agent"/>
+                            <field name="date"/>
+                            <field name="cus_dec_no"/>
+                            <field name="koggala_delivery_date"/>
+                            <field name="type_of_vehicle"/>
+                            <field name="package_size"/>
+                            <field name="remarks_notes"/>
+                            <field name="freight_invoice_no"/>
+                            <field name="clearance_invoice_no"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Custom report.-->
+<!--check_with_account_payee_and_with_20-->
+<odoo>
+    <template id="cheque_commercial_iou_request">
+        <t t-call="web.basic_layout">
+            <div class="page" style="font-size:15px; font-weight:bold">
+                <t t-foreach="docs" t-as="o">
+                    <table width="100%">
+                        <t t-set="name" t-value="str(o.employee_id.name).split()"/>
+                        <t t-set="length" t-value="len(name)"/>
+                        <tr height="30px">
+                            <td width="18%">&#160;</td>
+                            <td width="9%">&#160;</td>
+                            <td>&#160;</td>
+<!--                            <td class="text-left"><span t-field="o.date"/></td>-->
+                            <td width="25%" class="text-right">
+                                <t t-if="o.is_cheque_ac_payee">
+                                    <span style="border-top: 1px solid black; border-bottom: 1px solid black;">A/c Payee</span>
+                                </t>
+                                <t else="">
+                                    &#160;
+                                </t>
+                            </td>
+                            <td width="10%">&#160;</td>
+                            <td width="20%" class="text-left" style="font-size:16px; padding-top: 5px; padding-left:35px">
+                                <table width="100%" style="font-size:18px; padding-top: 1px;">
+                                    <tr>
+                                        <td width="10%"><span t-esc="str(o.cheque_date)[8:9]" style="font-size:20px;"/></td>
+                                        <td width="12%"><span t-esc="str(o.cheque_date)[9:10]" style="font-size:20px;"/></td>
+                                        <td width="13%"><span t-esc="str(o.cheque_date)[5:6]" style="font-size:20px;"/></td>
+                                        <td width="12%"><span t-esc="str(o.cheque_date)[6:7]" style="font-size:20px;"/></td>
+                                        <td width="15%">&#160;</td>
+                                        <td width="16%">&#160;&#160;</td>
+                                        <td width="13%"><span t-esc="str(o.cheque_date)[2:3]" style="font-size:20px;"/></td>
+                                        <td width="9%"><span t-esc="str(o.cheque_date)[3:4]" style="font-size:20px;"/></td>
+<!--                                        <td width="1%">&#160;</td>-->
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr height="28px">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+<!--                            <td class="text-left"><span t-esc="name[0]"/>&#160;<t t-if="length &gt;= 2"><span t-esc="name[1]"/></t></td>-->
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
+                        <tr height="47px">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+<!--                            <td class="text-left">PV0019-16666</td>-->
+                            <td><div style="margin-top: 3px;"><span t-field="o.employee_id"/></div></td>
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
+                        <tr height="34px">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                            <td rowspan="3" style="line-height: 2.2;"><span t-esc="o.currency_id.amount_to_text(o.released_amount)"/>&#160;Only</td>
+<!--                            <td>&#160;</td>-->
+                            <td>&#160;</td>
+                        </tr>
+                        <tr height="30px">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+<!--                            <td class="text-left"><div style="margin-top: 5px;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span t-esc="'{0:,.2f}'.format(float(o.amount)).replace(',', ',')"/></div></td>-->
+                            <td>&#160;</td>
+                            <td>&#160;&#160;<span t-esc="'{0:,.2f}'.format(float(o.released_amount)).replace(',', ',')" style="font-size:18px; margin-left:41px"/></td>
+                        </tr>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <record id="action_cheque_commercial_iou_request" model="ir.actions.report">
+        <field name="name">Commercial Cheque</field>
+        <field name="model">petty.cash.release</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">petty_cash.cheque_commercial_iou_request</field>
+        <field name="report_file">petty_cash.cheque_commercial_iou_request</field>
+        <field name="binding_model_id" ref="petty_cash.model_petty_cash_release"/>
+        <field name="paperformat_id" ref="petty_cash_paperformat_commercial"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

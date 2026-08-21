@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <record id="merge_procurementplan_wizard_form" model="ir.ui.view">
+            <field name="name">merge.procurementplan.wizard.wizard.form</field>
+            <field name="model">merge.procurementplan.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+
+                        <group>
+                            <group >
+                                <field name="is_single_order" invisible="1"/>
+                                <field name="merge_procurement_plans" attrs="{'invisible': [('is_single_order', '=', True)]}"/>
+                                <field name="vendor_ids" widget="many2many_tags"/>
+                            </group>
+
+                        </group>
+                         <h5><field name="procurement_tooltip" string="" class="fst-italic text-muted"  attrs="{'invisible': [('is_single_order', '=', True)]}" /></h5>
+                        <notebook>
+                            <page string="Procurement Plans">
+                                <field name="procurement_plan_ids">
+                                    <tree editable="bottom" create="false">
+                                        <field name="wizard_id" invisible="1"/>
+                                        <field name="procurement_id" readonly="1" force_save="1"/>
+                                        <field name="product_id" readonly="1" force_save="1"/>
+                                        <field name="source" optional="hide" />
+                                        <field name="scheduled_date" optional="show"/>
+                                        <field name="required_qty" optional="show" sum="required_qty"/>
+                                        <field name="on_hand_qty" optional="hide" sum="on_hand_qty"/>
+                                        <field name="forecasted_qty" optional="hide" sum="forecasted_qty"/>
+                                        <field name="to_order_qty" optional="show" sum="to_order_qty"/>
+                                        <field name="partner_id" optional="show"/>
+                                        <field name="partner_ids" widget="many2many_tags" invisible="1"/>
+                                        <field name="lead_time" optional="show"/>
+                                        <field name="order_last_date" optional="hide"/>
+                                        <field name="order_qty" />
+                                        <field name="company_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button name="create_rfq" string="CREATE RFQ(s)"
+                               class="oe_highlight" type="object" data-hotkey="q" />
+                        <button special="cancel" data-hotkey="z" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

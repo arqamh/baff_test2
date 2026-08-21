@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_stock_move_job_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Stock Moves by Project / Job</h2>
+                    <p>
+                        <strong>Generated:</strong>
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                        <span> | </span>
+                        <strong>Records:</strong>
+                        <span t-esc="len(docs)"/>
+                    </p>
+
+                    <table class="table table-sm table-bordered" style="font-size: 10px;">
+                        <thead>
+                            <tr class="table-active">
+                                <th>Date</th>
+                                <th>Reference</th>
+                                <th>Project / Job</th>
+                                <th>Job Number</th>
+                                <th>Product</th>
+                                <th class="text-end">Demand</th>
+                                <th class="text-end">Done</th>
+                                <th>UoM</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="move">
+                                <tr>
+                                    <td><span t-field="move.date" t-options='{"format": "yyyy-MM-dd HH:mm"}'/></td>
+                                    <td><span t-field="move.reference"/></td>
+                                    <td>
+                                        <span t-esc="move.project_id.name or move.job_costing_id.name or ''"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="move.job_number or move.job_costing_number or ''"/>
+                                    </td>
+                                    <td><span t-field="move.product_id.display_name"/></td>
+                                    <td class="text-end"><span t-field="move.product_uom_qty"/></td>
+                                    <td class="text-end"><span t-field="move.quantity_done"/></td>
+                                    <td><span t-field="move.product_uom.name"/></td>
+                                    <td><span t-field="move.location_id.display_name"/></td>
+                                    <td><span t-field="move.location_dest_id.display_name"/></td>
+                                    <td><span t-esc="dict(move._fields['state'].selection).get(move.state, move.state)"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <p t-if="not docs" class="mt-4 text-center text-muted">
+                        No stock moves in the selection.
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

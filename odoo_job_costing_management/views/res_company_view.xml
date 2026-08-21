@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- inherited fields page Automatic Approval inside companies view-->
+        <record id="fine_finish_res_company_modifications_view_order_form" model="ir.ui.view">
+            <field name="name">fine.finish.res.company.modifications.view.order.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='general_info']" position="after">
+                    <page string="Automatic Approval">
+                        <field name="automatic_approval_lines">
+                            <tree editable="top">
+                                <field name="company_id" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="is_review"/>
+                                <field name="condition" required="1" attrs="{'invisible': [('is_review', '=', True)]}"/>
+                                <field name="from_amount" attrs="{'invisible': ['|', ('condition', '!=', 'between'), ('is_review', '=', True)]}"/>
+                                <field name="to_limit" attrs="{'invisible': [('is_review', '=', True)]}"/>
+                                <field name="user_ids" widget="many2many_tags" options="{'no_create':True}" required="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

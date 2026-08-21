@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_field_readonly_rule_user,field.readonly.rule.user,model_field_readonly_rule,base.group_user,1,0,0,0
+access_field_readonly_rule_admin,field.readonly.rule.admin,model_field_readonly_rule,base.group_system,1,1,1,1
+access_field_readonly_rule_line_user,field.readonly.rule.line.user,model_field_readonly_rule_line,base.group_user,1,0,0,0
+access_field_readonly_rule_line_admin,field.readonly.rule.line.admin,model_field_readonly_rule_line,base.group_system,1,1,1,1

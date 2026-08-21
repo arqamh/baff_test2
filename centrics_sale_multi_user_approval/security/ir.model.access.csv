@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_config_approval_lines,access.sale.order.config.approval.lines,model_sale_order_config_approval_lines,,1,1,1,1
+access_sale_order_approvers_wizard,access.sale.order.approvers.wizard,model_sale_order_approvers_wizard,,1,1,1,1
+access_sale_order_approval_lines,access.sale.order.approval.lines,model_sale_order_approval_lines,,1,1,1,1
+access_sale_order_approvers_lines_wizard,access.sale.order.approvers.lines.wizard,model_sale_order_approvers_lines_wizard,,1,1,1,1

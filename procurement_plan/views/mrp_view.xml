@@ -1,0 +1,15 @@
+<odoo>
+    <record id="baff_mrp_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.baff.view</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="procurement_plan_ids" invisible="1"/>
+                <button type="object" name="open_procurement_plans" class="oe_stat_button" icon="fa-pencil-square-o"
+                        attrs="{'invisible':[('procurement_plan_ids', '=', [])]}" groups="procurement_plan.access_group_procurement_plan_user">Procurement
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_stock_move_job_tree" model="ir.ui.view">
+        <field name="name">stock.move.job.tree</field>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Moves by Project / Job" create="false" edit="false" delete="false">
+                <field name="date"/>
+                <field name="reference" string="Reference"/>
+                <field name="origin" optional="show"/>
+                <field name="project_id" string="Project" optional="show"/>
+                <field name="project_name" string="Project / Job Name" optional="hide"/>
+                <field name="job_costing_id" string="Job Costing" optional="show"/>
+                <field name="job_costing_number" string="Job Costing No." optional="hide"/>
+                <field name="job_number" string="Job Number" optional="show"/>
+                <field name="product_id" string="Product"/>
+                <field name="product_uom_qty" string="Demand"/>
+                <field name="quantity_done" string="Done" sum="Done"/>
+                <field name="product_uom" string="UoM" groups="uom.group_uom"/>
+                <field name="location_id" string="From"/>
+                <field name="location_dest_id" string="To"/>
+                <field name="raw_material_production_id" string="Consumed By (MO)" optional="hide"/>
+                <field name="production_id" string="Produced By (MO)" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state in ('assigned', 'partially_available')"
+                       decoration-muted="state == 'cancel'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_stock_move_job_search" model="ir.ui.view">
+        <field name="name">stock.move.job.search</field>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <search string="Stock Moves by Project / Job">
+                <field name="product_id"/>
+                <field name="project_id" string="Project / Job Name"
+                       filter_domain="['|',
+                           ('project_id', 'ilike', self),
+                           ('project_name', 'ilike', self)]"/>
+                <field name="job_number" string="Job Number"
+                       filter_domain="['|',
+                           ('job_number', 'ilike', self),
+                           ('job_costing_number', 'ilike', self)]"/>
+                <field name="job_costing_id"/>
+                <field name="location_id" string="Source Location"/>
+                <field name="location_dest_id" string="Destination Location"/>
+                <field name="reference" string="Reference"/>
+                <field name="origin"/>
+
+                <separator/>
+                <filter string="Done" name="state_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Ready" name="state_assigned" domain="[('state', '=', 'assigned')]"/>
+                <filter string="In Progress" name="state_progress"
+                        domain="[('state', 'in', ('confirmed', 'partially_available', 'waiting'))]"/>
+                <filter string="Not Cancelled" name="not_cancel" domain="[('state', '!=', 'cancel')]"/>
+
+                <separator/>
+                <filter string="Has Job Costing" name="has_job" domain="[('job_costing_id', '!=', False)]"/>
+                <filter string="No Job Costing" name="no_job" domain="[('job_costing_id', '=', False)]"/>
+
+                <separator/>
+                <filter string="Move Date" name="filter_date" date="date"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Job Costing" name="group_job_costing"
+                            context="{'group_by': 'job_costing_id'}"/>
+                    <filter string="Job Number" name="group_job_number"
+                            context="{'group_by': 'job_number'}"/>
+                    <filter string="Product" name="group_product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter string="Source Location" name="group_src"
+                            context="{'group_by': 'location_id'}"/>
+                    <filter string="Destination Location" name="group_dest"
+                            context="{'group_by': 'location_dest_id'}"/>
+                    <filter string="State" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Month" name="group_date"
+                            context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_move_job_report" model="ir.actions.act_window">
+        <field name="name">Stock Moves by Project / Job</field>
+        <field name="res_model">stock.move</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_stock_move_job_tree"/>
+        <field name="search_view_id" ref="view_stock_move_job_search"/>
+        <field name="context">{'search_default_not_cancel': 1, 'search_default_has_job': 1, 'search_default_group_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No stock moves found.
+            </p>
+            <p>
+                Use the filters above to narrow down by project, job number, product,
+                date or location. Use <em>Print</em> to export the filtered list to PDF.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_move_job_report"
+              name="Stock Moves by Job"
+              parent="stock.menu_warehouse_report"
+              action="action_stock_move_job_report"
+              sequence="50"/>
+
+</odoo>
