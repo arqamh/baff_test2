@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_round
 
 # Sheet states between the Sales Order creation and the production approval (done)
 INVOICEABLE_LINE_STATES = ('ready_for_production', 'waiting_production_approval')
@@ -34,7 +35,17 @@ class JobCosting(models.Model):
         wiped every invoiceable line of the quotation.
         """
         for job_costing in self:
+            job_costing._check_can_add_invoiceable_lines()
             job_costing._update_invoiceable_lines()
+
+    def update_sales_price(self):
+        """ The approval keeps updating the Sales Order line prices, but its invoiceable lines (one per
+        finished good plus Labor and Overhead lines, which counted Labor and Overhead twice) are
+        replaced with the same lines as the 'Add Invoiceable Lines' button """
+        result = super().update_sales_price()
+        for job_costing in self.filtered('quotation_id'):
+            job_costing._update_invoiceable_lines()
+        return result
 
     def _get_invoiceable_components(self):
         """ Rows that can become invoiceable lines, in sheet order: the ticked rows, plus every
@@ -142,25 +153,59 @@ class JobCosting(models.Model):
             commission = (total_cost + profit) * commission_percentage / (100 - commission_percentage)
             amounts.append(self._to_customer_currency(total_cost + profit + commission))
 
-        # Round each line and let the last one absorb the rounding difference
-        rounded_amounts = [customer_currency.round(amount) for amount in amounts]
-        rounded_amounts[-1] = customer_currency.round(sum(amounts) - sum(rounded_amounts[:-1]))
+        # Bring the lines to the Sales Order total, so the quotation approval check
+        # (Total Quotation Amount = Total Amount) passes: cost the rows do not reach is spread
+        # over the lines and the rounding difference goes to a line of quantity 1 (else the last)
+        target_total = self._get_invoiceable_target_total()
+        if target_total is None:
+            target_total = customer_currency.round(sum(amounts))
+        factor = target_total / sum(amounts) if sum(amounts) else 1.0
+        price_digits = self.env['decimal.precision'].precision_get('Product Price')
+        quantities = [component.product_qty or 1.0 for component in components]
+        price_units = [float_round(amount * factor / quantity, precision_digits=price_digits)
+                       for amount, quantity in zip(amounts, quantities)]
+        subtotals = [customer_currency.round(quantity * price_unit)
+                     for quantity, price_unit in zip(quantities, price_units)]
+        residue = customer_currency.round(target_total - sum(subtotals))
+        if residue:
+            absorber = next((index for index in reversed(range(len(quantities))) if quantities[index] == 1.0),
+                            len(quantities) - 1)
+            price_units[absorber] = float_round((subtotals[absorber] + residue) / quantities[absorber],
+                                                precision_digits=price_digits)
 
         values = []
-        for sequence, (component, amount) in enumerate(zip(components, rounded_amounts), start=1):
-            quantity = component.product_qty or 1.0
+        for sequence, (component, quantity, price_unit) in enumerate(zip(components, quantities, price_units),
+                                                                     start=1):
             values.append({
                 'sequence': sequence,
                 'product_id': component.product_id.id,
                 'product_uom_qty': quantity,
                 'product_uom': component.uom_id.id,
-                'price_unit': amount / quantity,
+                'price_unit': price_unit,
                 'name': self._get_invoiceable_line_name(component),
                 'category': 'product',
                 'job_costing_id': self.id,
                 'so_order_id': self.quotation_id.sale_id.id,
             })
         return values
+
+    def _get_invoiceable_target_total(self):
+        """ Sales Order total the approval (update_sales_price) gives the finished goods: Total Price
+        split by quantity, unit price rounded like the order line. None without finished goods. """
+        self.ensure_one()
+        finished_goods = self.finished_good_ids.filtered(lambda finished_good: finished_good.product_id)
+        if not finished_goods:
+            return None
+        customer_currency = self.customer_currency_id or self.currency_id
+        price_digits = self.env['decimal.precision'].precision_get('Product Price')
+        total_qty = sum(finished_goods.mapped('product_qty')) or 1.0
+        total_price = self._to_customer_currency(self.jobcost_total)
+        target_total = 0.0
+        for finished_good in finished_goods.filtered('product_qty'):
+            share = total_price * finished_good.product_qty / total_qty
+            unit_price = float_round(share / finished_good.product_qty, precision_digits=price_digits)
+            target_total += customer_currency.round(finished_good.product_qty * unit_price)
+        return customer_currency.round(target_total)
 
     def _get_replaced_invoiceable_lines(self):
         """ Lines this sheet created before, plus untagged lines left by the old button """
@@ -173,11 +218,9 @@ class JobCosting(models.Model):
             or (not line.job_costing_id and not line.category and not line.display_type
                 and line.product_id in cost_lines.product_id and line.name in legacy_names))
 
-    def _update_invoiceable_lines(self):
+    def _check_can_add_invoiceable_lines(self):
+        """ The button works once the Sales Order is created, until the sheet is done """
         self.ensure_one()
-        if not self.quotation_id:
-            raise UserError(_("Link a Quotation to Job Costing Sheet %s before adding invoiceable lines.")
-                            % self.display_name)
         if self.state == 'done':
             raise UserError(_("Job Costing Sheet %s is Done: its invoiceable lines can no longer be changed.")
                             % self.display_name)
@@ -188,6 +231,12 @@ class JobCosting(models.Model):
             state = dict(self._fields['state']._description_selection(self.env)).get(self.state)
             raise UserError(_("Invoiceable lines of Job Costing Sheet %s cannot be added in state %s.")
                             % (self.display_name, state))
+
+    def _update_invoiceable_lines(self):
+        self.ensure_one()
+        if not self.quotation_id:
+            raise UserError(_("Link a Quotation to Job Costing Sheet %s before adding invoiceable lines.")
+                            % self.display_name)
         values = self._prepare_invoiceable_line_values()
         commands = [(2, line.id) for line in self._get_replaced_invoiceable_lines()]
         commands += [(0, 0, vals) for vals in values]

@@ -1,6 +1,6 @@
 {
     'name': 'Invoiceable Lines Extend',
-    'version': '16.0.1.1',
+    'version': '16.0.1.2',
     'sequence': 10,
     'author': "Centrics Business Solutions (Pvt) Ltd",
     'website': 'http://www.centrics.cloud/',
