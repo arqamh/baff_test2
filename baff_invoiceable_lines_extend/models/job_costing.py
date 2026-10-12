@@ -85,6 +85,12 @@ class JobCosting(models.Model):
                             % (self.display_name, self.customer_currency_id.name))
         return amount / self.currency_rate
 
+    def _get_invoiceable_line_name(self, component):
+        """ Component path for a parent / BOM row, Raw Material name otherwise """
+        if component.material_type in ('parent', 'bom') and component.component:
+            return component.component
+        return component.product_id.display_name or ''
+
     def _prepare_invoiceable_line_values(self):
         """ One line value dict per invoiced row, amounts in customer currency """
         self.ensure_one()
@@ -97,6 +103,15 @@ class JobCosting(models.Model):
         # A parent that is not ticked is only invoiced when it has cost left
         components = components.filtered(
             lambda line: line.is_include_report or costs[line.id]['material'] or costs[line.id]['labour'])
+        # A row without description (no Raw Material, no Component) is skipped when it has no cost
+        unnamed = components.filtered(lambda line: not self._get_invoiceable_line_name(line))
+        unnamed_with_cost = unnamed.filtered(lambda line: costs[line.id]['material'] or costs[line.id]['labour'])
+        if unnamed_with_cost:
+            raise UserError(_("Set a Raw Material on line(s) %s of Job Costing Sheet %s, or untick "
+                              "'Is Included In Report'.")
+                            % (', '.join(unnamed_with_cost.mapped(lambda line: line.material_index or str(line.id))),
+                               self.display_name))
+        components -= unnamed
         if not components:
             raise UserError(_("Job Costing Sheet %s has no cost to invoice.") % self.display_name)
         total_material = sum(costs[component.id]['material'] for component in components)
@@ -128,8 +143,7 @@ class JobCosting(models.Model):
                 'product_uom_qty': quantity,
                 'product_uom': component.uom_id.id,
                 'price_unit': amount / quantity,
-                'name': component.component if component.material_type in ('parent', 'bom') and component.component
-                else component.product_id.display_name,
+                'name': self._get_invoiceable_line_name(component),
                 'category': 'product',
                 'job_costing_id': self.id,
                 'so_order_id': self.quotation_id.sale_id.id,
