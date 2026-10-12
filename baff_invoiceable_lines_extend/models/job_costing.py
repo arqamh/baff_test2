@@ -1,9 +1,21 @@
-from odoo import models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+
+# Sheet states between the Sales Order creation and the production approval (done)
+INVOICEABLE_LINE_STATES = ('ready_for_production', 'waiting_production_approval')
 
 
 class JobCosting(models.Model):
     _inherit = 'job.costing'
+
+    can_add_invoiceable_lines = fields.Boolean(compute='_compute_can_add_invoiceable_lines')
+
+    @api.depends('state', 'quotation_id.sale_id')
+    def _compute_can_add_invoiceable_lines(self):
+        """ Invoiceable lines can be added once the Sales Order is created, until the sheet is done """
+        for job_costing in self:
+            job_costing.can_add_invoiceable_lines = bool(
+                job_costing.quotation_id.sale_id and job_costing.state in INVOICEABLE_LINE_STATES)
 
     def action_add_lines(self):
         """ Replace the invoiceable lines this sheet created on its quotation with one line per
@@ -166,6 +178,16 @@ class JobCosting(models.Model):
         if not self.quotation_id:
             raise UserError(_("Link a Quotation to Job Costing Sheet %s before adding invoiceable lines.")
                             % self.display_name)
+        if self.state == 'done':
+            raise UserError(_("Job Costing Sheet %s is Done: its invoiceable lines can no longer be changed.")
+                            % self.display_name)
+        if not self.quotation_id.sale_id:
+            raise UserError(_("Create the Sales Order of Job Costing Sheet %s before adding invoiceable lines.")
+                            % self.display_name)
+        if not self.can_add_invoiceable_lines:
+            state = dict(self._fields['state']._description_selection(self.env)).get(self.state)
+            raise UserError(_("Invoiceable lines of Job Costing Sheet %s cannot be added in state %s.")
+                            % (self.display_name, state))
         values = self._prepare_invoiceable_line_values()
         commands = [(2, line.id) for line in self._get_replaced_invoiceable_lines()]
         commands += [(0, 0, vals) for vals in values]

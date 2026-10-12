@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record model="ir.ui.view" id="job_costing_form_view_inherit_baff_invoiceable_lines_extend">
+        <field name="name">job.costing.form.inherit.baff_invoiceable_lines_extend</field>
+        <field name="model">job.costing</field>
+        <field name="inherit_id" ref="odoo_job_costing_management.job_costing_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Hidden once the sheet is Done; before the Sales Order exists, pressing it gives a warning -->
+            <xpath expr="//header/button[@name='action_add_lines']" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', '=', 'done')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
