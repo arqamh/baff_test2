@@ -92,10 +92,28 @@ class StockAgingReport(models.AbstractModel):
 								  for line, _qty in lines if line['move_id']})
 		unit_cost_by_move = {}
 		if incoming_move_ids:
-			for group in self.env['stock.valuation.layer'].read_group(
-					[('stock_move_id', 'in', incoming_move_ids)], ['value:sum', 'quantity:sum'], ['stock_move_id']):
-				if group['quantity']:
-					unit_cost_by_move[group['stock_move_id'][0]] = group['value'] / group['quantity']
+			value_by_move = defaultdict(float)
+			qty_by_move = defaultdict(float)
+			move_by_layer = {}
+			for layer in self.env['stock.valuation.layer'].search_read(
+					[('stock_move_id', 'in', incoming_move_ids)], ['stock_move_id', 'value', 'quantity']):
+				move_id = layer['stock_move_id'][0]
+				move_by_layer[layer['id']] = move_id
+				value_by_move[move_id] += layer['value']
+				qty_by_move[move_id] += layer['quantity']
+			# Landed costs and vendor bill price differences are booked as their
+			# own valuation layer, linked to the original layer (not the move)
+			# via stock_valuation_layer_id, so fold their value back into the
+			# move they correct or they'd silently disappear from the report.
+			if move_by_layer:
+				for correction in self.env['stock.valuation.layer'].search_read(
+						[('stock_valuation_layer_id', 'in', list(move_by_layer.keys())), ('stock_move_id', '=', False)],
+						['stock_valuation_layer_id', 'value']):
+					parent_id = correction['stock_valuation_layer_id'][0]
+					value_by_move[move_by_layer[parent_id]] += correction['value']
+			for move_id, qty in qty_by_move.items():
+				if qty:
+					unit_cost_by_move[move_id] = value_by_move[move_id] / qty
 
 		currency = company.currency_id
 		for product in products.filtered(lambda p: p.id in incoming_by_product):
